@@ -1,0 +1,21 @@
+<?php
+/*
+
+*/
+	print '<form action="/people/save" method="POST" name="people">';
+	print '			<input type="hidden" name="id"	value="'.$people->id.'">';
+	print 'ФИО		<input type="text" name="fio"	value="'.$people->fio.'"><br>';
+	print 'Email	<input type="text" name="mail"	value="'.$people->mail.'"><br>';
+	print 'Город	<input type="text" name="state"	value="'.$people->state.'"><br>';
+	print 'Телефон	<input type="text" name="phone" value="'.$people->phone.'"><br>';
+	print 'Фирма	<input type="text" name="firm"	value="'.$people->firm.'"><br>';
+	print 'Описание<br><textarea name="descr" cols="80" rows="20">'.$people->descr.'</textarea><br>';
+
+	print "<select>\n";
+	people::getMasters();
+	print "</select>\n";	
+	
+	print '<br>';
+	print '<input type="submit" onclick="javascript:save()" value="Сохранить">';
+	print '</form>';
+?>

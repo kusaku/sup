@@ -1,0 +1,9 @@
+<?php
+
+class ServiceController extends Controller
+{
+	public function actionGetList()
+	{
+		$this->renderPartial('getlist');
+	}
+}

@@ -1,0 +1,70 @@
+<?php
+/*
+	Контроллер для таблицы PEOPLE
+	* Пользоватли
+	* Клиенты
+	* Партнёты
+*/
+class PeopleController extends Controller
+{
+	/*
+		Возвращаем всех клиентов
+	*/
+	public function actionGetClients()
+	{
+		$peoples = PeopleGroup::getById(4)->peoples;
+		$this->renderPartial('getlist',array('peoples'=>$peoples));
+	}
+
+	/*
+		Возвращаем всех менеджеров
+	*/
+	public function actionGetManagers()
+	{
+		$peoples = PeopleGroup::getById(4)->peoples;
+		$this->renderPartial('getlist',array('peoples'=>$peoples));
+	}
+
+	/*
+		Действие по умолчанию - выводим полный список всех людей
+	*/
+	public function actionIndex()
+	{
+		$peoples = People::getAll();
+		$this->render('index',array('peoples'=>$peoples));
+	}
+	
+	/*
+		Действие при заданном параметре.
+		Возвращаем форму с данными человека.
+	*/
+	public function actionView()
+	{
+		if ( Yii::app()->request->getParam('id') )
+			$this->renderPartial('get',array('people'=>People::getById(Yii::app()->request->getParam('id'))));
+			else
+			$this->renderPartial('get',array('people'=>new People()));
+	}
+	
+	/*
+		Сохраняем данные, которые вернулись из формы.
+	*/
+	public function actionSave()
+	{
+		if ( isset ($_POST['id']) )
+		{
+			if ( $_POST['id'] ) $people = People::GetById($_POST['id']);
+			else $people = new People();
+			$people->fio = $_POST['fio'];
+			$people->mail = $_POST['mail'];
+			$people->state = $_POST['state'];
+			$people->phone = $_POST['phone'];
+			$people->firm = $_POST['firm'];
+			$people->descr = $_POST['descr'];
+			$people->save();
+			// Возвращаемся к редактируемому элементу
+			$this->redirect(Yii::app()->homeUrl.'people/'.$people->id);
+		}
+	}
+	
+}

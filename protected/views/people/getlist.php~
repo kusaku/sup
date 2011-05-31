@@ -1,0 +1,23 @@
+<?php
+/*
+	Универсальный вывод списка людей в селект.
+	Используется для списка менеджеров и клиентов
+*/
+print '<select id="people_select" style="width: 500px;" onChange="showList()">';
+	foreach ($peoples as $people)
+	{
+
+		print "<option value='".$people->id."'>";
+		print $people->fio;
+		print "</option>\n";
+
+	}
+print "</select>\n";
+
+?>
+<script>
+function showList(){
+alert($("#people_select").val());
+addPackage($("#people_select").val());
+}
+</script>

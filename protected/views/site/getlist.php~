@@ -1,0 +1,16 @@
+<?php
+
+$sites = Site::getAll();
+print "<select>\n";
+	foreach ($sites as $site)
+	{
+
+		print "<option value='".$site->id."'>";
+		print $site->url;
+		print "</option>\n";
+
+	}
+print "</select>\n";
+
+
+?>

@@ -1,0 +1,56 @@
+<?php
+
+/*
+	Выводим (!) (знаю, что криво, но пока так) список мастеров.
+	В параметре можно передать ID выбранного мастера
+*/
+function GetMasters( $sel = -1 )
+{
+	print "<option>..</option>";
+	$peoples = PeopleGroup::getById( 5 )->peoples;
+	foreach ( $peoples as $people )
+	{
+		$selected = '';
+		if ( $people->id == $sel ) $selected = ' selected';
+		
+		print "<option value='".$people->id."' $selected>";
+		print $people->fio;
+		print "</option>\n";
+	}
+}
+
+print '<form name="megaform" action="/package/save" method="POST">';
+$Pservices = Service::getAllByParent(0);
+print "<table border=1>";
+	foreach ($Pservices as $Pservice)
+	{
+		print '<tr><td>'.$Pservice->name.'</td><td>';
+		$services = Service::getAllByParent($Pservice->id);
+		print "<table>";
+			foreach ($services as $service)
+			{
+				print "<tr>";
+				print "<td><input type='checkbox' name='service[".$service->id."]' value='".$service->id."'></td>";
+				print "<td>".$service->name.'</td>';
+				print '<td><input type="text" name="descr['.$service->id.']." value=""></td>';
+				print '<td><input type="text" style="width: 20px;" name="count['.$service->id.']." value="1"></td>';
+				print '<td>*</td>';
+				print '<td><input type="text" style="width: 50px;" name="price['.$service->id.']." value="'.$service->price.'">'.'</td>';
+				
+				print "<td><select>";
+				getMasters();
+				print "</select></td>";
+				
+				print "</tr>\n";
+			}
+		print "</table>";
+		print '</td></tr>';
+
+	}
+print "</table>";
+
+
+?>
+<input type="button" onClick="javascript:alert('Пока не работает');" value="Сохранить">
+<input type="button" onClick="javascript:$('#sup_popup').fadeOut(300);" value="Сохранить и скрыть">
+<input type="button" onClick="javascript:$('#sup_popup').fadeOut(300);" value="Отмена">

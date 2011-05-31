@@ -1,0 +1,29 @@
+<script>
+function loadData(){
+	$.ajax({
+		url:'/package/get',
+		dataType: 'html',
+		data:{'manager_id': 11306},
+		success: function(data){
+			$('#sup_content').html(data);
+		}
+		});
+};
+
+function addPackage(){
+	$.ajax({
+		url:'/service/getList',
+		dataType: 'html',
+		data:{'m': 11},
+		success: function(data){
+			$('#sup_popup_content').html(data);
+			$('#sup_popup').fadeIn(600);
+		}
+		});
+};
+
+$(document).ready(function(){$('#sup_popup').hide(0);});
+</script>
+
+<a href="javascript:loadData()">Load</a>
+<a href="javascript:addPackage()">ShowPackage</a>

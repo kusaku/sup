@@ -1,0 +1,10 @@
+<?php
+
+class SitesController extends Controller
+{
+	public function getList()
+	{
+		$this->render('getlist');
+	}
+	
+}

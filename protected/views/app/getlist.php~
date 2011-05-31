@@ -1,0 +1,16 @@
+<?php
+
+$sites = Service::getAll();
+print "<select>";
+	foreach ($sites as $site)
+	{
+
+		print "<option>";
+		print $site->name;
+		print "</option>\n";
+
+	}
+print "</select>";
+
+
+?>

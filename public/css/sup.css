@@ -1,0 +1,33 @@
+a {cursor: pointer;} /* Ибо задолбался переопределять :)*/
+.ui-autocomplete {text-align: left;}
+.ui-autocomplete-loading {background: white url('ui-lightness/images/ui-anim_basic_16x16.gif') right center no-repeat;}
+#preloader{	margin: 200px auto 0 auto; width: 100px; height: 100px; background: url(/images/100x100_preloader.gif) no-repeat;}
+
+.login_form{margin: 200px auto 0 auto; width: 241px; background: #fdfdfd url(/images/login_bc.jpg) bottom repeat-x; border: 1px solid #b6c3c7; padding: 5px;}
+.login_form_img{margin-bottom: 15px;}
+.row_buttons{text-align: right;}
+.row_buttons input {color:#fff;	background: url('/images/button_bc.png') repeat-x; padding:0 21px; font-size:14px; border:none; cursor:pointer; margin: 10px 10px 0 0;}
+
+#modal{width: 100%;height: 100%;position: fixed;top: 0;left: 0;background: url('/images/background.png');z-index: 2;}
+#sup_popup {position: fixed;top: 0;background-color: #FFF;z-index: 3;text-align: left;padding-bottom: 7px;}
+#sup_preloader {position: fixed;top: 0;z-index: 3;text-align: center;}
+#popup_close {position: absolute;cursor:pointer; top: 10px; right: 10px; width: 9px; height: 9px;background: url(/images/close.png) 0 0 no-repeat;}
+
+.ui-menu-item img{float: left; margin: 1px 3px 0 1px;cursor: pointer;} /* Плюсики в поиске на главной странице */
+
+.tipsBody a{color:#ff7b0b;}
+.tipsBody a:hover{color:#000000;}
+
+#summa{float: right; font-size: 18px;}
+.orders .column {float: left; padding-right: 30px;position:relative;}
+.orders .column:hover .tips{display:block; width:149px; height:auto; overflow:hidden; position:absolute; left:30px; top:20px; z-index:2;}
+
+a.add_zakaz		{display:inline-block; width:22px; height:22px; margin:0px 0 0 10px; background:url(../images/icons.png) 0 0 no-repeat; font-size:0;vertical-align:middle;}
+a.add_contact	{display:inline-block; width:22px; height:22px; margin:0px 0 0 10px; background:url(../images/icons.png) 0 -22px no-repeat; font-size:0;vertical-align:middle;}
+a.add_site		{display:inline-block; width:22px; height:22px; margin:0px 0 0 10px; background:url(../images/icons.png) 0 -44px no-repeat; font-size:0;vertical-align:middle;}
+
+/* Табы в выполняемом заказе */
+.tabs {margin-top: 7px; margin-bottom: -6px;}
+.tab {margin: 5px 5px 0 0; padding: 5px; background-color: #d5dddf;}
+.selected {background-color: #ff701a; color: #FFF;}
+.tabContent {padding:0 5px 0 10px;}

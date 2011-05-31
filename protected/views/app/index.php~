@@ -1,0 +1,42 @@
+<script>
+function loadData(){
+	$.ajax({
+		url:'/package/get',
+		dataType: 'html',
+		data:{'manager_id': 11306},
+		success: function(data){
+			$('#sup_content').html(data);
+		}
+		});
+};
+
+
+
+function showPopUp(){
+	$.ajax({
+		url:'/people/getmanagers',
+		dataType: 'html',
+		data:{'m': 11},
+		success: function(data){
+			$('#sup_popup_header').html(data);
+			$('#sup_popup').fadeIn(400);
+		}
+		});
+};
+
+
+function addPackage(){
+	$.ajax({
+		url:'/service/getList',
+		dataType: 'html',
+		data:{'m': 11},
+		success: function(data){
+			$('#sup_popup_content').html(data);
+			$('#sup_popup').fadeIn(400);
+		}
+		});
+};
+</script>
+
+<a href="javascript:loadData()">Load</a><br>
+<a href="javascript:showPopUp()">ShowPackage</a>
