@@ -169,11 +169,15 @@ $Pservices = Service::getAllByParent(0);
 				$dataTime = date('Y-m-d H:i:s');
 
 				print '<label class="column1" for="check1">'.$service->name.':</label>';
-
-				print '<span class="niceCheck all4dk">';
-				if ($b)	print "<input type='checkbox' class='cbox' name='service[".$service->id."]' value='".$service->id."' checked>";
-				else	print "<input type='checkbox' class='cbox' name='service[".$service->id."]' value='".$service->id."' >";
-				print '</span>';
+				
+				if ($Pservice->exclusive == 1) {
+					if ($b)	print "<input class='cbox' type='radio' name='service[".$Pservice->id."]' value='".$service->id."' checked>";
+					else	print "<input class='cbox' type='radio' name='service[".$Pservice->id."]' value='".$service->id."' >";
+				} else {
+					if ($b)	print "<input class='cbox' type='checkbox' name='service[".$service->id."]' value='".$service->id."' checked>";
+					else	print "<input class='cbox' type='checkbox' name='service[".$service->id."]' value='".$service->id."' >";
+				}
+				
 
 				if ($b)	print '<input class="column2" type="text" name="descr['.$service->id.']." value="'.$zserv[$service->id]->descr.'" size="30">';
 				else	print '<input class="column2" type="text" name="descr['.$service->id.']." value="" size="30">';

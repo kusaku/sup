@@ -63,7 +63,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=sup',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => '26298463',
+			'password' => '',
 			'charset' => 'utf8',
 			'enableProfiling' => true,
 		),
@@ -74,7 +74,7 @@ return array(
 		
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
-            'errorAction'=>'site/error',
+            'errorAction'=>'app/error',
         ),
 		'log'=>array(
 			'class'=>'CLogRouter',

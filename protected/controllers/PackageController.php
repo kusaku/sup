@@ -67,6 +67,8 @@ class PackageController extends Controller
 			$site->ftp = $_POST['site_ftp'];
 			$site->db = $_POST['site_db'];
 			$site->client_id = $_POST['pack_client_id'];
+			$site->bm_login = $_POST['site_bmlogin'];
+			$site->bm_password = $_POST['site_bmpassword'];
 
 			$site->save();
 			$pack->site_id = $site->id;
@@ -84,7 +86,7 @@ class PackageController extends Controller
 		Serv2pack::delByPack($pack->id);
 
 		if ( isset($_POST['service']) )
-		foreach($_POST['service'] as $id=>$service)
+		foreach($_POST['service'] as $id)
 		{
 			$s2p = new Serv2pack();
 
@@ -110,6 +112,7 @@ class PackageController extends Controller
 		if ( Yii::app()->request->getParam('id') )
 		{
 			$package = Package::getById( Yii::app()->request->getParam('id') );
+			/*
 			if ( Yii::app()->request->getParam('message') != '' )
 			$package->descr = $package->descr."\nПодробности оплаты: ".Yii::app()->request->getParam('message');
 			$package->status_id = 50;
@@ -125,6 +128,7 @@ class PackageController extends Controller
 			 * $created_on = false,
 			 * $due_date = false)
 			 */
+			/*
 			$issue = Redmine::addIssue(
 					'#'.$package->id.' '.$package->name,	// Название
 					$package->descr,	// Описание
@@ -148,7 +152,31 @@ class PackageController extends Controller
 				$service->to_redmine = $issue->id;
 				$service->save();
 			}
-
+			*/
+			$bmr = new BMRequest();
+			$site = $package->site;
+			$client = $package->client;
+			
+			if ($site->bm_isset) {
+				$result = $bmr->queryProfiles(array('username'=>$site->bm_login, 'passwd'=>$site->bm_password));
+			} else {
+				array('username'=>$site->bm_login, 
+				'passwd'=>$site->bm_password, 
+				'confirm'=>$site->bm_password, 
+				'email'=>$client->mail, 
+				'person'=>$client->fio);
+				
+				$result = $bmr->register(array('username', 'passwd'));
+			}
+			if ($site->bm_login && $site->bm_password) {
+				
+				print_r($result);
+			} else {
+				
+			}
+			exit();
+			
+			//$client = People::getNameById($package->client_id);
 
 			// Возвращаем данные для замены аяксом
 			Package::genClientBlock($package->client_id);

@@ -68,6 +68,9 @@ class SiteController extends Controller
 			$site->host = $data['site_host'];
 			$site->ftp = $data['site_ftp'];
 			$site->db = $data['site_db'];
+			$site->bm_login = $data['site_bmlogin'];
+			$site->bm_password = $data['site_bmpassword'];
+			
 			$site->save();
 			$this->redirect(Yii::app()->homeUrl);
 		}

@@ -35,7 +35,7 @@ class Service extends CActiveRecord
     
     public static function getAllByParent($id)
     {
-    	return self::model()->findAll(array('condition'=>"parent_id=$id"));
+    	return self::model()->findAll(array('condition'=>"parent_id=$id", 'order'=>'sort_order ASC'));
     }
 }
 ?>
