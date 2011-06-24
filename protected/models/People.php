@@ -26,7 +26,9 @@ class People extends CActiveRecord
 			'my_sites'=>array(self::HAS_MANY, 'Site', 'client_id'),
 			'contacts'=>array(self::HAS_MANY, 'People', 'parent_id'),
 			'parent'=>array(self::BELONGS_TO,'People',	'parent_id'),
-			'packages'=>array(self::HAS_MANY, 'Package', 'client_id', 'order'=>'dt_change DESC')
+			'packages'=>array(self::HAS_MANY, 'Package', 'client_id', 'order'=>'dt_change DESC'),
+			'value'=>array(self::HAS_MANY, 'PeopleAttr', 'people_id', 'index'=>'attribute_id'),
+			'attr'=>array(self::MANY_MANY, 'Attributes', 'people_attr(people_id, attribute_id)', 'with'=>'value', 'index'=>'type')
 			);
 	}
 

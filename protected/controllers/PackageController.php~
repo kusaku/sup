@@ -1,9 +1,0 @@
-<?php
-
-class PackageController extends Controller
-{
-	public function actionGet()
-	{
-		$this->renderPartial('index',array('manager_id'=>Yii::app()->request->getParam('manager_id')));
-	}
-}

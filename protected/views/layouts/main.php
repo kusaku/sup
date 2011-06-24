@@ -4,9 +4,9 @@
         <meta http-equiv="content-type" content="text/html; charset=utf-8" />
         <title><?= Yii::app()->name['name']?></title>
         <link href="/css/reset.css" rel="stylesheet" type="text/css" />
-        <link href="/css/ui-lightness/jquery-ui-1.8.11.custom.css" rel="stylesheet" type="text/css" />
-        <link href="/css/style.css" rel="stylesheet" type="text/css" />
-        <link href="/css/radiocheckselect.css" rel="stylesheet" type="text/css" />
+        <!--link href="/css/ui-lightness/jquery-ui-1.8.11.custom.css" rel="stylesheet" type="text/css" /-->
+        <link href="/css/smartbox.css" rel="stylesheet" type="text/css" />
+		<link href="/css/style.css" rel="stylesheet" type="text/css" />
         <link href="/css/sup.css" rel="stylesheet" type="text/css" />
         <script language="JavaScript" src="/js/jquery-1.5.2.js">
         </script>
@@ -18,12 +18,6 @@
         </script>
         <script language="JavaScript" src="/js/main.js">
         </script>
-        <script language="JavaScript" src="/js/init.js">
-        </script>
-        <!--script language="JavaScript" src="/js/jScrollPane.js"></script>
-        <script language="JavaScript" src="/js/jquery.mousewheel.min.js"></script>
-        <script language="JavaScript" src="/js/cusel-min-2.3.1.js"></script>
-        <script language="JavaScript" src="/js/radio.js"></script-->
     </head>
     <body>
         <?= $content?>

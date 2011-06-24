@@ -10,10 +10,10 @@ $(function(){
             //loadData(ui.item.id);
         }
     });
-	// считаем сумму при изменении опций в пакете
-	$('input.cbox').live('change', function(){
-		sumka();
-	});
+    // считаем сумму при изменении опций в пакете
+    $('input.cbox').live('change', function(){
+        sumka();
+    });
     prepareHtml();
 });
 
@@ -34,6 +34,14 @@ $(document).ready(function(){
 function prepareHtml(){
     $('select').selectBox();
     $('input[type="checkbox"], input[type="radio"]').radiocheckBox();
+    $('.accordion').accordion({
+        active: false,
+        autoHeight: false,
+        collapsible: true
+    });
+    $('#sup_popup').draggable({
+        handle: '.clientHead'
+    });
 }
 
 
@@ -183,7 +191,7 @@ function loadSites(client_id, selected){
         },
         success: function(data){
             $('#site_selector').html(data);
-			prepareHtml();
+            prepareHtml();
         }
     });
 };
@@ -200,7 +208,7 @@ function loadNewSite(){
         },
         success: function(data){
             $('#site_selector').html(data);
-			prepareHtml();
+            prepareHtml();
         }
     });
 };
