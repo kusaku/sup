@@ -82,13 +82,16 @@ foreach ($sites as $site) {
                 print '<p class="label">Описание:</p>';
 				print '<p>'.$usluga->service->name.'</p>';
 				
-				// XXX если заказана регистрация доменного имени (исправить номер):
-				if ($usluga->service->parent_id == 666 && strripos($usluga->descr, '(заказан)') === false) {
-				    print '<a onClick="bmDomainName('.$site->id.')" class="edit">создать заказ</a>';
-				}
-				// если заказан хостинг:
-				if ($usluga->service->parent_id == 67 && strripos($usluga->descr, '(заказан)') === false) {
-				    print '<a onClick="bmVHost('.$site->id.','.$usluga->service->primaryKey.')" class="edit">создать заказ</a>';
+				// если дата окончания услуги прошла
+				if (strtotime($usluga->dt_end) < strtotime('now')) {
+					// XXX если заказана регистрация доменного имени (исправить номер):
+					if ($usluga->service->parent_id == 71 and strtotime($usluga->dt_end) < strtotime('now')) {
+					    print '<a onClick="bmDomainName('.$site->id.','.$package->primaryKey.','.$usluga->service->primaryKey.')" class="edit">создать заказ</a>';
+					}
+					// XXX если заказан хостинг (исправить номер):
+					if ($usluga->service->parent_id == 67 and strtotime($usluga->dt_end) < strtotime('now')) {
+					    print '<a onClick="bmVHost('.$site->id.','.$package->primaryKey.','.$usluga->service->primaryKey.')" class="edit">создать заказ</a>';
+					}
 				}
 				
 				print '</div>';

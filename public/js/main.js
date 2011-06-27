@@ -459,13 +459,14 @@ function bmOpen(client_id){
     return false;
 }
 
-function bmVHost(site_id, service_id){
+function bmVHost(site_id, package_id, service_id){
         $.ajax({
         type: 'POST',
         url: '/bm/ordervhost',
         data: {
             'site_id': site_id,
-			'service_id': service_id
+			'package_id': package_id,
+			'service_id': service_id			
         },
         //dataType: 'json',
         success: function(data){
@@ -484,6 +485,28 @@ function bmVHost(site_id, service_id){
     return false;
 }
 
-function bmDomainName(site_id){
+function bmDomainName(site_id, package_id, service_id){
+        $.ajax({
+        type: 'POST',
+        url: '/bm/orderdomain',
+        data: {
+            'site_id': site_id,
+			'package_id': package_id,
+			'service_id': service_id			
+        },
+        //dataType: 'json',
+        success: function(data){
+            try {
+                data = jQuery.parseJSON(data)
+                if (data.success) {
+					// успешно...
+                }
+                return false;
+            } 
+            catch (e) {
+                // что-то пошло не так, json не вернулся
+            }
+        }
+    });
     return false;
 }

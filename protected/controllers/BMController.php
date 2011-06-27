@@ -88,11 +88,12 @@ class BMController extends Controller {
         $site_id = (int) Yii::app()->request->getParam('site_id');
         $site = Site::getById($site_id);
         
-        // услуга
+        // ID пакета
+        $package_id = (int) Yii::app()->request->getParam('package_id');
+        // ID услуги
         $service_id = (int) Yii::app()->request->getParam('service_id');
-        $service = Service::getById($service_id);
         
-        // клиент
+        // клиент и его учетка
         $client = $site->client;
         isset($client->attr['username']) and $username = $client->attr['username']->value[0]->value or $username = '';
         isset($client->attr['password']) and $password = $client->attr['password']->value[0]->value or $password = '';
@@ -116,10 +117,24 @@ class BMController extends Controller {
         
         // передаем данные
         $data = array_merge($prices[$service_id], array('username'=>$username, 'passwd'=>$password, 'domain'=>$site->url));
+        $serv2pack = Serv2pack::getByIds($service_id, $package_id);
         
         // новый BMRequest
         $bmr = new BMRequest();
         $result = $bmr->orderVhost($data);
+        
+        // период хостинга относительно now
+        $next = array(68=>'+3 month',
+                         69=>'+6 month',
+                         70=>'+12 month');
+        
+        // при успехе обновим дату создания и истечения услуги
+        if ($result['success']) {
+            $serv2pack = Serv2pack::getByIds($service_id, $package_id);
+            $serv2pack->dt_beg = date('Y-m-d H:i:s');
+            $serv2pack->dt_end = date('Y-m-d H:i:s', strtotime('now '.$next[$service_id]));
+            $serv2pack->save();
+        }
         
         print(json_encode($result));
     }
@@ -133,27 +148,58 @@ class BMController extends Controller {
         $site_id = (int) Yii::app()->request->getParam('site_id');
         $site = Site::getById($site_id);
         
-        // услуга
+        // ID пакета
+        $package_id = (int) Yii::app()->request->getParam('package_id');
+        // ID услуги
         $service_id = (int) Yii::app()->request->getParam('service_id');
-        $service = Service::getById($service_id);
         
-        // клиент
+        // клиент и его учетка
         $client = $site->client;
         isset($client->attr['username']) and $username = $client->attr['username']->value[0]->value or $username = '';
         isset($client->attr['password']) and $password = $client->attr['password']->value[0]->value or $password = '';
+
         
-        // передаем данные
         $data = array('username'=>$username,
-                         'passwd'=>$password,
-                         'domain'=>$site->url);
-        
-        // новый BMRequest
+                         'passwd'=>$password);
         $bmr = new BMRequest();
-        // XXX требуется использовать существующий
-        // или создать контакт домена
-        // т.е. $bmr->queryComainContacts();
+
+        
+        $result = $bmr->queryDomainContacts($data);
+        
+        // выход при ошибке
+        if (!$result['success'])
+            exit(json_encode($result));
+            
+        // если есть контакты домена, используем последний, иначе - создаем новый
+        if (! empty($result['elids'])) {
+            $lastdcid = array_pop($result['elids']);
+        } else {
+            $data['name'] = 'AutoContact from SUP';
+            foreach ($client->attr as $name=>$value)
+                $data[$name] = $value;
+            $result = $bmr->domainContactEdit($data);
+            // выход при ошибке
+            if (!$result['success'])
+                exit(json_encode($result));
+            $lastdcid = $result['elid'];
+        }
+        
+        // данные для конкретного тарифа - с периодом и дополнениями
+        $prices = array(72=>array('price'=>38,
+                         'period'=>16,
+                         'autoprolong'=>30));
+        
+        $data = array_merge($prices[$service_id], array('username'=>$username, 'passwd'=>$password, 'customer'=>$lastdcid, 'subjnic'=>$lastdcid, 'domain'=>$site->url, 'elid'=>$lastdcid, 'customertype'=>'person'));
         
         $result = $bmr->orderDomain($data);
+        
+        // при успехе обновим дату создания и истечения услуги
+        if ($result['success']) {
+            $serv2pack = Serv2pack::getByIds($service_id, $package_id);
+            $serv2pack->dt_beg = date('Y-m-d H:i:s');
+            $serv2pack->dt_end = date('Y-m-d H:i:s', strtotime('now +12 month'));
+            $serv2pack->save();
+        }
         
         print(json_encode($result));
     }

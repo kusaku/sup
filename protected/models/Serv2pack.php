@@ -22,6 +22,13 @@ class Serv2pack extends CActiveRecord
 			'service'=>array(self::BELONGS_TO,	'Service',	'serv_id')
 			);
 	}
+	
+	/*
+	 * Получить пакет по составному ключу
+	 */
+	public function getByIds($serv_id, $pack_id) {
+         return self::model()->findByPk(array('serv_id'=>$serv_id, 'pack_id'=>$pack_id)); 
+	}
 
 	/*
 	 * Удаляем все записи из Ser2Pack, относящиеся к указанному Заказу ($pack_id)
