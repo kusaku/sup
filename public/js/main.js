@@ -377,106 +377,113 @@ function selectTab(id){
 /* 
  * Регистрация в биллинге
  */
-function bmRegister(){
-    var form = $('form[name="site"]');
-    var site_id = form.find('input[name="site_id"]').val();
-    var login = form.find('input[name="site_bmlogin"]').val();
-    var password = form.find('input[name="site_bmpassword"]').val();
-    if (login && password) {
-        $.ajax({
-            type: 'POST',
-            url: '/bm/register',
-            data: {
-                'site_id': site_id,
-                'username': login,
-                'password': password
-            },
-            //dataType: 'json',
-            success: function(data){
-                try {
-                    // получаем json
-                    data = jQuery.parseJSON(data)
-                    // при удаче меняем ссылку
-                    if (data.success) {
-                        form.find('a').replaceWith('<a style="padding:5px 20px;display:block;" onclick="bmOpen()" href="#">Открыть в BM (id ' + data.userid + ')</a>');
-                    }
-                    else {
-                        switch (data.code) {
-                            // ошибка 4 - неправильной/отсутвуещее поле формы
-                            case 4:
-                            // поля при проверке передаются...
-                            case 8:
-                                if (data.msg == 'userexists') 
-                                    alert('Пользователь с таким именем уже зарегистрирован')
-                                break;
-                            // ошибка 100 не описана, но обычно это ошибка доступа
-                            case 100:
-                                alert('В доступе отказано')
-                                break;
-                            // другие ошибки
-                            default:
-                            //alert(data.code + ': ' + data.msg);
-                        }
-                    }
-                } 
-                catch (e) {
-                    // что-то пошло не так, json не вернулся
+function bmRegister(client_id){
+    var client_id = client_id;
+    $.ajax({
+        type: 'POST',
+        url: '/bm/register',
+        data: {
+            'client_id': client_id,
+        },
+        //dataType: 'json',
+        success: function(data){
+            try {
+                // получаем json
+                data = jQuery.parseJSON(data)
+                // при удаче меняем ссылку
+                if (data.success) {
+                    form.find('a').replaceWith('<a style="padding:5px 20px;display:block;" onclick="bmOpen(' + client_id + ')" href="#">Открыть в BM (id ' + data.userid + ')</a>');
                 }
+                else {
+                    switch (data.code) {
+                        // ошибка 4 - неправильной/отсутвуещее поле формы
+                        case 4:
+                        // поля при проверке передаются...
+                        case 8:
+                            if (data.msg == 'userexists') 
+                                alert('Пользователь с таким именем уже зарегистрирован')
+                            break;
+                        // ошибка 100 не описана, но обычно это ошибка доступа
+                        case 100:
+                            alert('В доступе отказано')
+                            break;
+                        // другие ошибки
+                        default:
+                        //alert(data.code + ': ' + data.msg);
+                    }
+                }
+            } 
+            catch (e) {
+                // что-то пошло не так, json не вернулся
             }
-        });
-    }
-    else {
-        !login && form.find('input[name="site_bmlogin"]').css('background-color', '#fa0500').css('color', '#FFF');
-        !password && form.find('input[name="site_bmpassword"]').css('background-color', '#fa0500').css('color', '#FFF');
-    }
+        }
+    });
     return false;
 }
 
 /*
  * Переход в биллинг
  */
-function bmOpen(){
-    var form = $('form[name="site"]');
-    var site_id = form.find('input[name="site_id"]').val();
-    var login = form.find('input[name="site_bmlogin"]').val();
-    var password = form.find('input[name="site_bmpassword"]').val();
-    if (login && password) {
-        $.ajax({
-            type: 'POST',
-            url: '/bm/open',
-            data: {
-                'username': login,
-                'password': password
-            },
-            //dataType: 'json',
-            success: function(data){
-                try {
-                    data = jQuery.parseJSON(data)
-                    if (data.success) {
-                        var url = 'https://host.fabricasaitov.ru/manager/billmgr';
-                        url += '?func=auth&username=' + data.username + '&key=' + data.key;
-                        $('<iframe>').load(function(){
-                            /*
-                             var w = window.open((urladdon) ? url + urladdon : url);
-                             if (w)
-                             w.location.href = '/';
-                             else
-                             alert('Ваш браузер блокирует всплывающие окна');
-                             */
-                            window.location.href = url;
-                        }).attr('src', 'http://host.fabricasaitov.ru/setcookie.php').hide().appendTo('body');
-                    }
-                    return false;
-                } 
-                catch (e) {
-                    // что-то пошло не так, json не вернулся
+function bmOpen(client_id){
+    $.ajax({
+        type: 'POST',
+        url: '/bm/open',
+        data: {
+            'client_id': client_id
+        },
+        //dataType: 'json',
+        success: function(data){
+            try {
+                data = jQuery.parseJSON(data)
+                if (data.success) {
+                    var url = 'https://host.fabricasaitov.ru/manager/billmgr';
+                    url += '?func=auth&username=' + data.username + '&key=' + data.key;
+                    $('<iframe>').load(function(){
+                        /*
+                         var w = window.open((urladdon) ? url + urladdon : url);
+                         if (w)
+                         w.location.href = '/';
+                         else
+                         alert('Ваш браузер блокирует всплывающие окна');
+                         */
+                        window.location.href = url;
+                    }).attr('src', 'http://host.fabricasaitov.ru/setcookie.php').hide().appendTo('body');
                 }
+                return false;
+            } 
+            catch (e) {
+                // что-то пошло не так, json не вернулся
             }
-        });
-    }
-    else {
-        !login && form.find('input[name="site_bmlogin"]').css('background-color', '#fa0500').css('color', '#FFF');
-        !password && form.find('input[name="site_bmpassword"]').css('background-color', '#fa0500').css('color', '#FFF');
-    }
+        }
+    });
+    return false;
+}
+
+function bmVHost(site_id, service_id){
+        $.ajax({
+        type: 'POST',
+        url: '/bm/ordervhost',
+        data: {
+            'site_id': site_id,
+			'service_id': service_id
+        },
+        //dataType: 'json',
+        success: function(data){
+            try {
+                data = jQuery.parseJSON(data)
+                if (data.success) {
+					// успешно...
+                }
+                return false;
+            } 
+            catch (e) {
+                // что-то пошло не так, json не вернулся
+            }
+        }
+    });
+    return false;
+}
+
+function bmDomainName(site_id){
     return false;
 }

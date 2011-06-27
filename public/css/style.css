@@ -700,6 +700,7 @@ a:hover {
 }
 
 .newClientWindow {
+    width: 550px;
 }
 
 .newClientWindow .clientHead {
@@ -725,7 +726,7 @@ a:hover {
 }
 
 .newClientWindow input[type =
-"text"] {
+"text"], .newClientWindow input[type = "password"] {
     display: block;
     width: 150px;
     height: 18px;
@@ -803,7 +804,6 @@ a.plus {
  background: url(../images/dlgarrov.png) 5px 0 no-repeat #f4f6f7;
  }
  /**/
-
 .orderBlock .header {
     display: block;
     height: 22px;

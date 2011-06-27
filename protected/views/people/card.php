@@ -29,6 +29,9 @@
 			<p class="label">Примечание:</p>
 			<p><?=$client->descr?>&nbsp;</p>
 		</div>
+		<?php if(!isset($client->attr['bm_id']) or !$client->attr['bm_id']->value[0]->value): ?>
+			<a onClick="bmRegister(<?=$client->primaryKey?>)">Создать аккаунт в BILLManager</a>  
+		<?php endif; ?>
 	</div>
 
 	<div class="orders">
@@ -76,10 +79,19 @@ foreach ($sites as $site) {
 			print '<div class="subPart">';
 
 				print '<div class="column1">';
-				print '<p class="label">Описание:</p>';
+                print '<p class="label">Описание:</p>';
 				print '<p>'.$usluga->service->name.'</p>';
+				
+				// XXX если заказана регистрация доменного имени (исправить номер):
+				if ($usluga->service->parent_id == 666 && strripos($usluga->descr, '(заказан)') === false) {
+				    print '<a onClick="bmDomainName('.$site->id.')" class="edit">создать заказ</a>';
+				}
+				// если заказан хостинг:
+				if ($usluga->service->parent_id == 67 && strripos($usluga->descr, '(заказан)') === false) {
+				    print '<a onClick="bmVHost('.$site->id.','.$usluga->service->primaryKey.')" class="edit">создать заказ</a>';
+				}
+				
 				print '</div>';
-
 				print '<div class="column2">';
 				print '<p class="label">Заказан:</p>';
 				print '<p>'.$usluga->dt_beg.'</p>';
@@ -89,6 +101,7 @@ foreach ($sites as $site) {
 				print '<p class="label">Мастер:</p>';
 				print '<p>'.People::getNameById($usluga->master_id).'</p>';
 				print '</div>';
+				
 
 			print '</div>';
 			$summa = $summa + $usluga->price*$usluga->quant;

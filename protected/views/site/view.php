@@ -18,15 +18,6 @@
             <br>
             <textarea name="site_db" cols="16" rows="5"><?= $site->db; ?></textarea>
         </td>
-        <td style="padding-left: 15px;vertical-align:top;">
-            Логин в BILLManager:
-            <br>
-            <input type="text" name="site_bmlogin" value="<?= $site->bm_login; ?>">
-            <br><br>
-            Пароль в BILLManager:
-            <br>
-            <input type="password" name="site_bmpassword" value="<?= $site->bm_password; ?>">
-        </td>
     </tr>
 </table>
 <?php else : ?>
@@ -53,19 +44,6 @@
             Database: 
         </label>
         <textarea name="site_db" rows="3" cols="12"><?= $site->db; ?></textarea>
-        <label>
-            BM login: 
-        </label>
-		<input type="text" name="site_bmlogin" value="<?= $site->bm_login; ?>">
-        <label>
-            BM password: 
-        </label>
-		<input type="password" name="site_bmpassword" value="<?= $site->bm_password; ?>">
-        <?php if ($site->bm_id): ?>
-        <a style="padding:5px 20px;display:block;" onclick="bmOpen()" href="#">Открыть в BM (id <?= $site->bm_id; ?>)</a>
-        <?php else : ?>
-        <a style="padding:5px 20px;display:block;" onclick="bmRegister()" href="#">Зарегистрировать в BM</a>
-        <?php endif; ?>
     </form>
     <div class="buttons">
         <p>
