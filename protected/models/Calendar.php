@@ -27,7 +27,7 @@ class Calendar extends CActiveRecord
 	 * @param int $id
 	 * @return object
 	 */
-	public static function getById(int $id)
+	public static function getById($id)
 	{
 		return self::model()->find(array('condition'=>"id=$id", 'limit'=>1));
 	}
@@ -37,11 +37,11 @@ class Calendar extends CActiveRecord
 	 * @param bool $onlyMy
 	 * @return object
 	 */
-	public static function getAllActual( bool $onlyMy = true)
+	public static function getAllActual( $onlyMy = true)
 	{
-		if ( $onlyMy )
+		/*if ( $onlyMy )
 			return self::model()->findAll(array('condition'=>"(status = 1)and(people_id = ".Yii::app()->user->id.")"));
-		else
+		else*/
 			return self::model()->findAll(array('condition'=>"status = 1"));
 	}
 
@@ -51,7 +51,7 @@ class Calendar extends CActiveRecord
 	 * @param bool $onlyMy
 	 * @return object
 	 */
-	public static function getAllBySatus(int $status, bool $onlyMy)
+	public static function getAllBySatus($status, $onlyMy)
 	{
 		if ( $onlyMy )
 			return self::model()->findAll(array('condition'=>"(status = ".$status.")and(people_id = ".Yii::app()->user->id.")"));

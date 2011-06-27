@@ -26,6 +26,7 @@ $(document).ready(function(){
     $('#modal').hide(0); // И фон всплывающего окна
     $("#buttonClear").addClass('hidden'); // Прячем кнопку очистки поиска
     loadData(); // Загружаем заказы на главную страницу
+	loadCalendar();
 });
 
 /*
@@ -472,3 +473,23 @@ function bmOpen(){
     }
     return false;
 }
+
+/* Загружаем данные для главной страницы.
+ */
+function loadCalendar(){
+    $.ajax({
+        url: '/calendar',
+        dataType: 'html',
+        success: function(data){
+            $('#sup_content').after('<div class="calendar"><input type="text" id="datepicker">'+data+'</div>');
+			$('.eventCloseButton').bind('click', function(){
+				$(this).parent().parent().remove();
+			});
+			$( "#datepicker" ).datepicker({
+			showOtherMonths: true,
+			selectOtherMonths: true,
+			dateFormat: "yy-mm-dd"
+		});
+        }
+    });
+};
