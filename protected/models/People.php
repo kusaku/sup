@@ -26,7 +26,8 @@ class People extends CActiveRecord
 			'my_sites'=>array(self::HAS_MANY, 'Site', 'client_id'),
 			'contacts'=>array(self::HAS_MANY, 'People', 'parent_id'),
 			'parent'=>array(self::BELONGS_TO,'People',	'parent_id'),
-			'packages'=>array(self::HAS_MANY, 'Package', 'client_id', 'order'=>'dt_change DESC')
+			'packages'=>array(self::HAS_MANY, 'Package', 'client_id', 'order'=>'dt_change DESC'),
+			'calendar'=>array(self::HAS_MANY, 'Calendar', 'people_id'), // Все события календаря для этого человека
 			);
 	}
 
