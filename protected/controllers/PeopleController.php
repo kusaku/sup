@@ -75,6 +75,16 @@ class PeopleController extends Controller
 			$people->firm = $data['firm'];
 			$people->descr = $data['descr'];
 			$people->save();
+			// сохраняем атрибуты
+			foreach ($data['attr'] as $id=>$value) {
+                 isset($people->value[$id]) and $attr = $people->value[$id] or $attr = new PeopleAttr();
+				 $attr->attribute_id = $id;
+				 $attr->people_id = $people->primaryKey;
+                 if (empty($attr->attr->regexp) || preg_match($attr->attr->regexp, $value)) {
+				 	$attr->value = $value;
+					$attr->save();	                 	
+                 }
+			} 
 			// Возвращаемся к редактируемому (добавляемому) элементу
 			//$this->redirect(Yii::app()->homeUrl.'people/'.$people->id);
 			$this->redirect(Yii::app()->homeUrl);

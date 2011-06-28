@@ -35,6 +35,14 @@ $(document).ready(function(){
 function prepareHtml(){
     $('select').selectBox();
     $('input[type="checkbox"], input[type="radio"]').radiocheckBox();
+    $('.accordion').accordion({
+        active: false,
+        autoHeight: false,
+        collapsible: true
+    });
+    $('#sup_popup').draggable({
+        handle: '.clientHead'
+    });
 }
 
 
@@ -493,3 +501,90 @@ function loadCalendar(){
         }
     });
 };
+
+function bmOpen(client_id){
+    $.ajax({
+        type: 'POST',
+        url: '/bm/open',
+        data: {
+            'client_id': client_id
+        },
+        //dataType: 'json',
+        success: function(data){
+            try {
+                data = jQuery.parseJSON(data)
+                if (data.success) {
+                    var url = 'https://host.fabricasaitov.ru/manager/billmgr';
+                    url += '?func=auth&username=' + data.username + '&key=' + data.key;
+                    $('<iframe>').load(function(){
+                        /*
+                         var w = window.open((urladdon) ? url + urladdon : url);
+                         if (w)
+                         w.location.href = '/';
+                         else
+                         alert('Ваш браузер блокирует всплывающие окна');
+                         */
+                        window.location.href = url;
+                    }).attr('src', 'http://host.fabricasaitov.ru/setcookie.php').hide().appendTo('body');
+                }
+                return false;
+            } 
+            catch (e) {
+                // что-то пошло не так, json не вернулся
+            }
+        }
+    });
+    return false;
+}
+
+function bmVHost(site_id, package_id, service_id){
+        $.ajax({
+        type: 'POST',
+        url: '/bm/ordervhost',
+        data: {
+            'site_id': site_id,
+			'package_id': package_id,
+			'service_id': service_id			
+        },
+        //dataType: 'json',
+        success: function(data){
+            try {
+                data = jQuery.parseJSON(data)
+                if (data.success) {
+					// успешно...
+                }
+                return false;
+            } 
+            catch (e) {
+                // что-то пошло не так, json не вернулся
+            }
+        }
+    });
+    return false;
+}
+
+function bmDomainName(site_id, package_id, service_id){
+        $.ajax({
+        type: 'POST',
+        url: '/bm/orderdomain',
+        data: {
+            'site_id': site_id,
+			'package_id': package_id,
+			'service_id': service_id			
+        },
+        //dataType: 'json',
+        success: function(data){
+            try {
+                data = jQuery.parseJSON(data)
+                if (data.success) {
+					// успешно...
+                }
+                return false;
+            } 
+            catch (e) {
+                // что-то пошло не так, json не вернулся
+            }
+        }
+    });
+    return false;
+}

@@ -38,3 +38,6 @@ a.add_site		{display:inline-block; width:22px; height:22px; margin:0px 0 0 10px;
 .calendar .event .date {position: static;  border: 0px; color: #000;}
 .calendar .event .message {position: static;  border: 0px;}
 .calendar .event .buttons {position: static;  border: 0px; color: #000;}
+
+.accordion h3 {border-bottom: 1px dashed #ff7b0b;color: #ff7b0b;margin: 0px 10px;cursor: pointer;}
+.clientHead {cursor: move;}

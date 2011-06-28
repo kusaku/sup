@@ -1,627 +1,4 @@
-2011/06/10 16:15:42 [error] [exception.CException] exception 'CException' with message 'CHttpRequest is unable to determine the request URI.' in C:\Aks\webRoot\projects\sup\framework\web\CHttpRequest.php:410
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CHttpRequest.php(354): CHttpRequest->getRequestUri()
-#1 C:\Aks\webRoot\projects\sup\framework\web\CUrlManager.php(315): CHttpRequest->getPathInfo()
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(120): CUrlManager->parseUrl(Object(CHttpRequest))
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main}
-2011/06/10 16:16:23 [error] [exception.CException] exception 'CException' with message 'CHttpRequest is unable to determine the request URI.' in C:\Aks\webRoot\projects\sup\framework\web\CHttpRequest.php:410
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CHttpRequest.php(354): CHttpRequest->getRequestUri()
-#1 C:\Aks\webRoot\projects\sup\framework\web\CUrlManager.php(315): CHttpRequest->getPathInfo()
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(120): CUrlManager->parseUrl(Object(CHttpRequest))
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main}
-2011/06/10 17:08:08 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[HY000]: General error: 1364 Field 'login' doesn't have a default value. The SQL statement executed was: INSERT INTO `people` (`pgroup_id`, `mail`, `psw`, `fio`, `state`, `phone`, `firm`, `parent_id`, `percent`, `permission`, `descr`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8, :yp9, :yp10).
-in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php (77)
-in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/10 17:08:08 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[HY000]: General error: 1364 Field 'login' doesn't have a default value. The SQL statement executed was: INSERT INTO `people` (`pgroup_id`, `mail`, `psw`, `fio`, `state`, `phone`, `firm`, `parent_id`, `percent`, `permission`, `descr`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8, :yp9, :yp10)' in C:\Aks\webRoot\projects\sup\framework\db\CDbCommand.php:338
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\db\ar\CActiveRecord.php(1015): CDbCommand->execute()
-#1 C:\Aks\webRoot\projects\sup\framework\db\ar\CActiveRecord.php(779): CActiveRecord->insert(NULL)
-#2 C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php(77): CActiveRecord->save()
-#3 [internal function]: PeopleController->actionSave(NULL)
-#4 C:\Aks\webRoot\projects\sup\framework\web\actions\CAction.php(104): ReflectionMethod->invokeArgs(Object(PeopleController), Array)
-#5 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(48): CAction->runWithParamsInternal(Object(PeopleController), Object(ReflectionMethod), Array)
-#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
-#7 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
-#8 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
-#9 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('save')
-#10 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('people/save')
-#11 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#12 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#13 {main} REQUEST_URI=/people/save
-2011/06/10 17:41:32 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[HY000]: General error: 1364 Field 'redmine_proj' doesn't have a default value. The SQL statement executed was: INSERT INTO `package` (`name`, `site_id`, `status_id`, `client_id`, `manager_id`, `dt_beg`, `dt_end`, `summa`, `descr`, `dt_change`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8, :yp9).
-in C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php (82)
-in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/10 17:41:32 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[HY000]: General error: 1364 Field 'redmine_proj' doesn't have a default value. The SQL statement executed was: INSERT INTO `package` (`name`, `site_id`, `status_id`, `client_id`, `manager_id`, `dt_beg`, `dt_end`, `summa`, `descr`, `dt_change`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8, :yp9)' in C:\Aks\webRoot\projects\sup\framework\db\CDbCommand.php:338
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\db\ar\CActiveRecord.php(1015): CDbCommand->execute()
-#1 C:\Aks\webRoot\projects\sup\framework\db\ar\CActiveRecord.php(779): CActiveRecord->insert(NULL)
-#2 C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php(82): CActiveRecord->save()
-#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PackageController->actionSave()
-#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
-#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
-#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('save')
-#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('package/save')
-#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#11 {main} REQUEST_URI=/package/save
-2011/06/10 17:43:54 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '' for key 'url'. The SQL statement executed was: INSERT INTO `site` (`url`, `host`, `ftp`, `db`, `client_id`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4).
-in C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php (71)
-in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/10 17:43:54 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '' for key 'url'. The SQL statement executed was: INSERT INTO `site` (`url`, `host`, `ftp`, `db`, `client_id`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4)' in C:\Aks\webRoot\projects\sup\framework\db\CDbCommand.php:338
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\db\ar\CActiveRecord.php(1015): CDbCommand->execute()
-#1 C:\Aks\webRoot\projects\sup\framework\db\ar\CActiveRecord.php(779): CActiveRecord->insert(NULL)
-#2 C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php(71): CActiveRecord->save()
-#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PackageController->actionSave()
-#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
-#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
-#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('save')
-#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('package/save')
-#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#11 {main} REQUEST_URI=/package/save
-2011/06/15 15:14:01 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "contact".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('contact')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('contact')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/contact')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/contact
-2011/06/15 15:14:29 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "sdfsdfsdf".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('sdfsdfsdf')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('sdfsdfsdf')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/sdfsdfsdf')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/sdfsdfsdf
-2011/06/15 15:16:00 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "about".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('about')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('about')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/about')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/about
-2011/06/15 15:16:04 [error] [php] Trying to get property of non-object (C:\Aks\webRoot\projects\sup\protected\models\Redmine.php:132)
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
-#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): AboutController->runAction()
-#2 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): AboutController->runActionWithFilters()
-#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): AboutController->run()
-#4 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
-#5 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#6 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/about
-in C:\Aks\webRoot\projects\sup\protected\models\Redmine.php (132)
-in C:\Aks\webRoot\projects\sup\protected\controllers\AboutController.php (10)
-in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/15 15:25:33 [error] [php] Trying to get property of non-object (C:\Aks\webRoot\projects\sup\protected\components\UserIdentity.php:36)
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\validators\CValidator.php(192): CInlineValidator->validateAttribute()
-#1 C:\Aks\webRoot\projects\sup\framework\base\CModel.php(152): CInlineValidator->validate()
-#2 C:\Aks\webRoot\projects\sup\protected\controllers\AppController.php(49): LoginForm->validate()
-#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): AppController->actionLogin()
-#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
-#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): AppController->runAction()
-#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): AppController->runActionWithFilters()
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): AppController->run()
-#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
-#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/app/login
-in C:\Aks\webRoot\projects\sup\protected\components\UserIdentity.php (36)
-in C:\Aks\webRoot\projects\sup\protected\models\LoginForm.php (52)
-in C:\Aks\webRoot\projects\sup\protected\controllers\AppController.php (49)
-2011/06/15 15:31:00 [error] [exception.CHttpException._00] exception 'CHttpException' with message 'Не указан идентификатор (ID) человека!' in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php:82
-Stack trace:
-#0 [internal function]: PeopleController->actionSave(NULL)
-#1 C:\Aks\webRoot\projects\sup\framework\web\actions\CAction.php(104): ReflectionMethod->invokeArgs(Object(PeopleController), Array)
-#2 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(48): CAction->runWithParamsInternal(Object(PeopleController), Object(ReflectionMethod), Array)
-#3 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
-#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
-#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
-#6 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('save')
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('people/save')
-#8 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#9 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#10 {main} REQUEST_URI=/people/save
-2011/06/15 15:34:32 [error] [exception.CHttpException._00] exception 'CHttpException' with message 'Не указан идентификатор (ID) человека!' in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php:82
-Stack trace:
-#0 [internal function]: PeopleController->actionSave(NULL)
-#1 C:\Aks\webRoot\projects\sup\framework\web\actions\CAction.php(104): ReflectionMethod->invokeArgs(Object(PeopleController), Array)
-#2 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(48): CAction->runWithParamsInternal(Object(PeopleController), Object(ReflectionMethod), Array)
-#3 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
-#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
-#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
-#6 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('save')
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('people/save')
-#8 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#9 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#10 {main} REQUEST_URI=/people/save
-2011/06/15 15:55:28 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "index2".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('index2')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('index2')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/index2')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/index2
-2011/06/15 15:56:05 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "index2".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('index2')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('index2')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/index2')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/index2
-2011/06/15 17:15:22 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon04.png
-2011/06/15 17:15:22 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon03.png
-2011/06/15 17:15:22 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon02.png
-2011/06/15 17:39:28 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "contact".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('contact')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('contact')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/contact')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/contact
-2011/06/15 18:11:22 [error] [exception.CHttpException.400] exception 'CHttpException' with message 'Your request is invalid.' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:328
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(301): CController->invalidActionParams(Object(CInlineAction))
-#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
-#2 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
-#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('view')
-#4 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('package/view')
-#5 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#6 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#7 {main} REQUEST_URI=/package/2
-2011/06/15 18:11:31 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('package/images/...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/package/images/icon04.png
-2011/06/15 18:11:31 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('package/images/...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/package/images/icon02.png
-2011/06/15 18:11:31 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('package/images/...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/package/images/icon03.png
-2011/06/16 10:11:47 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon04.png
-2011/06/16 10:11:47 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon03.png
-2011/06/16 10:11:47 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon02.png
-2011/06/16 12:05:30 [error] [php] Trying to get property of non-object (C:\Aks\webRoot\projects\sup\protected\views\package\view.php:174)
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PackageController->renderFile()
-#1 C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php(28): PackageController->renderPartial()
-#2 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PackageController->actionView()
-#3 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
-#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PackageController->runAction()
-#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PackageController->runActionWithFilters()
-#6 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PackageController->run()
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
-#8 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#9 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/package/2?package_id=2&client_id=0
-in C:\Aks\webRoot\projects\sup\protected\views\package\view.php (174)
-in C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php (28)
-in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/16 12:16:29 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon04.png
-2011/06/16 12:16:29 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon02.png
-2011/06/16 12:16:29 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon03.png
-2011/06/16 12:16:56 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon02.png
-2011/06/16 12:16:56 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon04.png
-2011/06/16 12:16:56 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon03.png
-2011/06/16 12:18:42 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon04.png
-2011/06/16 12:18:42 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon02.png
-2011/06/16 12:18:42 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon03.png
-2011/06/16 12:19:38 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon04.png
-2011/06/16 12:19:38 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon02.png
-2011/06/16 12:19:38 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon03.png
-2011/06/16 12:19:48 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon03.png
-2011/06/16 12:19:48 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon04.png
-2011/06/16 12:19:48 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon02.png
-2011/06/16 12:21:41 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon04.png
-2011/06/16 12:21:41 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon03.png
-2011/06/16 12:21:41 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon02.png
-2011/06/16 12:22:35 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon04.png
-2011/06/16 12:22:35 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon02.png
-2011/06/16 12:22:35 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "images".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('images')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('images')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('app/images/icon...')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/app/images/icon03.png
-2011/06/16 13:15:10 [error] [php] Undefined offset:  67 (C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php:93)
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PackageController->runAction()
-#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PackageController->runActionWithFilters()
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PackageController->run()
-#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
-#4 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#5 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/package/save
-in C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php (93)
-in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/16 14:35:01 [error] [php] include(BMRequest.php) [<a href='/phpman/function.include.html'>function.include.html</a>]: failed to open stream: No such file or directory (C:\Aks\webRoot\projects\sup\framework\YiiBase.php:396)
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\protected\views\package\view.php(157): spl_autoload_call()
-#1 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(119): require()
-#2 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PackageController->renderInternal()
-#3 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PackageController->renderFile()
-#4 C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php(28): PackageController->renderPartial()
-#5 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PackageController->actionView()
-#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
-#7 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PackageController->runAction()
-#8 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PackageController->runActionWithFilters()
-#9 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PackageController->run()
-#10 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
-#11 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#12 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/package/2?package_id=2&client_id=0
-in C:\Aks\webRoot\projects\sup\protected\views\package\view.php (157)
-in C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php (28)
-in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/16 14:35:09 [error] [php] include(BMRequest.php) [<a href='/phpman/function.include.html'>function.include.html</a>]: failed to open stream: No such file or directory (C:\Aks\webRoot\projects\sup\framework\YiiBase.php:396)
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\protected\views\package\view.php(157): spl_autoload_call()
-#1 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(119): require()
-#2 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PackageController->renderInternal()
-#3 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PackageController->renderFile()
-#4 C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php(28): PackageController->renderPartial()
-#5 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PackageController->actionView()
-#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
-#7 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PackageController->runAction()
-#8 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PackageController->runActionWithFilters()
-#9 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PackageController->run()
-#10 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
-#11 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#12 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/package/2?package_id=2&client_id=0
-in C:\Aks\webRoot\projects\sup\protected\views\package\view.php (157)
-in C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php (28)
-in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/16 14:36:07 [error] [php] Missing argument 1 for ISPRequest::__construct(), called in C:\Aks\webRoot\projects\sup\protected\views\package\view.php on line 157 and defined (C:\Aks\webRoot\projects\sup\protected\models\BMRequest.php:146)
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PackageController->renderInternal()
-#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PackageController->renderFile()
-#2 C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php(28): PackageController->renderPartial()
-#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PackageController->actionView()
-#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
-#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PackageController->runAction()
-#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PackageController->runActionWithFilters()
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PackageController->run()
-#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
-#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/package/2?package_id=2&client_id=0
-in C:\Aks\webRoot\projects\sup\protected\models\BMRequest.php (146)
-in C:\Aks\webRoot\projects\sup\protected\views\package\view.php (157)
-in C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php (28)
-2011/06/16 14:36:16 [error] [php] Missing argument 1 for ISPRequest::__construct(), called in C:\Aks\webRoot\projects\sup\protected\views\package\view.php on line 157 and defined (C:\Aks\webRoot\projects\sup\protected\models\BMRequest.php:146)
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PackageController->renderInternal()
-#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PackageController->renderFile()
-#2 C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php(28): PackageController->renderPartial()
-#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PackageController->actionView()
-#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
-#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PackageController->runAction()
-#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PackageController->runActionWithFilters()
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PackageController->run()
-#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
-#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/package/2?package_id=2&client_id=0
-in C:\Aks\webRoot\projects\sup\protected\models\BMRequest.php (146)
-in C:\Aks\webRoot\projects\sup\protected\views\package\view.php (157)
-in C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php (28)
-2011/06/16 14:40:33 [error] [php] Missing argument 1 for ISPRequest::__construct(), called in C:\Aks\webRoot\projects\sup\protected\views\package\view.php on line 157 and defined (C:\Aks\webRoot\projects\sup\protected\models\BMRequest.php:146)
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PackageController->renderInternal()
-#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PackageController->renderFile()
-#2 C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php(28): PackageController->renderPartial()
-#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PackageController->actionView()
-#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
-#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PackageController->runAction()
-#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PackageController->runActionWithFilters()
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PackageController->run()
-#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
-#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/package/2?package_id=2&client_id=0
-in C:\Aks\webRoot\projects\sup\protected\models\BMRequest.php (146)
-in C:\Aks\webRoot\projects\sup\protected\views\package\view.php (157)
-in C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php (28)
-2011/06/16 15:25:56 [error] [exception.CException] exception 'CException' with message 'Property "Site.bm_login" is not defined.' in C:\Aks\webRoot\projects\sup\framework\base\CComponent.php:131
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\db\ar\CActiveRecord.php(128): CComponent->__get('bm_login')
-#1 C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php(157): CActiveRecord->__get('bm_login')
-#2 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PackageController->actionAddPay()
-#3 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
-#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
-#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
-#6 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('addpay')
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('package/addpay')
-#8 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#9 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#10 {main} REQUEST_URI=/package/addpay/2?message=
-2011/06/16 15:26:06 [error] [exception.CException] exception 'CException' with message 'Property "Site.bm_login" is not defined.' in C:\Aks\webRoot\projects\sup\framework\base\CComponent.php:131
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\db\ar\CActiveRecord.php(128): CComponent->__get('bm_login')
-#1 C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php(157): CActiveRecord->__get('bm_login')
-#2 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PackageController->actionAddPay()
-#3 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
-#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
-#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
-#6 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('addpay')
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('package/addpay')
-#8 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#9 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#10 {main} REQUEST_URI=/package/addpay/2?message=
-2011/06/20 11:15:35 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "index".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('site')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/site/?client_id=2&id=1
-2011/06/20 13:14:34 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "billmgr".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('billmgr')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/billmgr/
-2011/06/20 13:14:38 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "billmgr".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('billmgr')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/billmgr/
-2011/06/20 13:25:53 [error] [php] Wrong parameter count for var_dump() (C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php:16)
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
-#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): BMController->runAction()
-#2 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): BMController->runActionWithFilters()
-#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): BMController->run()
-#4 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
-#5 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#6 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/bm/register
-in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php (16)
-in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/20 13:26:00 [error] [php] Wrong parameter count for var_dump() (C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php:16)
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
-#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): BMController->runAction()
-#2 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): BMController->runActionWithFilters()
-#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): BMController->run()
-#4 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
-#5 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#6 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/bm/register
-in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php (16)
-in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/20 13:33:28 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "billmgr".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('billmgr')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/billmgr/
-2011/06/20 13:57:20 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The system is unable to find the requested action "open".' in C:\Aks\webRoot\projects\sup\framework\web\CController.php:477
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(262): CController->missingAction('open')
-#1 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('open')
-#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('bm/open')
-#3 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#4 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#5 {main} REQUEST_URI=/bm/open
-2011/06/20 14:13:01 [error] [php] Undefined index:  userid (C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php:41)
+2011/06/27 12:12:16 [error] [php] Undefined variable: username (C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php:63)
 Stack trace:
 #0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): BMController->runAction()
 #1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): BMController->runActionWithFilters()
@@ -629,101 +6,254 @@ Stack trace:
 #3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
 #4 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
 #5 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
-REQUEST_URI=/bm/register
-in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php (41)
+REQUEST_URI=/bm/open
+in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php (63)
 in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/20 19:01:23 [error] [system.db.CDbCommand] CDbCommand::execute() failed: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '' for key 'url'. The SQL statement executed was: INSERT INTO `site` (`url`, `host`, `ftp`, `db`, `client_id`, `bm_login`, `bm_password`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6).
-in C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php (73)
-in C:\Aks\webRoot\projects\sup\public\index.php (13)
-2011/06/20 19:01:23 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand failed to execute the SQL statement: SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry '' for key 'url'. The SQL statement executed was: INSERT INTO `site` (`url`, `host`, `ftp`, `db`, `client_id`, `bm_login`, `bm_password`) VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6)' in C:\Aks\webRoot\projects\sup\framework\db\CDbCommand.php:338
+2011/06/27 13:04:03 [error] [php] Undefined variable: username (C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php:61)
 Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\db\ar\CActiveRecord.php(1015): CDbCommand->execute()
-#1 C:\Aks\webRoot\projects\sup\framework\db\ar\CActiveRecord.php(779): CActiveRecord->insert(NULL)
-#2 C:\Aks\webRoot\projects\sup\protected\controllers\PackageController.php(73): CActiveRecord->save()
-#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PackageController->actionSave()
+#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): BMController->runAction()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): BMController->runActionWithFilters()
+#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): BMController->run()
+#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#4 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#5 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/bm/open
+in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php (61)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 13:04:13 [error] [php] Undefined variable: username (C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php:61)
+Stack trace:
+#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): BMController->runAction()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): BMController->runActionWithFilters()
+#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): BMController->run()
+#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#4 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#5 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/bm/open
+in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php (61)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 16:20:55 [error] [php] Missing argument 1 for Serv2pack::getById(), called in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php on line 98 and defined (C:\Aks\webRoot\projects\sup\protected\models\Serv2pack.php:30)
+Stack trace:
+#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): BMController->runAction()
+#2 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): BMController->runActionWithFilters()
+#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): BMController->run()
+#4 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#5 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#6 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/bm/ordervhost
+in C:\Aks\webRoot\projects\sup\protected\models\Serv2pack.php (30)
+in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php (98)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 16:20:59 [error] [php] Missing argument 1 for Serv2pack::getById(), called in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php on line 98 and defined (C:\Aks\webRoot\projects\sup\protected\models\Serv2pack.php:30)
+Stack trace:
+#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): BMController->runAction()
+#2 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): BMController->runActionWithFilters()
+#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): BMController->run()
+#4 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#5 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#6 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/bm/ordervhost
+in C:\Aks\webRoot\projects\sup\protected\models\Serv2pack.php (30)
+in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php (98)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 16:21:48 [error] [php] Trying to get property of non-object (C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php:99)
+Stack trace:
+#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): BMController->runAction()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): BMController->runActionWithFilters()
+#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): BMController->run()
+#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#4 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#5 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/bm/ordervhost
+in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php (99)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 16:21:52 [error] [php] Trying to get property of non-object (C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php:99)
+Stack trace:
+#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): BMController->runAction()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): BMController->runActionWithFilters()
+#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): BMController->run()
+#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#4 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#5 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/bm/ordervhost
+in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php (99)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 16:31:57 [error] [exception.CException] exception 'CException' with message 'Serv2pack does not have a method named "dt_beg".' in C:\Aks\webRoot\projects\sup\framework\base\CComponent.php:266
+Stack trace:
+#0 C:\Aks\webRoot\projects\sup\framework\db\ar\CActiveRecord.php(213): CComponent->__call('dt_beg', Array)
+#1 C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php(123): CActiveRecord->__call('dt_beg', Array)
+#2 C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php(123): Serv2pack->dt_beg()
+#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): BMController->actionOrderVhost()
 #4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
 #5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): CController->runAction(Object(CInlineAction))
 #6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
-#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('save')
-#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('package/save')
+#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): CController->run('ordervhost')
+#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('bm/ordervhost')
 #9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
 #10 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#11 {main} REQUEST_URI=/package/save
-2011/06/23 11:41:27 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "images/select-content.png".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
+#11 {main} REQUEST_URI=/bm/ordervhost
+2011/06/27 17:11:32 [error] [php] date() expects at least 1 parameter, 0 given (C:\Aks\webRoot\projects\sup\protected\views\people\card.php:92)
 Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('images/select-c...')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/images/select-content.png
-2011/06/23 11:41:27 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "images/radiocheck-content.png".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
+#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PeopleController->renderInternal()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PeopleController->renderFile()
+#2 C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php(127): PeopleController->renderPartial()
+#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PeopleController->actionCard()
+#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PeopleController->runAction()
+#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PeopleController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PeopleController->run()
+#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/people/card/2
+in C:\Aks\webRoot\projects\sup\protected\views\people\card.php (92)
+in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php (127)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 17:11:33 [error] [php] date() expects at least 1 parameter, 0 given (C:\Aks\webRoot\projects\sup\protected\views\people\card.php:92)
 Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('images/radioche...')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/images/radiocheck-content.png
-2011/06/23 11:43:01 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "images/radiocheck-content.png".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
+#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PeopleController->renderInternal()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PeopleController->renderFile()
+#2 C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php(127): PeopleController->renderPartial()
+#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PeopleController->actionCard()
+#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PeopleController->runAction()
+#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PeopleController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PeopleController->run()
+#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/people/card/2
+in C:\Aks\webRoot\projects\sup\protected\views\people\card.php (92)
+in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php (127)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 17:11:35 [error] [php] date() expects at least 1 parameter, 0 given (C:\Aks\webRoot\projects\sup\protected\views\people\card.php:92)
 Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('images/radioche...')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/images/radiocheck-content.png
-2011/06/23 11:43:01 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "images/radiocheck-content.png".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
+#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PeopleController->renderInternal()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PeopleController->renderFile()
+#2 C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php(127): PeopleController->renderPartial()
+#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PeopleController->actionCard()
+#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PeopleController->runAction()
+#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PeopleController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PeopleController->run()
+#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/people/card/2
+in C:\Aks\webRoot\projects\sup\protected\views\people\card.php (92)
+in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php (127)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 17:11:36 [error] [php] date() expects at least 1 parameter, 0 given (C:\Aks\webRoot\projects\sup\protected\views\people\card.php:92)
 Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('images/radioche...')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/images/radiocheck-content.png
-2011/06/23 11:53:54 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "js/init.js".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
+#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PeopleController->renderInternal()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PeopleController->renderFile()
+#2 C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php(127): PeopleController->renderPartial()
+#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PeopleController->actionCard()
+#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PeopleController->runAction()
+#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PeopleController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PeopleController->run()
+#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/people/card/2
+in C:\Aks\webRoot\projects\sup\protected\views\people\card.php (92)
+in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php (127)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 17:11:37 [error] [php] date() expects at least 1 parameter, 0 given (C:\Aks\webRoot\projects\sup\protected\views\people\card.php:92)
 Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('js/init.js')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/js/init.js
-2011/06/23 11:53:54 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "js/init.js".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
+#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PeopleController->renderInternal()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PeopleController->renderFile()
+#2 C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php(127): PeopleController->renderPartial()
+#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PeopleController->actionCard()
+#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PeopleController->runAction()
+#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PeopleController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PeopleController->run()
+#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/people/card/2
+in C:\Aks\webRoot\projects\sup\protected\views\people\card.php (92)
+in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php (127)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 17:11:37 [error] [php] date() expects at least 1 parameter, 0 given (C:\Aks\webRoot\projects\sup\protected\views\people\card.php:92)
 Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('js/init.js')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/js/init.js
-2011/06/23 11:55:16 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "js/init.js".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
+#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PeopleController->renderInternal()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PeopleController->renderFile()
+#2 C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php(127): PeopleController->renderPartial()
+#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PeopleController->actionCard()
+#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PeopleController->runAction()
+#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PeopleController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PeopleController->run()
+#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/people/card/2
+in C:\Aks\webRoot\projects\sup\protected\views\people\card.php (92)
+in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php (127)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 17:11:37 [error] [php] date() expects at least 1 parameter, 0 given (C:\Aks\webRoot\projects\sup\protected\views\people\card.php:92)
 Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('js/init.js')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/js/init.js
-2011/06/23 11:55:17 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "js/init.js".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
+#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PeopleController->renderInternal()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PeopleController->renderFile()
+#2 C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php(127): PeopleController->renderPartial()
+#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PeopleController->actionCard()
+#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PeopleController->runAction()
+#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PeopleController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PeopleController->run()
+#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/people/card/2
+in C:\Aks\webRoot\projects\sup\protected\views\people\card.php (92)
+in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php (127)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 17:11:39 [error] [php] date() expects at least 1 parameter, 0 given (C:\Aks\webRoot\projects\sup\protected\views\people\card.php:92)
 Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('js/init.js')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/js/init.js
-2011/06/23 11:56:42 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "js/init.js".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
+#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PeopleController->renderInternal()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PeopleController->renderFile()
+#2 C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php(127): PeopleController->renderPartial()
+#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PeopleController->actionCard()
+#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PeopleController->runAction()
+#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PeopleController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PeopleController->run()
+#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/people/card/2
+in C:\Aks\webRoot\projects\sup\protected\views\people\card.php (92)
+in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php (127)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 17:11:44 [error] [php] date() expects at least 1 parameter, 0 given (C:\Aks\webRoot\projects\sup\protected\views\people\card.php:92)
 Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('js/init.js')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/js/init.js
-2011/06/23 11:56:42 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "js/init.js".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
+#0 C:\Aks\webRoot\projects\sup\framework\web\CBaseController.php(88): PeopleController->renderInternal()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(866): PeopleController->renderFile()
+#2 C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php(127): PeopleController->renderPartial()
+#3 C:\Aks\webRoot\projects\sup\framework\web\actions\CInlineAction.php(50): PeopleController->actionCard()
+#4 C:\Aks\webRoot\projects\sup\framework\web\CController.php(300): CInlineAction->runWithParams()
+#5 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): PeopleController->runAction()
+#6 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): PeopleController->runActionWithFilters()
+#7 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): PeopleController->run()
+#8 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#9 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#10 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/people/card/2
+in C:\Aks\webRoot\projects\sup\protected\views\people\card.php (92)
+in C:\Aks\webRoot\projects\sup\protected\controllers\PeopleController.php (127)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
+2011/06/27 17:31:08 [error] [php] Undefined offset:  72 (C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php:205)
 Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('js/init.js')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/js/init.js
-2011/06/23 11:57:26 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "js/init.js".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('js/init.js')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/js/init.js
-2011/06/23 11:57:26 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "js/init.js".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('js/init.js')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/js/init.js
-2011/06/23 12:00:19 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Unable to resolve the request "js/init.js".' in C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php:332
-Stack trace:
-#0 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController('js/init.js')
-#1 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
-#2 C:\Aks\webRoot\projects\sup\public\index.php(13): CApplication->run()
-#3 {main} REQUEST_URI=/js/init.js
+#0 C:\Aks\webRoot\projects\sup\framework\web\CController.php(278): BMController->runAction()
+#1 C:\Aks\webRoot\projects\sup\framework\web\CController.php(257): BMController->runActionWithFilters()
+#2 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(328): BMController->run()
+#3 C:\Aks\webRoot\projects\sup\framework\web\CWebApplication.php(121): CWebApplication->runController()
+#4 C:\Aks\webRoot\projects\sup\framework\base\CApplication.php(155): CWebApplication->processRequest()
+#5 C:\Aks\webRoot\projects\sup\public\index.php(13): CWebApplication->run()
+REQUEST_URI=/bm/orderdomain
+in C:\Aks\webRoot\projects\sup\protected\controllers\BMController.php (205)
+in C:\Aks\webRoot\projects\sup\public\index.php (13)
