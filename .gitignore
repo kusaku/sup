@@ -1,5 +1,6 @@
 nbproject
 /logs
-/protected/runtime 
+/protected/runtime
+/protected/config/main.php
 .tmp*
 .project

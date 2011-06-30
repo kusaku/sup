@@ -1,5 +1,4 @@
 <!--		Возвращаем форму для создания/редактирования человека		-->
-
 <div class="newClientWindow" style="margin-bottom: 5px;">
     <div class="clientHead">
         Информация о клиенте
@@ -31,20 +30,22 @@
                 Примечание: 
             </label>
             <textarea name="descr" rows="3" cols="12"><?= $people->descr?></textarea>
-        <?php if (isset($people->attr['bm_id']) and $bm_id = $people->attr['bm_id']->value[0]->value): ?>
-        <a style="padding:5px 20px;display:block;" onclick="bmOpen(<?= $people->primaryKey; ?>)" href="#">Открыть в BM (id <?= $bm_id ?>)</a>
-        <?php else : ?>
-        <a style="padding:5px 20px;display:block;" onclick="bmRegister(<?= $people->primaryKey; ?>)" href="#">Зарегистрировать в BM</a>
-        <?php endif; ?>			
+            
+			<?php if (isset($people->attr['bm_id']) and $bm_id = $people->attr['bm_id']->value[0]->value): ?>
+            <a style="padding:5px 20px;display:block;" onclick="bmOpen(<?= $people->primaryKey; ?>)" href="#">Открыть в BM (id <?= $bm_id?>)</a>
+            <?php else : ?>
+            <a style="padding:5px 20px;display:block;" onclick="bmRegister(<?= $people->primaryKey; ?>)" href="#">Зарегистрировать в BM</a>
+            <?php endif; ?>
+            			
         </div>
         <div style="float:right;width:295px;margin-top:10px;max-height: 575px;overflow-y:scroll;">
             <div class="supAccordion">
                 <?php foreach (Attributes::model()->with('children')->getGroups() as $group): ?>
-                <h3 onClick="accordion('#accordionElement<?= $group->id?>')" style="cursor: pointer;"><?= $group->name?></h3>
-                <div class="hidden supAccordionElement" id="accordionElement<?= $group->id?>">
+                <h3 style="cursor: pointer;"><?= $group->name?></h3>
+                <div style="display:none;">
                     <?php foreach ($group->children as $attr): ?>
-                    <label for="<?= $attr->type ?>" class="111column1">
-                        <?= $attr->name?>
+                    <label for="<?= $attr->type ?>">
+                        <?= $attr->name;?>
                     </label>
                     <input type="text" size="70" id="<?= $attr->type ?>" value="<?= isset($people->attr[$attr->type]) ? $people->attr[$attr->type]->value[0]->value : '' ?>" name="attr[<?= $attr->primaryKey ?>]">
                     <? endforeach; ?>
@@ -61,10 +62,3 @@
         <a class="buttonCancel" onClick="hidePopUp()">Отмена</a>
     </div>
 </div>
-<!-- Реализация своего аккордиона. Позже вынести в отдельный файл. -->
-<script>
-	function accordion(id){
-		$('.supAccordionElement').addClass('hidden');
-		$(id).removeClass('hidden');
-	}
-</script>

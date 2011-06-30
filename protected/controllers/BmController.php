@@ -21,13 +21,7 @@ class BMController extends Controller {
         isset($client->attr['country']) and $country = $client->attr['country']->value[0]->value or $country = 182;
         
         // передаем данные
-        $data = array('username'=>$username,
-                         'passwd'=>$password,
-                         'confirm'=>$password,
-                         'email'=>$email,
-                         'person'=>$person,
-                         'name'=>$name,
-                         'country'=>$country);
+        $data = array('username'=>$username, 'passwd'=>$password, 'confirm'=>$password, 'email'=>$email, 'person'=>$person, 'name'=>$name, 'country'=>$country);
         
         // если у клиента указана фирма - значит он юрик, иначе физик
         if (! empty($name)) {
@@ -36,10 +30,11 @@ class BMController extends Controller {
             $data['ptype'] = 'pperson';
         }
         
+		
         // новый BMRequest
         $bmr = new BMRequest();
         $result = $bmr->register($data);
-        
+       
         // при успешной регистрации сохряняем ID учетки в атрибутах
         if ($result['success']) {
             // 5003 == attribute_id для атрибута bm_id
@@ -66,8 +61,7 @@ class BMController extends Controller {
         isset($client->attr['password']) and $password = $client->attr['password']->value[0]->value or $password = '';
         
         // передаем данные
-        $data = array('username'=>$username,
-                         'passwd'=>$password);
+        $data = array('username'=>$username, 'passwd'=>$password);
         
         // новый BMRequest
         $bmr = new BMRequest();
@@ -99,21 +93,7 @@ class BMController extends Controller {
         isset($client->attr['password']) and $password = $client->attr['password']->value[0]->value or $password = '';
         
         // данные для конкретного тарифа - с периодом и дополнениями
-        $prices = array(68=>array('price'=>39,
-                         'period'=>21,
-                         'addon_40'=>1000,
-                         'addon_43'=>1,
-                         'addon_44'=>1),
-                         69=>array('price'=>39,
-                         'period'=>22,
-                         'addon_40'=>1000,
-                         'addon_43'=>1,
-                         'addon_44'=>1),
-                         70=>array('price'=>39,
-                         'period'=>23,
-                         'addon_40'=>1000,
-                         'addon_43'=>1,
-                         'addon_44'=>1));
+        $prices = array(68=>array('price'=>39, 'period'=>21, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1), 69=>array('price'=>39, 'period'=>22, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1), 70=>array('price'=>39, 'period'=>23, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1));
         
         // передаем данные
         $data = array_merge($prices[$service_id], array('username'=>$username, 'passwd'=>$password, 'domain'=>$site->url));
@@ -124,18 +104,24 @@ class BMController extends Controller {
         $result = $bmr->orderVhost($data);
         
         // период хостинга относительно now
-        $next = array(68=>'+3 month',
-                         69=>'+6 month',
-                         70=>'+12 month');
+        $next = array(68=>'+3 month', 69=>'+6 month', 70=>'+12 month');
         
-        // при успехе обновим дату создания и истечения услуги
+        // при успехе
         if ($result['success']) {
+            // обновим дату создания и истечения услуги
             $serv2pack = Serv2pack::getByIds($service_id, $package_id);
             $serv2pack->dt_beg = date('Y-m-d H:i:s');
             $serv2pack->dt_end = date('Y-m-d H:i:s', strtotime('now '.$next[$service_id]));
             $serv2pack->save();
+            // добавим напоминалку
+            $event = new Calendar();
+            $event->people_id = Yii::app()->user->id;
+            $event->date = date('Y-m-d', strtotime('now '.$next[$service_id]));
+            $event->message = "У $client->fio для сайта $site->url заканчивается хостинг";
+            $event->status = 1;
+            $event->save();
         }
-        
+        // вывод результатов
         print(json_encode($result));
     }
     
@@ -159,8 +145,7 @@ class BMController extends Controller {
         isset($client->attr['password']) and $password = $client->attr['password']->value[0]->value or $password = '';
 
         
-        $data = array('username'=>$username,
-                         'passwd'=>$password);
+        $data = array('username'=>$username, 'passwd'=>$password);
         $bmr = new BMRequest();
 
         
@@ -185,20 +170,26 @@ class BMController extends Controller {
         }
         
         // данные для конкретного тарифа - с периодом и дополнениями
-        $prices = array(72=>array('price'=>38,
-                         'period'=>16,
-                         'autoprolong'=>30));
+        $prices = array(72=>array('price'=>38, 'period'=>16, 'autoprolong'=>30));
         
         $data = array_merge($prices[$service_id], array('username'=>$username, 'passwd'=>$password, 'customer'=>$lastdcid, 'subjnic'=>$lastdcid, 'domain'=>$site->url, 'elid'=>$lastdcid, 'customertype'=>'person'));
         
         $result = $bmr->orderDomain($data);
         
-        // при успехе обновим дату создания и истечения услуги
+        // при успехе
         if ($result['success']) {
+            // обновим дату создания и истечения услуги
             $serv2pack = Serv2pack::getByIds($service_id, $package_id);
             $serv2pack->dt_beg = date('Y-m-d H:i:s');
             $serv2pack->dt_end = date('Y-m-d H:i:s', strtotime('now +12 month'));
             $serv2pack->save();
+            // добавим напоминалку
+            $event = new Calendar();
+            $event->people_id = Yii::app()->user->id;
+            $event->date = date('Y-m-d', strtotime('now +12 month'));
+            $event->message = "У $client->fio для сайта $site->url заканчивается регистрация домена";
+            $event->status = 1;
+            $event->save();
         }
         
         print(json_encode($result));
