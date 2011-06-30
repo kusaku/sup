@@ -700,12 +700,11 @@ a:hover {
 }
 
 .newClientWindow {
-    width: 550px;
+    width: 570px;
 }
 
 .newClientWindow .clientHead {
     display: block;
-    width: 540px;
     height: 31px;
     margin: 0;
     padding: 0 0 0 10px;

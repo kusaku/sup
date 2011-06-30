@@ -28,6 +28,11 @@ class Site extends CActiveRecord
 		return self::model()->find(array('condition'=>"id=$id", 'limit'=>1));
 	}
 
+	/**
+	 *	Получение типа сайта по его ID. Типы сайта: визитка, официальный, корпоративный.
+	 * @param int $id
+	 * @return string
+	 */
 	public static function getTypeById($id)
 	{
 		$type = 'Тип сайта не определён';

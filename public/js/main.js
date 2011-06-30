@@ -22,7 +22,8 @@ $(function(){
     $("#buttonClear").addClass('hidden'); // Прячем кнопку очистки поиска
     loadData(); // Загружаем заказы на главную страницу
     loadCalendar();
-    prepareHtml();		
+	$.datepicker.setDefaults( $.datepicker.regional[ "ru" ] ); // Устанавливаем локаль для календаря
+    prepareHtml();	
 });
 
 /*
@@ -478,7 +479,8 @@ function bmOpen(){
     return false;
 }
 
-/* Загружаем данные для главной страницы.
+/* 
+ * Загружаем данные для главной страницы.
  */
 function loadCalendar(){
     $.ajax({

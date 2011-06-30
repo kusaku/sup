@@ -26,6 +26,26 @@ a.add_zakaz		{display:inline-block; width:22px; height:22px; margin:0px 0 0 10px
 a.add_contact	{display:inline-block; width:22px; height:22px; margin:0px 0 0 10px; background:url(../images/icons.png) 0 -22px no-repeat; font-size:0;vertical-align:middle;}
 a.add_site		{display:inline-block; width:22px; height:22px; margin:0px 0 0 10px; background:url(../images/icons.png) 0 -44px no-repeat; font-size:0;vertical-align:middle;}
 
+a.orangeButton {
+    display: block;
+    padding: 3px 6px;
+    background: #ff701a;
+    color: #ffffff;
+    text-decoration: none;
+    margin: 3px 5px;
+    cursor: pointer;
+}
+
+a.grayButton {
+    display: block;
+    padding: 3px 6px;
+    background: #c8d2d5;
+    color: #ffffff;
+    text-decoration: none;
+    margin: 3px 5px;
+    cursor: pointer;
+}
+
 /* Табы в выполняемом заказе */
 .tabs {margin-top: 7px; margin-bottom: -6px;}
 .tab {margin: 5px 5px 0 0; padding: 5px; background-color: #d5dddf;}
@@ -34,10 +54,19 @@ a.add_site		{display:inline-block; width:22px; height:22px; margin:0px 0 0 10px;
 
 /* Calendar */
 .calendar {position: absolute; left: 10px; top: 10px;}
-.calendar .event {position: static; padding: .8em; margin-bottom: 1em; border: 2px solid #ddd; background: #FFF6BF; color: #817134; border-color: #FFD324;}
-.calendar .event .date {position: static;  border: 0px; color: #000;}
+.calendar .event {position: static; padding: 5px; margin-bottom: 1em; border: 1px solid #B0C3C9; background: #FAFAFA; color: #000; width:200px;}
+.calendar .event .date {position: static;  border: 0px; color: #555;}
 .calendar .event .message {position: static;  border: 0px;}
 .calendar .event .buttons {position: static;  border: 0px; color: #000;}
+#eventsCount {color: #ff7b0b; position: relative; left: 41px; top: -8px;}
 
 .accordion h3 {border-bottom: 1px dashed #ff7b0b;color: #ff7b0b;margin: 0px 10px;cursor: pointer;}
 .clientHead {cursor: move;}
+
+/*.ui-accordion-header{padding-left: 25px;}
+.ui-accordion-header{text-align: center;}
+.ui-accordion-content{padding: 0px;}
+.ui-accordion-content-active{padding: 0px;}
+.ui-widget-content{background: none; padding: 0px;}
+
+.ui-accordion-content .ui-helper-reset .ui-widget-content .ui-corner-bottom .ui-accordion-content-active {padding: 0;}*/

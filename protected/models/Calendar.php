@@ -39,10 +39,10 @@ class Calendar extends CActiveRecord
 	 */
 	public static function getAllActual( $onlyMy = true)
 	{
-		/*if ( $onlyMy )
-			return self::model()->findAll(array('condition'=>"(status = 1)and(people_id = ".Yii::app()->user->id.")"));
-		else*/
-			return self::model()->findAll(array('condition'=>"status = 1"));
+		if ( $onlyMy )
+			return self::model()->findAll(array('condition'=>"(status = 1)and(people_id = ".Yii::app()->user->id.")and(date <= '".date("Y-m-d")."')"));
+		else
+			return self::model()->findAll(array('condition'=>"(status = 1)and(date <= '".date("Y-m-d")."')"));
 	}
 
 	/**

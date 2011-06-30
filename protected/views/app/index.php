@@ -16,7 +16,7 @@
 	</div>
 	<div class="userBar">
 		<ul>
-			<li><a href="javascript:alert('Эта кнопка не используется и, в дальнейшем, будет удалена!\n\n Для добавления заказа существующему клиенту, находим его в поиске и нажимаем +.\nЕсли нужно создать заказ для новго клиента, то в начале создаём этого клиента.')" class="addOrder">Добавить заказ</a></li>
+			<li><a onClick="editCalendarEvent(0)" class="addOrder">Напоминание</a></li>
 			<li><a onClick="addEditClient(0)" class="addClient">Добавить клиента</a></li>
 			<li><a href="javascript:alert('Пока не работает')" class="lastDone">Последние выполненные</a></li>
 			<li><a href="javascript:alert('Пока не работает')" class="notWorked">Не распределены</a></li>
@@ -29,7 +29,8 @@
 		<a href="/app/logout" class="logout">выход</a>
 	</div>
 	<div class="today">
-		<span class="name"><?=$day?></span> - <?=date('d')?> <?=$month?> <?=date('Y')?>г. <a href="#" class="datePicker">календарик</a>
+		<span class="name"><?=$day?></span> - <?=date('d')?> <?=$month?> <?=date('Y')?>г. <a onClick="calendarToggle()" class="datePicker">календарик</a>
+		<span id="eventsCount"></span>
 	</div>
 	<div class="newOrders">
 		<a href="#">Новые заказы</a><a href="#" class="newOrdersCount" id="newOrdersCount">0</a>
