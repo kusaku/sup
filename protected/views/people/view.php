@@ -37,15 +37,13 @@
         <a style="padding:5px 20px;display:block;" onclick="bmRegister(<?= $people->primaryKey; ?>)" href="#">Зарегистрировать в BM</a>
         <?php endif; ?>			
         </div>
-        <div style="float:right;width:275px;margin-top:10px;">
-            <div class="accordion">
+        <div style="float:right;width:295px;margin-top:10px;max-height: 575px;overflow-y:scroll;">
+            <div class="supAccordion">
                 <?php foreach (Attributes::model()->with('children')->getGroups() as $group): ?>
-                <h3>
-                    <?= $group->name?>
-                </h3>
-                <div style="display:none;">
+                <h3 onClick="accordion('#accordionElement<?= $group->id?>')" style="cursor: pointer;"><?= $group->name?></h3>
+                <div class="hidden supAccordionElement" id="accordionElement<?= $group->id?>">
                     <?php foreach ($group->children as $attr): ?>
-                    <label for="<?= $attr->type ?>" class="column1">
+                    <label for="<?= $attr->type ?>" class="111column1">
                         <?= $attr->name?>
                     </label>
                     <input type="text" size="70" id="<?= $attr->type ?>" value="<?= isset($people->attr[$attr->type]) ? $people->attr[$attr->type]->value[0]->value : '' ?>" name="attr[<?= $attr->primaryKey ?>]">
@@ -63,3 +61,9 @@
         <a class="buttonCancel" onClick="hidePopUp()">Отмена</a>
     </div>
 </div>
+<script>
+	function accordion(id){
+		$('.supAccordionElement').addClass('hidden');
+		$(id).removeClass('hidden');
+	}
+</script>
