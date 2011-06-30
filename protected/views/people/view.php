@@ -61,6 +61,7 @@
         <a class="buttonCancel" onClick="hidePopUp()">Отмена</a>
     </div>
 </div>
+<!-- Реализация своего аккордиона. Позже вынести в отдельный файл. -->
 <script>
 	function accordion(id){
 		$('.supAccordionElement').addClass('hidden');
