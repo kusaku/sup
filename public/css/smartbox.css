@@ -4,7 +4,7 @@
     width: 13px;
     background: url("../images/radiocheck-content.png") no-repeat scroll 0 0 transparent;
     cursor: pointer;
-	margin: 0px 7px;
+    margin: 0px 7px;
 }
 
 .radiocheckBox-checked {

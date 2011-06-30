@@ -1,6 +1,8 @@
-/*	Автокомплит - поиск на главной странице.
+/* 
+ * Автоматическая загрузка - выполнится как загрузится страница.
  */
 $(function(){
+    //Автокомплит - поиск на главной странице.
     $("#searchClient").autocomplete({
         source: "/people/GlobalSearchJSON",
         minLength: 3,
@@ -10,23 +12,17 @@ $(function(){
             //loadData(ui.item.id);
         }
     });
-	// считаем сумму при изменении опций в пакете
-	$('input.cbox').live('change', function(){
-		sumka();
-	});
-    prepareHtml();
-});
-
-/* 
- * Автоматическая загрузка - выполнится как загрузится страница.
- */
-$(document).ready(function(){
+    // считаем сумму при изменении опций в пакете
+    $('input.cbox').live('change', function(){
+        sumka();
+    });
     $('#sup_popup').hide(0); // Прячем всплывающее окно
     $('#sup_preloader').hide(0); // Прячем preloader
     $('#modal').hide(0); // И фон всплывающего окна
     $("#buttonClear").addClass('hidden'); // Прячем кнопку очистки поиска
     loadData(); // Загружаем заказы на главную страницу
-	loadCalendar();
+    loadCalendar();
+    prepareHtml();		
 });
 
 /*
@@ -192,7 +188,7 @@ function loadSites(client_id, selected){
         },
         success: function(data){
             $('#site_selector').html(data);
-			prepareHtml();
+            prepareHtml();
         }
     });
 };
@@ -209,7 +205,7 @@ function loadNewSite(){
         },
         success: function(data){
             $('#site_selector').html(data);
-			prepareHtml();
+            prepareHtml();
         }
     });
 };
@@ -489,15 +485,15 @@ function loadCalendar(){
         url: '/calendar',
         dataType: 'html',
         success: function(data){
-            $('#sup_content').after('<div class="calendar"><input type="text" id="datepicker">'+data+'</div>');
-			$('.eventCloseButton').bind('click', function(){
-				$(this).parent().parent().remove();
-			});
-			$( "#datepicker" ).datepicker({
-			showOtherMonths: true,
-			selectOtherMonths: true,
-			dateFormat: "yy-mm-dd"
-		});
+            $('#sup_content').after('<div class="calendar"><input type="text" id="datepicker">' + data + '</div>');
+            $('.eventCloseButton').bind('click', function(){
+                $(this).parent().parent().remove();
+            });
+            $("#datepicker").datepicker({
+                showOtherMonths: true,
+                selectOtherMonths: true,
+                dateFormat: "yy-mm-dd"
+            });
         }
     });
 };
@@ -516,6 +512,10 @@ function bmOpen(client_id){
                 if (data.success) {
                     var url = 'https://host.fabricasaitov.ru/manager/billmgr';
                     url += '?func=auth&username=' + data.username + '&key=' + data.key;
+					// "зачем эта хренотень?" - спросите Вы? дело в том, что если на сайте
+					// биллинга не установлены куки, то автовход вернет ошибку. поэтому
+					// мы подгружаем в iframe страничку, которая ставит куку, и затем
+					// переходим по ссылке в биллинг.
                     $('<iframe>').load(function(){
                         /*
                          var w = window.open((urladdon) ? url + urladdon : url);
@@ -538,20 +538,20 @@ function bmOpen(client_id){
 }
 
 function bmVHost(site_id, package_id, service_id){
-        $.ajax({
+    $.ajax({
         type: 'POST',
         url: '/bm/ordervhost',
         data: {
             'site_id': site_id,
-			'package_id': package_id,
-			'service_id': service_id			
+            'package_id': package_id,
+            'service_id': service_id
         },
         //dataType: 'json',
         success: function(data){
             try {
                 data = jQuery.parseJSON(data)
                 if (data.success) {
-					// успешно...
+                    // успешно...
                 }
                 return false;
             } 
@@ -564,20 +564,20 @@ function bmVHost(site_id, package_id, service_id){
 }
 
 function bmDomainName(site_id, package_id, service_id){
-        $.ajax({
+    $.ajax({
         type: 'POST',
         url: '/bm/orderdomain',
         data: {
             'site_id': site_id,
-			'package_id': package_id,
-			'service_id': service_id			
+            'package_id': package_id,
+            'service_id': service_id
         },
         //dataType: 'json',
         success: function(data){
             try {
                 data = jQuery.parseJSON(data)
                 if (data.success) {
-					// успешно...
+                    // успешно...
                 }
                 return false;
             } 
