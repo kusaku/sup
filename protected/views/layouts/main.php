@@ -14,13 +14,10 @@
 		</script>
 		<script language="JavaScript" src="/js/jquery-ui-1.8.11.custom.min.js">
 		</script>
-		<script language="JavaScript" src="/js/jquery.selectBox.min.js">
-		</script>
-		<script language="JavaScript" src="/js/jquery.radiocheckBox.min.js">
+		<script language="JavaScript" src="/js/jquery.smartBox.min.js">
 		</script>
 		<script language="JavaScript" src="/js/main.js">
 		</script>
-
 		<!-- Скрипты по модулям -->
 		<script language="JavaScript" src="/js/calendar.js"></script>
 	</head>

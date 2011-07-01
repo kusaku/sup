@@ -715,31 +715,27 @@ a:hover {
 }
 
 .newClientWindow label {
-    display: block;
+    display: inline-block;
     width: 95px;
-    height: 20px;
     margin: 6px 0;
     padding: 0 5px;
-    float: left;
     text-align: right;
+	vertical-align: middle;
 }
 
-.newClientWindow input[type =
-"text"], .newClientWindow input[type = "password"] {
-    display: block;
+.newClientWindow input[type = "text"], .newClientWindow input[type = "password"] {
+    display: inline-block;
     width: 150px;
     height: 18px;
     margin: 5px 0;
-    float: left;
 }
 
 .newClientWindow textarea {
-    display: block;
+    display: inline-block;
     width: 150px;
     height: 60px;
     margin: 5px 0;
     padding: 2px 3px;
-    float: left;
     border: 1px solid #b0c3c9;
 }
 
@@ -1065,7 +1061,6 @@ a.buttonLogin {
 }
 
 label {
-    line-height: 22px;
     color: #818181;
 }
 

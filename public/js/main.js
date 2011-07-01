@@ -1,6 +1,8 @@
-/*	Автокомплит - поиск на главной странице.
+/* 
+ * Автоматическая загрузка - выполнится как загрузится страница.
  */
 $(function(){
+    //Автокомплит - поиск на главной странице.
     $("#searchClient").autocomplete({
         source: "/people/GlobalSearchJSON",
         minLength: 3,
@@ -10,37 +12,32 @@ $(function(){
             //loadData(ui.item.id);
         }
     });
-	// считаем сумму при изменении опций в пакете
-	$('input.cbox').live('change', function(){
-		sumka();
-	});
-    prepareHtml();
-});
-
-/* 
- * Автоматическая загрузка - выполнится как загрузится страница.
- */
-$(document).ready(function(){
+    // считаем сумму при изменении опций в пакете
+    $('input.cbox').live('change', function(){
+        sumka();
+    });
     $('#sup_popup').hide(0); // Прячем всплывающее окно
     $('#sup_preloader').hide(0); // Прячем preloader
     $('#modal').hide(0); // И фон всплывающего окна
     $("#buttonClear").addClass('hidden'); // Прячем кнопку очистки поиска
     loadData(); // Загружаем заказы на главную страницу
-	loadCalendar();
-	$.datepicker.setDefaults( $.datepicker.regional[ "ru" ] ); // Устанавливаем локаль для календаря
+    loadCalendar();
+    $.datepicker.setDefaults($.datepicker.regional["ru"]); // Устанавливаем локаль для календаря
+    // реализация аккордеона
+    $('.supAccordion h3').live('click', function(){
+        $(this).next().slideDown();
+        $('.supAccordion > div').not($(this).next()).slideUp();
+    });
+    prepareHtml();
 });
 
 /*
  * Подготовка динимаческого html при его загрузке и изменении
  */
 function prepareHtml(){
+    // замена стандартных элементов
     $('select').selectBox();
     $('input[type="checkbox"], input[type="radio"]').radiocheckBox();
-    $('.accordion').accordion({
-        active: false,
-        autoHeight: false,
-        collapsible: true
-    });
     $('#sup_popup').draggable({
         handle: '.clientHead'
     });
@@ -193,7 +190,7 @@ function loadSites(client_id, selected){
         },
         success: function(data){
             $('#site_selector').html(data);
-			prepareHtml();
+            prepareHtml();
         }
     });
 };
@@ -210,7 +207,7 @@ function loadNewSite(){
         },
         success: function(data){
             $('#site_selector').html(data);
-			prepareHtml();
+            prepareHtml();
         }
     });
 };
@@ -379,110 +376,94 @@ function selectTab(id){
 /* 
  * Регистрация в биллинге
  */
-function bmRegister(){
-    var form = $('form[name="site"]');
-    var site_id = form.find('input[name="site_id"]').val();
-    var login = form.find('input[name="site_bmlogin"]').val();
-    var password = form.find('input[name="site_bmpassword"]').val();
-    if (login && password) {
-        $.ajax({
-            type: 'POST',
-            url: '/bm/register',
-            data: {
-                'site_id': site_id,
-                'username': login,
-                'password': password
-            },
-            //dataType: 'json',
-            success: function(data){
-                try {
-                    // получаем json
-                    data = jQuery.parseJSON(data)
-                    // при удаче меняем ссылку
-                    if (data.success) {
-                        form.find('a').replaceWith('<a style="padding:5px 20px;display:block;" onclick="bmOpen()" href="#">Открыть в BM (id ' + data.userid + ')</a>');
-                    }
-                    else {
-                        switch (data.code) {
-                            // ошибка 4 - неправильной/отсутвуещее поле формы
-                            case 4:
-                            // поля при проверке передаются...
-                            case 8:
-                                if (data.msg == 'userexists') 
-                                    alert('Пользователь с таким именем уже зарегистрирован')
-                                break;
-                            // ошибка 100 не описана, но обычно это ошибка доступа
-                            case 100:
-                                alert('В доступе отказано')
-                                break;
-                            // другие ошибки
-                            default:
-                            //alert(data.code + ': ' + data.msg);
-                        }
-                    }
-                } 
-                catch (e) {
-                    // что-то пошло не так, json не вернулся
+function bmRegister(client_id){
+    var client_id = client_id;
+    var form = $('form[name="megaform"]');
+    $.ajax({
+        type: 'POST',
+        url: '/bm/register',
+        data: {
+            'client_id': client_id
+        },
+        //dataType: 'json',
+        success: function(data){
+            try {
+                // получаем json
+                data = jQuery.parseJSON(data)
+                // при удаче меняем ссылку
+                if (data.success) {
+                    form.find('a').replaceWith('<a style="padding:5px 20px;display:block;" onclick="bmOpen(' + client_id + ')" href="#">Открыть в BM (id ' + data.userid + ')</a>');
                 }
+                else {
+                    switch (data.code) {
+                        // ошибка 4 - неправильной/отсутвуещее поле формы
+                        case 4:
+                            var field = $('#' + data.val);
+                            var msg = (field.val()) ? 'Это поле заполнено неправильно' : 'Это поле требуется для регистрации'
+                            field.tipBox(msg);
+                            var parent = field.parents(':hidden');
+                            if (parent.length) {
+                                parent.slideDown(function(){
+                                    field.tipBox('show');
+                                });
+                                $('.supAccordion > div').not(parent).slideUp();
+                            }
+                            else {
+                                field.tipBox('show');
+                            }
+                            break;
+                        // поля при проверке передаются...
+                        case 8:
+                            if (data.msg == 'userexists') {
+                                var field = $('#username');
+                                var msg = 'Пользователь с таким именем уже зарегистрирван'
+                                field.tipBox(msg);
+                                var parent = field.parents(':hidden');
+                                if (parent.length) {
+                                    parent.slideDown(function(){
+                                        field.tipBox('show');
+                                    });
+                                    $('.supAccordion > div').not(parent).slideUp();
+                                }
+                                else {
+                                    field.tipBox('show');
+                                }
+                            }
+                            break;
+                        // ошибка 100 не описана, но обычно это ошибка доступа
+                        case 100:
+                            var field = $('#username');
+                            var msg = 'В доступе отказано'
+                            field.tipBox(msg);
+                            var parent = field.parents(':hidden');
+                            if (parent.length) {
+                                parent.slideDown(function(){
+                                    field.tipBox('show');
+                                });
+                                $('.supAccordion > div').not(parent).slideUp();
+                            }
+                            else {
+                                field.tipBox('show');
+                            }
+                            break;
+                        // другие ошибки
+                        default:
+                        alert(data.code + ': ' + data.msg);
+                    }
+                }
+            } 
+            catch (e) {
+                // что-то пошло не так, json не вернулся
             }
-        });
-    }
-    else {
-        !login && form.find('input[name="site_bmlogin"]').css('background-color', '#fa0500').css('color', '#FFF');
-        !password && form.find('input[name="site_bmpassword"]').css('background-color', '#fa0500').css('color', '#FFF');
-    }
+        }
+    });
+    
     return false;
 }
 
 /*
  * Переход в биллинг
  */
-function bmOpen(){
-    var form = $('form[name="site"]');
-    var site_id = form.find('input[name="site_id"]').val();
-    var login = form.find('input[name="site_bmlogin"]').val();
-    var password = form.find('input[name="site_bmpassword"]').val();
-    if (login && password) {
-        $.ajax({
-            type: 'POST',
-            url: '/bm/open',
-            data: {
-                'username': login,
-                'password': password
-            },
-            //dataType: 'json',
-            success: function(data){
-                try {
-                    data = jQuery.parseJSON(data)
-                    if (data.success) {
-                        var url = 'https://host.fabricasaitov.ru/manager/billmgr';
-                        url += '?func=auth&username=' + data.username + '&key=' + data.key;
-                        $('<iframe>').load(function(){
-                            /*
-                             var w = window.open((urladdon) ? url + urladdon : url);
-                             if (w)
-                             w.location.href = '/';
-                             else
-                             alert('Ваш браузер блокирует всплывающие окна');
-                             */
-                            window.location.href = url;
-                        }).attr('src', 'http://host.fabricasaitov.ru/setcookie.php').hide().appendTo('body');
-                    }
-                    return false;
-                } 
-                catch (e) {
-                    // что-то пошло не так, json не вернулся
-                }
-            }
-        });
-    }
-    else {
-        !login && form.find('input[name="site_bmlogin"]').css('background-color', '#fa0500').css('color', '#FFF');
-        !password && form.find('input[name="site_bmpassword"]').css('background-color', '#fa0500').css('color', '#FFF');
-    }
-    return false;
-}
-
 function bmOpen(client_id){
     $.ajax({
         type: 'POST',
@@ -497,6 +478,10 @@ function bmOpen(client_id){
                 if (data.success) {
                     var url = 'https://host.fabricasaitov.ru/manager/billmgr';
                     url += '?func=auth&username=' + data.username + '&key=' + data.key;
+                    // "зачем эта хренотень?" - спросите Вы? дело в том, что если на сайте
+                    // биллинга не установлены куки, то автовход вернет ошибку. поэтому
+                    // мы подгружаем в iframe страничку, которая ставит куку, и затем
+                    // переходим по ссылке в биллинг.
                     $('<iframe>').load(function(){
                         /*
                          var w = window.open((urladdon) ? url + urladdon : url);
@@ -518,21 +503,28 @@ function bmOpen(client_id){
     return false;
 }
 
+/*
+ * Заказ виртуального хостинга
+ */
 function bmVHost(site_id, package_id, service_id){
-        $.ajax({
+    $.ajax({
         type: 'POST',
         url: '/bm/ordervhost',
         data: {
             'site_id': site_id,
-			'package_id': package_id,
-			'service_id': service_id			
+            'package_id': package_id,
+            'service_id': service_id
         },
         //dataType: 'json',
         success: function(data){
             try {
                 data = jQuery.parseJSON(data)
                 if (data.success) {
-					// успешно...
+                    $('#linkid-' + package_id + '-' + service_id).remove();
+                }
+                else {
+                    var msg = 'ошибка #' + data.code + ' - ' + data.val;
+                    $('#linkid-' + package_id + '-' + service_id).tipBox(msg).tipBox('show');
                 }
                 return false;
             } 
@@ -544,21 +536,28 @@ function bmVHost(site_id, package_id, service_id){
     return false;
 }
 
+/*
+ * Заказ доменного имени
+ */
 function bmDomainName(site_id, package_id, service_id){
-        $.ajax({
+    $.ajax({
         type: 'POST',
         url: '/bm/orderdomain',
         data: {
             'site_id': site_id,
-			'package_id': package_id,
-			'service_id': service_id			
+            'package_id': package_id,
+            'service_id': service_id
         },
         //dataType: 'json',
         success: function(data){
             try {
                 data = jQuery.parseJSON(data)
                 if (data.success) {
-					// успешно...
+                    $('#linkid-' + package_id + '-' + service_id).remove();
+                }
+                else {
+                    var msg = 'ошибка #' + data.code + ' - ' + data.val;
+                    $('#linkid-' + package_id + '-' + service_id).tipBox(msg).tipBox('show');
                 }
                 return false;
             } 

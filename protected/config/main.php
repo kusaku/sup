@@ -17,6 +17,10 @@ return array(
 
 	// preloading 'log' component
 	'preload'=>array('log'),
+	
+	// реализуем реестр - хранение и получение данных.
+	'onBeginRequest' => array('Registry', 'registryLoad'),
+	'onEndRequest' => array('Registry', 'registrySave'),
 
 	// autoloading model and component classes
 	'import'=>array(
@@ -63,7 +67,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=sup',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => '',
+			'password' => '19830407',
 			'charset' => 'utf8',
 			'enableProfiling' => true,
 		),

@@ -129,7 +129,7 @@ class ISPRequest {
             
             fwrite($fp, $send);
             $headers = fread($fp, 1024 * 1024);
-            $result = fread($fp, 1024 * 1024 * 1024); // max 1Mb
+            $result = fread($fp, 1024 * 1024); // max 1Mb
             $this->errcode = $errno;
             fclose($fp);
         }
@@ -308,7 +308,7 @@ class BMRequest extends ISPRequest {
         $post = array_merge($data, $post);
         
         $result = $this->setPost($post)->exec()->result();
-        
+		
         if (!$result) {
             return array('success'=>false,
                              'code'=>$this->errcode(),

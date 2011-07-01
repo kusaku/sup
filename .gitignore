@@ -1,5 +1,5 @@
 nbproject
 /logs
-/protected/runtime 
+/protected/runtime/*
 .tmp*
 .project
