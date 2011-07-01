@@ -112,12 +112,12 @@ class PackageController extends Controller
 		if ( Yii::app()->request->getParam('id') )
 		{
 			$package = Package::getById( Yii::app()->request->getParam('id') );
-			/*
+			
 			if ( Yii::app()->request->getParam('message') != '' )
 			$package->descr = $package->descr."\nПодробности оплаты: ".Yii::app()->request->getParam('message');
 			$package->status_id = 50;
 
-			/*
+			/* этот блок тут только для наглядного описания входных параметров
 			addIssue(
 			 * $subject,
 			 * $description,
@@ -128,7 +128,7 @@ class PackageController extends Controller
 			 * $created_on = false,
 			 * $due_date = false)
 			 */
-			/*
+			
 			$issue = Redmine::addIssue(
 					'#'.$package->id.' '.$package->name,	// Название
 					$package->descr,	// Описание
@@ -144,7 +144,7 @@ class PackageController extends Controller
 			foreach ($package->servPack as $service) {
 				$issue = Redmine::addIssue(
 						'#'.$package->id.' '.$service->service->name,	// Название
-						'OPISANIE',	// Описание
+						'Задача по проекту #'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
 						0,	// Родительский проект
 						53,	// Кому назначена
 						$package->redmine_proj);	// Родительская задача
@@ -152,7 +152,7 @@ class PackageController extends Controller
 				$service->to_redmine = $issue->id;
 				$service->save();
 			}
-			*/
+			
 			$bmr = new BMRequest();
 			$site = $package->site;
 			$client = $package->client;

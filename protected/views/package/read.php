@@ -96,33 +96,33 @@ foreach ($zserv as $value) {
 			<div class="scroll-pane">
 
 
-<?php
+				<?php
+					$hidden = '';
+					foreach ($tabs as $tab)
+					{
+						$issue = Redmine::getIssue($tab);
+						print '<div id="tabContent'.$tab.'" class="tabContent '.$hidden.'">';
 
-$hidden = '';
-foreach ($tabs as $tab)
-{
-	print '<div id="tabContent'.$tab.'" class="tabContent '.$hidden.'">';
+						if ( $issue ){
+							print $issue->subject.' ('.$issue->done_ratio.'%)<br>';
+							print 'Иполнитель: '.$issue->assigned_to['name'].'<br>';
+							print 'Описание: '.str_replace("\n", '<br>', $issue->description).'<br>';
+							print '<hr>';
 
-	$issue = Redmine::getIssue($tab);
-	if ( $issue ){
-		print $issue->subject.' ('.$issue->done_ratio.'%)<br>';
-		print 'Иполнитель: '.$issue->assigned_to['name'].'<br>';
-		print 'Описание: '.str_replace("\n", '<br>', $issue->description).'<br>';
-		print '<hr>';
-		foreach ($issue->journals->journal as $journal)
-		{
-			print $journal->user['name'].' ('.date('d-m-Y H:i', strtotime($journal->created_on)).')<br>';
-			print $journal->notes;
-			print '<hr>';
-		}
-	}else print 'Данные не получены! Вероятно задача не создана.';
-	
-	print '</div>';
-	$hidden = ' hidden';
-}
+							foreach ($issue->journals->journal as $journal)
+							{
+								print $journal->user['name'].' ('.date('d-m-Y H:i', strtotime($journal->created_on)).')<br>';
+								print $journal->notes;
+								print '<hr>';
+							}
+						} else print 'Данные не получены! Вероятно задача #'.$tab.' не создана.';
 
+						print '<textarea class="redmineMessage"></textarea> <br><a class="buttonSave">Send</a>';
+						print '</div>';
 
-?>
+						$hidden = ' hidden';
+					}
+				?>
 
 			</div>
 	</div>
@@ -132,7 +132,7 @@ foreach ($tabs as $tab)
 
 <div class="buttons">
 <!--		<a onClick="document.forms['megaform'].submit();" class="buttonSave">Сохранить</a>
-	<a href="javascript:alert('Пока не работает.');" class="buttonSaveExit">Сохранить и выйти</a> -->
+	<a href="javascript:alert('Пока не работает.');" class="buttonSaveExit">Сохранить и выйти</a>-->
 	<a onClick="hidePopUp()" class="buttonCancel">Отмена</a>
 
 	<span id="summa"></span>
