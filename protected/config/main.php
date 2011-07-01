@@ -17,6 +17,10 @@ return array(
 
 	// preloading 'log' component
 	'preload'=>array('log'),
+	
+	// реализуем реестр - хранение и получение данных.
+	'onBeginRequest' => array('Registry', 'registryLoad'),
+	'onEndRequest' => array('Registry', 'registrySave'),
 
 	// autoloading model and component classes
 	'import'=>array(
