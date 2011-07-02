@@ -368,8 +368,8 @@ function about(){
  */
 function selectTab(id){
     $('.tab').removeClass('selected');
-    $('#tab' + id).addClass('selected');
     $('.tabContent').addClass('hidden');
+	$('#tab' + id).addClass('selected');
     $('#tabContent' + id).removeClass('hidden');
 }
 

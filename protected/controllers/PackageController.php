@@ -205,6 +205,28 @@ class PackageController extends Controller
 
 	}
 
+	/*
+	 * Отмечаем заказ как не нужный - а врхив
+	 */
+	public function actionAddRedmineMessage()
+	{
+		$id	= Yii::app()->request->getParam('id');
+		$message = Yii::app()->request->getParam('message');
+		if ( $id & $message ){
+			Redmine::addNoteToIssue($id, $message);
+			$issue = Redmine::getIssue($id);
+			foreach ($issue->journals->journal as $journal)
+			{
+				$str = $journal->user['name'].' ('.date('d-m-Y H:i', strtotime($journal->created_on)).')<br>';
+				$str .= nl2br(htmlspecialchars($journal->notes));
+				$str .= '<hr>';
+			}
+			print $str;
+		} else {
+			print 0;
+		}
+
+	}
 
 	/*
 	 * Отмечаем заказ как не нужный - а врхив

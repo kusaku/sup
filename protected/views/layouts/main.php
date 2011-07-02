@@ -20,6 +20,7 @@
 		</script>
 		<!-- Скрипты по модулям -->
 		<script language="JavaScript" src="/js/calendar.js"></script>
+		<script language="JavaScript" src="/js/redmine.js"></script>
 	</head>
 	<body>
 		<?= $content?>
