@@ -217,7 +217,7 @@ $Pservices = Service::getAllByParent(0);
 
 <div class="buttons">
 	<a onClick="document.forms['megaform'].submit();" class="buttonSave">Сохранить</a>
-<!--	<a href="javascript:alert('Пока не работает.');" class="buttonSaveExit">Сохранить и выйти</a> -->
+	<a href="javascript:alert('Пока не работает.');" class="buttonSaveExit">Сохранить и выйти</a>
 	<a onClick="hidePopUp()" class="buttonCancel">Отмена</a>
 
 	<span id="summa"></span>

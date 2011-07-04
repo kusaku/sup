@@ -15,10 +15,9 @@
 class Redmine
 {
 	private static $config = array(
-		'allow_connect'=>0, // Подключаться к редмайну? Если нет, то любое обращение будет возвращать FALSE
+		'allow_connect'=>1, // Подключаться к редмайну? Если нет, то любое обращение будет возвращать FALSE
 		'protocol' => 'http',
 		'url' => "redmine.sandbox.loc", //Без HTTP://
-		//'apikey' => 'KLAzfse0gbjOWTMyvYL2', // Не используется, т.к. не работает.
 		'login' => 'dmitry.k', // Взять из профиля пользователя
 		'password' => '26298463', // Взять оттуда-же
 		'targetProjectId' => 1, // Целевой проект - в него будут попадать задачи

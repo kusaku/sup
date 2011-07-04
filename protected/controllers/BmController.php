@@ -3,6 +3,10 @@
  * BILLManager controller
  */
 class BMController extends Controller {
+
+	public function actionIndex(){
+		print 123;
+	}
     /**
      * Регистрирует клиента в биллинге
      * @return

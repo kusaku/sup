@@ -10,23 +10,6 @@
  *
  * НУЖНО ПЕРЕДЕЛАТЬ - AJAX
  */
-function sites($client_id, $sel = 0)
-{
-	$sites = Site::getAllByClient($client_id);
-	$res = '<select name="pack_site_id"><option value="0">..</option>';
-	if ( isset( $sites ) )
-	foreach ($sites as $site)
-	{
-		$res = $res.'<option value="'.$site->id.'"';
-
-		if ( $sel == $site->id)
-			$res = $res." selected";
-
-		$res = $res.'>'.$site->url.'</option>';
-	}
-	$res = $res.'</select>';
-	return $res;
-}
 
 $zserv = array(); // Заказанные сервисы/услуги
 
@@ -82,13 +65,12 @@ $zserv = array(); // Заказанные сервисы/услуги
 <?php
 
 $tabs = array();
-$tabs[] = $pack->redmine_proj;
+$tabs[]['to_redmine'] = $pack->redmine_proj;
 
 foreach ($zserv as $value) {
 	print '<span id="tab'.$value->to_redmine.'" class="tab" onClick="selectTab('.$value->to_redmine.')">'.$value->service->name.'</span>';
-	$tabs[] = $value->to_redmine;
+	$tabs[] = array('to_redmine'=>$value->to_redmine, 'name'=>$value->service->name);
 }
-
 ?>
 </div>
 	</div>
@@ -96,33 +78,35 @@ foreach ($zserv as $value) {
 			<div class="scroll-pane">
 
 
-<?php
+				<?php
+					$hidden = '';
+					foreach ($tabs as $tab)
+					{
+						$issue = Redmine::getIssue($tab['to_redmine']);
+						print '<div id="tabContent'.$tab['to_redmine'].'" class="tabContent '.$hidden.'">';
 
-$hidden = '';
-foreach ($tabs as $tab)
-{
-	print '<div id="tabContent'.$tab.'" class="tabContent '.$hidden.'">';
+						if ( $issue ){
+							print $issue->subject.' ('.$issue->done_ratio.'%)';
+							print '<div class="progressBar"><div class="progressStat" style="width:'.$issue->done_ratio.'%">'.$issue->done_ratio.'%</div></div>';
+							print 'Иполнитель: '.$issue->assigned_to['name'].'<br>';
+							print 'Описание: '.str_replace("\n", '<br>', $issue->description).'<br>';
+							print '<hr>';
 
-	$issue = Redmine::getIssue($tab);
-	if ( $issue ){
-		print $issue->subject.' ('.$issue->done_ratio.'%)<br>';
-		print 'Иполнитель: '.$issue->assigned_to['name'].'<br>';
-		print 'Описание: '.str_replace("\n", '<br>', $issue->description).'<br>';
-		print '<hr>';
-		foreach ($issue->journals->journal as $journal)
-		{
-			print $journal->user['name'].' ('.date('d-m-Y H:i', strtotime($journal->created_on)).')<br>';
-			print $journal->notes;
-			print '<hr>';
-		}
-	}else print 'Данные не получены! Вероятно задача не создана.';
-	
-	print '</div>';
-	$hidden = ' hidden';
-}
+							foreach ($issue->journals->journal as $journal)
+							{
+								print $journal->user['name'].' ('.date('d-m-Y H:i', strtotime($journal->created_on)).')<br>';
+								print nl2br(htmlspecialchars($journal->notes));
+								print '<hr>';
+							}
 
+							print '<textarea class="redmineMessage" id ="redmineMessageInput'.$tab['to_redmine'].'"></textarea> <br><a onClick="redmineSendMessage('.$tab['to_redmine'].');" class="orangeButton" style="clear: both; float: right;">Опубликовать</a>';
+						} else print 'Данные не получены! Вероятно задача #'.$tab['to_redmine'].' не создана.<br><a onClick="createRedmineIssue('.$tabs[0]['to_redmine'].', \'#'.$pack_id.' '.$tab['name'].'\');" class="grayButton" style="clear: both; float: right;">Создать задачу</a>';
 
-?>
+						print '</div>';
+
+						$hidden = ' hidden';
+					}
+				?>
 
 			</div>
 	</div>
@@ -131,10 +115,7 @@ foreach ($tabs as $tab)
 </form>
 
 <div class="buttons">
-<!--		<a onClick="document.forms['megaform'].submit();" class="buttonSave">Сохранить</a>
-	<a href="javascript:alert('Пока не работает.');" class="buttonSaveExit">Сохранить и выйти</a> -->
 	<a onClick="hidePopUp()" class="buttonCancel">Отмена</a>
-
 	<span id="summa"></span>
 </div>
 </div>
