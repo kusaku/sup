@@ -93,7 +93,6 @@ class Registry extends CActiveRecord {
     // выгрузка - вызывается при завершении
     public static function registrySave() {
         foreach (self::$_changed as $record) {
-            echo 'saved '.$record->name;
             $record->save();
         }
     }

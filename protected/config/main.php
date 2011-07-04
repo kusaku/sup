@@ -67,7 +67,7 @@ return array(
 			'connectionString' => 'mysql:host=localhost;dbname=sup',
 			'emulatePrepare' => true,
 			'username' => 'root',
-			'password' => '19830407',
+			'password' => 'root',
 			'charset' => 'utf8',
 			'enableProfiling' => true,
 		),
