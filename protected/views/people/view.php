@@ -32,9 +32,9 @@
             <textarea name="descr" rows="3" cols="12"><?= $people->descr?></textarea>
             
 			<?php if (isset($people->attr['bm_id']) and $bm_id = $people->attr['bm_id']->value[0]->value): ?>
-            <a style="padding:5px 20px;display:block;" onclick="bmOpen(<?= $people->primaryKey; ?>)" href="#">Открыть в BM (id <?= $bm_id?>)</a>
+            <a style="padding:5px 20px;display:block;" id="linkid-<?= $people->primaryKey; ?>" onclick="bmOpen(<?= $people->primaryKey; ?>)" href="#">Открыть в BM (id <?= $bm_id?>)</a>
             <?php else : ?>
-            <a style="padding:5px 20px;display:block;" onclick="bmRegister(<?= $people->primaryKey; ?>)" href="#">Зарегистрировать в BM</a>
+            <a style="padding:5px 20px;display:block;" id="linkid-<?= $people->primaryKey; ?>" onclick="bmRegister(<?= $people->primaryKey; ?>)" href="#">Зарегистрировать в BM</a>
             <?php endif; ?>
             			
         </div>

@@ -18,6 +18,8 @@ a {cursor: pointer;} /* Ибо задолбался переопределять
 .tipsBody a{color:#ff7b0b;}
 .tipsBody a:hover{color:#000000;}
 
+.cbox {margin:0 5px;}
+
 #summa{float: right; font-size: 18px;}
 .orders .column {float: left; padding-right: 30px;position:relative;}
 .orders .column:hover .tips{display:block; width:149px; height:auto; overflow:hidden; position:absolute; left:30px; top:20px; z-index:2;}

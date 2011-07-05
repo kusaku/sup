@@ -153,31 +153,6 @@ class PackageController extends Controller
 				$service->save();
 			}
 			
-			$bmr = new BMRequest();
-			$site = $package->site;
-			$client = $package->client;
-			
-			if ($site->bm_isset) {
-				$result = $bmr->queryProfiles(array('username'=>$site->bm_login, 'passwd'=>$site->bm_password));
-			} else {
-				array('username'=>$site->bm_login, 
-				'passwd'=>$site->bm_password, 
-				'confirm'=>$site->bm_password, 
-				'email'=>$client->mail, 
-				'person'=>$client->fio);
-				
-				$result = $bmr->register(array('username', 'passwd'));
-			}
-			if ($site->bm_login && $site->bm_password) {
-				
-				print_r($result);
-			} else {
-				
-			}
-			exit();
-			
-			//$client = People::getNameById($package->client_id);
-
 			// Возвращаем данные для замены аяксом
 			Package::genClientBlock($package->client_id);
 		}
@@ -229,7 +204,7 @@ class PackageController extends Controller
 	}
 
 	/*
-	 * Отмечаем заказ как не нужный - а врхив
+	 * Отмечаем заказ как не нужный - в архив
 	 */
 	public function actionDecline()
 	{

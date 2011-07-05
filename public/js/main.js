@@ -43,8 +43,8 @@ function prepareHtml(){
     });
 }
 
-
-/*	Очистка результатов поиска. Убираем введённое значение и прячем кнопку очистки.
+/*	
+ * Очистка результатов поиска. Убираем введённое значение и прячем кнопку очистки.
  */
 function searchClear(){
     $("#buttonClear").addClass('hidden');
@@ -52,9 +52,9 @@ function searchClear(){
     loadData();
 }
 
-
-/*	Показываем форму заказа.
- Может быть новый заказ для клиента, а может и существующий на редактирование
+/*	
+ * Показываем форму заказа.
+ * Может быть новый заказ для клиента, а может и существующий на редактирование
  */
 function Package(package_id, client_id){
     $('.ui-widget-content').hide();
@@ -77,8 +77,8 @@ function Package(package_id, client_id){
     });
 };
 
-
-/* Загружаем данные для главной страницы.
+/* 
+ * Загружаем данные для главной страницы.
  */
 function loadData(client_id){
     $('#sup_content').html('<div id="preloader"></div>');
@@ -98,8 +98,8 @@ function loadData(client_id){
     });
 };
 
-
-/* Показываем всплвающее окно.
+/* 
+ * Показываем всплвающее окно.
  */
 function showPopUp(){
     $('#modal').fadeIn(0); // 200
@@ -120,8 +120,8 @@ function showPopUp(){
     prepareHtml();
 };
 
-
-/* Прячем всплвающее окно.
+/* 
+ * Прячем всплвающее окно.
  */
 function hidePopUp(){
     $('#sup_popup').fadeOut(0);
@@ -129,7 +129,8 @@ function hidePopUp(){
     $('#modal').fadeOut(0); // 200
 };
 
-/* Показываем всплвающее окно.
+/* 
+ * Показываем всплвающее окно.
  */
 function showPopUpLoader(){
     $('#modal').fadeIn(0);
@@ -146,22 +147,25 @@ function showPopUpLoader(){
     $('#sup_preloader').css('top', top + 'px');
 };
 
-/*	Сворачиваем/разворачиваем заказы клиетна на главной странице.
- Фактически прячем/показываем все заказы кроме первого.
+/*	
+ * Сворачиваем/разворачиваем заказы клиетна на главной странице.
+ * Фактически прячем/показываем все заказы кроме первого.
  */
 function ShowHide(id){
     $('#' + id).toggleClass('less');
     $('#' + id).children('.forhide').toggle(0); // 150
 }
 
-/*	Сворачиваем/разворачиваем блок сайта в карточке клиента.
+/*	
+ * Сворачиваем/разворачиваем блок сайта в карточке клиента.
  */
 function CardShowHide(id){
     $('#orderBlock' + id).toggleClass('open');
     $('#orderBlock' + id).children('.orderPart').toggleClass('hidden'); // 150
 }
 
-/*	Считаем сумму заказа.
+/*	
+ * Считаем сумму заказа.
  */
 function sumka(){
     var sum = 0;
@@ -177,8 +181,8 @@ function sumka(){
     $("#summa").html(sum + ' руб.');
 };
 
-
-/*	Подгружаем список сайтов этого клиента.
+/*	
+ * Подгружаем список сайтов этого клиента.
  */
 function loadSites(client_id, selected){
     $.ajax({
@@ -195,8 +199,8 @@ function loadSites(client_id, selected){
     });
 };
 
-
-/*	Создаём новый хост.
+/*	
+ * Создаём новый хост.
  */
 function loadNewSite(){
     $.ajax({
@@ -212,8 +216,8 @@ function loadNewSite(){
     });
 };
 
-
-/*	Отмечаем заказ как оплаченный.
+/*	
+ * Отмечаем заказ как оплаченный.
  */
 function addPay(package_id, liid){
     if (package_id != null) {
@@ -238,8 +242,8 @@ function addPay(package_id, liid){
     }
 }
 
-
-/*	Берём новый заказ себе.
+/*	
+ * Берём новый заказ себе.
  */
 function takePack(package_id, liid){
     if (package_id != null) {
@@ -254,8 +258,8 @@ function takePack(package_id, liid){
     }
 }
 
-
-/*	Добавляем нового клиента.
+/*	
+ * Добавляем нового клиента.
  */
 function addEditClient(id, parent){
     showPopUpLoader();
@@ -272,8 +276,8 @@ function addEditClient(id, parent){
     });
 }
 
-
-/*	Редактируем сайт (домен)
+/*	
+ * Редактируем сайт (домен)
  */
 function editDomain(id, client_id){
     showPopUpLoader();
@@ -290,6 +294,9 @@ function editDomain(id, client_id){
     });
 }
 
+/*
+ * Проверка домена на существование
+ */
 function checkDomain(){
     if ($("#site_url").val() != '') 
         $.ajax({
@@ -313,8 +320,8 @@ function checkDomain(){
         });
 }
 
-
-/*	Отказывамся от заказа
+/*	
+ * Отказывамся от заказа
  */
 function decline(package_id, liid){
     if (package_id != null) {
@@ -329,8 +336,8 @@ function decline(package_id, liid){
     }
 }
 
-
-/*	Обновляем значения флажков (Новые заказы, Новые события, Выполненные проекты)
+/*	
+ * Обновляем значения флажков (Новые заказы, Новые события, Выполненные проекты)
  */
 function flagsUpdate(){
     $('#newOrdersCount').html($('.red').size());
@@ -338,7 +345,8 @@ function flagsUpdate(){
     $('#doneProjectsCount').html($('.green').size());
 }
 
-/*	Карточка клиента.
+/*	
+ * Карточка клиента.
  */
 function clientCard(id){
     $.ajax({
@@ -351,7 +359,8 @@ function clientCard(id){
     });
 }
 
-/*	About
+/*	
+ * About
  */
 function about(){
     $.ajax({
@@ -364,207 +373,12 @@ function about(){
     });
 }
 
-/*	Работа с табами в окне оплаченного (выполняемого) заказа.
+/*	
+ * Работа с табами в окне оплаченного (выполняемого) заказа.
  */
 function selectTab(id){
     $('.tab').removeClass('selected');
     $('.tabContent').addClass('hidden');
-	$('#tab' + id).addClass('selected');
+    $('#tab' + id).addClass('selected');
     $('#tabContent' + id).removeClass('hidden');
-}
-
-/* 
- * Регистрация в биллинге
- */
-function bmRegister(client_id){
-    var client_id = client_id;
-    var form = $('form[name="megaform"]');
-    $.ajax({
-        type: 'POST',
-        url: '/bm/register',
-        data: {
-            'client_id': client_id
-        },
-        //dataType: 'json',
-        success: function(data){
-            try {
-                // получаем json
-                data = jQuery.parseJSON(data)
-                // при удаче меняем ссылку
-                if (data.success) {
-                    form.find('a').replaceWith('<a style="padding:5px 20px;display:block;" onclick="bmOpen(' + client_id + ')" href="#">Открыть в BM (id ' + data.userid + ')</a>');
-                }
-                else {
-                    switch (data.code) {
-                        // ошибка 4 - неправильной/отсутвуещее поле формы
-                        case 4:
-                            var field = $('#' + data.val);
-                            var msg = (field.val()) ? 'Это поле заполнено неправильно' : 'Это поле требуется для регистрации'
-                            field.tipBox(msg);
-                            var parent = field.parents(':hidden');
-                            if (parent.length) {
-                                parent.slideDown(function(){
-                                    field.tipBox('show');
-                                });
-                                $('.supAccordion > div').not(parent).slideUp();
-                            }
-                            else {
-                                field.tipBox('show');
-                            }
-                            break;
-                        // поля при проверке передаются...
-                        case 8:
-                            if (data.msg == 'userexists') {
-                                var field = $('#username');
-                                var msg = 'Пользователь с таким именем уже зарегистрирван'
-                                field.tipBox(msg);
-                                var parent = field.parents(':hidden');
-                                if (parent.length) {
-                                    parent.slideDown(function(){
-                                        field.tipBox('show');
-                                    });
-                                    $('.supAccordion > div').not(parent).slideUp();
-                                }
-                                else {
-                                    field.tipBox('show');
-                                }
-                            }
-                            break;
-                        // ошибка 100 не описана, но обычно это ошибка доступа
-                        case 100:
-                            var field = $('#username');
-                            var msg = 'В доступе отказано'
-                            field.tipBox(msg);
-                            var parent = field.parents(':hidden');
-                            if (parent.length) {
-                                parent.slideDown(function(){
-                                    field.tipBox('show');
-                                });
-                                $('.supAccordion > div').not(parent).slideUp();
-                            }
-                            else {
-                                field.tipBox('show');
-                            }
-                            break;
-                        // другие ошибки
-                        default:
-                        alert(data.code + ': ' + data.msg);
-                    }
-                }
-            } 
-            catch (e) {
-                // что-то пошло не так, json не вернулся
-            }
-        }
-    });
-    
-    return false;
-}
-
-/*
- * Переход в биллинг
- */
-function bmOpen(client_id){
-    $.ajax({
-        type: 'POST',
-        url: '/bm/open',
-        data: {
-            'client_id': client_id
-        },
-        //dataType: 'json',
-        success: function(data){
-            try {
-                data = jQuery.parseJSON(data)
-                if (data.success) {
-                    var url = 'https://host.fabricasaitov.ru/manager/billmgr';
-                    url += '?func=auth&username=' + data.username + '&key=' + data.key;
-                    // "зачем эта хренотень?" - спросите Вы? дело в том, что если на сайте
-                    // биллинга не установлены куки, то автовход вернет ошибку. поэтому
-                    // мы подгружаем в iframe страничку, которая ставит куку, и затем
-                    // переходим по ссылке в биллинг.
-                    $('<iframe>').load(function(){
-                        /*
-                         var w = window.open((urladdon) ? url + urladdon : url);
-                         if (w)
-                         w.location.href = '/';
-                         else
-                         alert('Ваш браузер блокирует всплывающие окна');
-                         */
-                        window.location.href = url;
-                    }).attr('src', 'http://host.fabricasaitov.ru/setcookie.php').hide().appendTo('body');
-                }
-                return false;
-            } 
-            catch (e) {
-                // что-то пошло не так, json не вернулся
-            }
-        }
-    });
-    return false;
-}
-
-/*
- * Заказ виртуального хостинга
- */
-function bmVHost(site_id, package_id, service_id){
-    $.ajax({
-        type: 'POST',
-        url: '/bm/ordervhost',
-        data: {
-            'site_id': site_id,
-            'package_id': package_id,
-            'service_id': service_id
-        },
-        //dataType: 'json',
-        success: function(data){
-            try {
-                data = jQuery.parseJSON(data)
-                if (data.success) {
-                    $('#linkid-' + package_id + '-' + service_id).remove();
-                }
-                else {
-                    var msg = 'ошибка #' + data.code + ' - ' + data.val;
-                    $('#linkid-' + package_id + '-' + service_id).tipBox(msg).tipBox('show');
-                }
-                return false;
-            } 
-            catch (e) {
-                // что-то пошло не так, json не вернулся
-            }
-        }
-    });
-    return false;
-}
-
-/*
- * Заказ доменного имени
- */
-function bmDomainName(site_id, package_id, service_id){
-    $.ajax({
-        type: 'POST',
-        url: '/bm/orderdomain',
-        data: {
-            'site_id': site_id,
-            'package_id': package_id,
-            'service_id': service_id
-        },
-        //dataType: 'json',
-        success: function(data){
-            try {
-                data = jQuery.parseJSON(data)
-                if (data.success) {
-                    $('#linkid-' + package_id + '-' + service_id).remove();
-                }
-                else {
-                    var msg = 'ошибка #' + data.code + ' - ' + data.val;
-                    $('#linkid-' + package_id + '-' + service_id).tipBox(msg).tipBox('show');
-                }
-                return false;
-            } 
-            catch (e) {
-                // что-то пошло не так, json не вернулся
-            }
-        }
-    });
-    return false;
 }
