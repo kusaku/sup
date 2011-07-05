@@ -8,8 +8,8 @@ $(function(){
         minLength: 3,
         select: function(event, ui){
             $("#buttonClear").removeClass('hidden');
-            clientCard(ui.item.id);
-            //loadData(ui.item.id);
+				loadData(ui.item.id);
+				clientCard(ui.item.id);
         }
     });
     // считаем сумму при изменении опций в пакете
@@ -57,6 +57,7 @@ function searchClear(){
  * Может быть новый заказ для клиента, а может и существующий на редактирование
  */
 function Package(package_id, client_id){
+	$('body').css('cursor','wait');
     $('.ui-widget-content').hide();
     hidePopUp();
     showPopUpLoader();
@@ -73,6 +74,7 @@ function Package(package_id, client_id){
             $("#buttonClear").addClass('hidden');
             $('#sup_popup').html(data);
             showPopUp();
+			$('body').css('cursor','default');
         }
     });
 };
@@ -111,7 +113,9 @@ function showPopUp(){
     if (left < 1) 
         left = 0;
     var top = Math.round($(window).height() / 2) - Math.round($('#sup_popup').height() / 2);
-    if (top < 1) 
+    if (top > 10) 
+        top = 10;
+	if (top < 1)
         top = 0;
     
     $('#sup_popup').css('left', left + 'px');
@@ -190,7 +194,7 @@ function loadSites(client_id, selected){
         dataType: 'html',
         data: {
             'client_id': client_id,
-            'selected': selected,
+            'selected': selected
         },
         success: function(data){
             $('#site_selector').html(data);
@@ -231,7 +235,7 @@ function addPay(package_id, liid){
                 url: '/package/addpay/' + package_id,
                 dataType: 'html',
                 data: {
-                    'message': message,
+                    'message': message
                 },
                 success: function(data){
                     $('#li' + liid).replaceWith(data);

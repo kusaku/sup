@@ -167,7 +167,7 @@ class PackageController extends Controller
 		if ( Yii::app()->request->getParam('id') )
 		{
 			$package = Package::getById( Yii::app()->request->getParam('id') );
-			if ( $package->manager_id == 0 ) // Не перехватил-ли заказ другой менеджер
+			if ( $package->manager_id == 0 or $package->manager_id == Yii::app()->user->id ) // Не перехватил-ли заказ другой менеджер
 			{
 				$package->manager_id = Yii::app()->user->id;
 				$package->status_id = 17;

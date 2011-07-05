@@ -31,24 +31,7 @@ a.add_site		{display:inline-block; width:22px; height:22px; margin:0px 0 0 10px;
 a.orangeButton	{padding: 4px 9px;background: #ff701a;background:url(../images/ubutton2.png) 0 0 repeat-x;color: #FFF;text-decoration: none;margin: 3px 5px;}
 a.grayButton	{padding: 4px 9px;background: #c8d2d5;background:url(../images/ubutton4.png) 0 0 repeat-x;color: #FFF;text-decoration: none;margin: 3px 5px;}
 
-/* Табы в выполняемом заказе */
-.tabs {margin-top: 7px; margin-bottom: -6px;}
-.tab {margin: 5px 4px 0 0; padding: 4px 5px; background-color: #d5dddf;background:url(../images/ubutton4.png) 0 0 repeat-x;}
-.selected {background-color: #ff701a; color: #FFF;background:url(../images/ubutton2.png) 0 0 repeat-x;}
-.tabContent {padding:0 5px 0 10px; min-height: 300px;}
-
-.progressBar {width: 100px;float: none;height: 9px;border: 1px solid #b0c3c9;margin: 5px 0 0 0;}
-.progressBar .progressStat {width: 100px;float: none;height: 9px;border: 0;background: url(../images/progress.png) 0 0 repeat-x #39a849;color: #005500;font-size: 9px;}
-
-/* Calendar */
-.calendar {position: absolute; left: 10px; top: 10px;}
-.calendar .event {position: static; padding: 5px; margin-bottom: 1em; border: 1px solid #B0C3C9; background: #FAFAFA; color: #000; width:200px;}
-.calendar .event .date {position: static;  border: 0px; color: #555;}
-.calendar .event .message {position: static;  border: 0px;}
-.calendar .event .buttons {position: static;  border: 0px; color: #000;}
-#eventsCount {color: #ff7b0b; position: relative; left: 41px; top: -8px;}
-
-.accordion h3 {border-bottom: 1px dashed #ff7b0b;color: #ff7b0b;margin: 0px 10px;cursor: pointer;}
+.supAccordion h3 {color: #ff7b0b;cursor: pointer;}
 .clientHead {cursor: move;}
 
 .redmineMessage{width:100%; height: 100px;}

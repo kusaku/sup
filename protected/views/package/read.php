@@ -68,8 +68,8 @@ $tabs = array();
 $tabs[]['to_redmine'] = $pack->redmine_proj;
 
 foreach ($zserv as $value) {
-	print '<span id="tab'.$value->to_redmine.'" class="tab" onClick="selectTab('.$value->to_redmine.')">'.$value->service->name.'</span>';
-	$tabs[] = array('to_redmine'=>$value->to_redmine, 'name'=>$value->service->name);
+	print '<span id="tab'.$value->serv_id.'" class="tab" onClick="selectTab('.$value->serv_id.')">'.$value->service->name.'</span>';
+	$tabs[] = array('to_redmine'=>$value->to_redmine, 'name'=>$value->service->name, 'serv_id'=>$value->serv_id);
 }
 ?>
 </div>
@@ -83,7 +83,7 @@ foreach ($zserv as $value) {
 					foreach ($tabs as $tab)
 					{
 						$issue = Redmine::getIssue($tab['to_redmine']);
-						print '<div id="tabContent'.$tab['to_redmine'].'" class="tabContent '.$hidden.'">';
+						print '<div id="tabContent'.$tab['serv_id'].'" class="tabContent '.$hidden.'">';
 
 						if ( $issue ){
 							print $issue->subject.' ('.$issue->done_ratio.'%)';
@@ -100,7 +100,7 @@ foreach ($zserv as $value) {
 							}
 
 							print '<textarea class="redmineMessage" id ="redmineMessageInput'.$tab['to_redmine'].'"></textarea> <br><a onClick="redmineSendMessage('.$tab['to_redmine'].');" class="orangeButton" style="clear: both; float: right;">Опубликовать</a>';
-						} else print 'Данные не получены! Вероятно задача #'.$tab['to_redmine'].' не создана.<br><a onClick="createRedmineIssue('.$tabs[0]['to_redmine'].', \'#'.$pack_id.' '.$tab['name'].'\');" class="grayButton" style="clear: both; float: right;">Создать задачу</a>';
+						} else print 'Данные не получены! Вероятно задача #'.$tab['to_redmine'].' - "'.$tab['name'].'" не создана.<br>Для привязки задач к заказу обратитесь к администратору "'.Yii::app()->name['shortName'].'"';
 
 						print '</div>';
 

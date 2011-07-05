@@ -62,5 +62,16 @@ class AppController extends Controller
 		$this->redirect(Yii::app()->homeUrl);
 	}
 
+	/**
+	 * Обновление задач при изменениях в редмайне
+	 */
+	public function actionRedmineupdate(){
+		$issues = Redmine::getIssues();
+		//print_r($issues);
+		foreach ($issues as $issue) {
+			print_r($issue);
+		}/**/
+		return true;
+	}
 
 }

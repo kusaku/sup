@@ -18,8 +18,6 @@ class Redmine
 		'allow_connect'=>1, // Подключаться к редмайну? Если нет, то любое обращение будет возвращать FALSE
 		'protocol' => 'http',
 		'url' => "redmine.sandbox.loc", //Без HTTP://
-		'login' => 'dmitry.k', // Взять из профиля пользователя
-		'password' => '26298463', // Взять оттуда-же
 		'targetProjectId' => 1, // Целевой проект - в него будут попадать задачи
 	);
 
@@ -31,8 +29,8 @@ class Redmine
 
 		// Формируем правильный урл
 		$url = Redmine::$config['protocol'].'://'.
-			Redmine::$config['login'].':'.
-			Redmine::$config['password'].'@'.
+			Yii::app()->user->login.':'.
+			Yii::app()->user->password.'@'.
 			Redmine::$config['url'];
 
         $method = mb_strtolower($method);
@@ -108,8 +106,10 @@ class Redmine
 	 * @param <type> $projectId
 	 * @return <type>
 	 */
-	public static function getIssues($projectId) {
-		return Redmine::runRequest('/issues.xml'.$projectId, 'GET', '');
+	public static function getIssues($projectId = null) {
+		// Если проект не передали, то используем проект по умолчанию
+		if ( $projectId === null ) $projectId = Redmine::$config['targetProjectId'];
+		return Redmine::runRequest('/issues.xml?project_id='.$projectId, 'GET', '');
 	}
 
 	/**
