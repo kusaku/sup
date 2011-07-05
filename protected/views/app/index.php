@@ -1,5 +1,5 @@
 <?php
-	$weekdays = array('Понедельник','Вторник','Среда','Четверг','Пятница','Суббота','Воскресенье');
+	$weekdays = array('Понед.','Вторн.','Среда','Четв.','Пятн.','Субб.','Воскр.');
 	$day= $weekdays[date('N')-1];
 	$months = array('января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря');
 	$month = $months[date('n')-1];
@@ -19,7 +19,7 @@
 			<li><a onClick="editCalendarEvent(0)" class="addOrder">Напоминание</a></li>
 			<li><a onClick="addEditClient(0)" class="addClient">Добавить клиента</a></li>
 			<li><a href="javascript:alert('Пока не работает')" class="lastDone">Последние выполненные</a></li>
-			<li><a href="javascript:alert('Пока не работает')" class="notWorked">Не распределены</a></li>
+			<li><a href="http://doc.fabricasaitov.ru/" target="_blanck" class="notWorked">Wiki-справка</a></li>
 		</ul>
 		<form method="post" action="#">
 			<input class="searchClient" id="searchClient" name="clientName" placeholder="Поиск клиента..." size="67"/>
@@ -29,8 +29,11 @@
 		<a href="/app/logout" class="logout">выход</a>
 	</div>
 	<div class="today">
-		<span class="name"><?=$day?></span> - <?=date('d')?> <?=$month?> <?=date('Y')?>г. <a onClick="calendarToggle()" class="datePicker">календарик</a>
-		<span id="eventsCount"></span>
+		<span class="name"><?=$day?></span> - <?=date('d')?> <?=$month?> <?=date('Y')?>г.
+		<a onClick="calendarToggle()" style="text-decoration: none;">
+			<div class="datePicker"></div>
+			<div id="eventsCount"></div>
+		</a>
 	</div>
 	<div class="newOrders">
 		<a href="#">Новые заказы</a><a href="#" class="newOrdersCount" id="newOrdersCount">0</a>
@@ -67,4 +70,4 @@
 	<div id="sup_content"></div>
 
 </div>
-<div style="position: fixed; bottom: 0; right: 0; height: 10px; width: 10px;" onClick="about()"></div>
+<div style="position: fixed; top: 0; left: 0; height: 10px; width: 10px;" onClick="about()"></div>

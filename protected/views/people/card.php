@@ -68,7 +68,7 @@ foreach ($sites as $site) {
 	$packages = $site->package;
 	foreach ($packages as $package) {
 		print '<div class="orderPart hidden">';
-		print '<a onClick="Package('.$package->id.', 0)" class="active">Заказ #'.$package->id.'&nbsp;&nbsp;'.$package->name;
+		print '<a onClick="Package('.$package->id.', 0)" class="active" style="text-decoration: underline;">Заказ #'.$package->id.'&nbsp;&nbsp;'.$package->name;
 		if ( $package->summa ) print '&nbsp;&nbsp;&nbsp;&nbsp;<strong>'.$package->summa.'руб.</strong>';
 		print '</a>';
 		$uslugi = $package->servPack;

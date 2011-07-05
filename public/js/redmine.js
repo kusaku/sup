@@ -5,7 +5,7 @@
 
 
 function redmineSendMessage(issueId){
-//	$('#sup_content').after('<div id="preloader"></div>');
+	$('body').css('cursor','wait');
 	message = $('#redmineMessageInput'+issueId).val();
 	$.ajax({
 		url: '/package/addRedmineMessage',
@@ -21,7 +21,8 @@ function redmineSendMessage(issueId){
 			else{
 				alert('При добавлении комментария возникла ошибка!');
 			}
+			$('body').css('cursor','default');
 		}
 	});
-//	$('#preloader').remove();
 }
+

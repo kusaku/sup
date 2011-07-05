@@ -8,6 +8,8 @@
 		<link href="/css/smartbox.css" rel="stylesheet" type="text/css" />
 		<link href="/css/style.css" rel="stylesheet" type="text/css" />
 		<link href="/css/sup.css" rel="stylesheet" type="text/css" />
+		<link href="/css/tabs.css" rel="stylesheet" type="text/css" />
+		<link href="/css/calendar.css" rel="stylesheet" type="text/css" />
 		<script language="JavaScript" src="/js/jquery-1.5.2.js">
 		</script>
 		<script language="JavaScript" src="/js/jquery.ui.datepicker-ru.js">
@@ -20,6 +22,8 @@
 		</script>
 		<!-- Скрипты по модулям -->
 		<script language="JavaScript" src="/js/calendar.js"></script>
+		<script language="JavaScript" src="/js/tabs.js"></script>
+		<script language="JavaScript" src="/js/billmanager.js"></script>
 		<script language="JavaScript" src="/js/redmine.js"></script>
 	</head>
 	<body>

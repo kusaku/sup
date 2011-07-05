@@ -35,6 +35,8 @@ class UserIdentity extends CUserIdentity
 			$this->setState('group_id', $user->pgroup_id);
 			$this->setState('group_name', $user->people_group->name);
 			$this->setState('id', $user->id);
+			$this->setState('login', $user->login);
+			$this->setState('password', $this->password);
 		}
 
 		
