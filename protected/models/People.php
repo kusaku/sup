@@ -28,8 +28,9 @@ class People extends CActiveRecord
 			'parent'=>array(self::BELONGS_TO,'People',	'parent_id'),
 			'packages'=>array(self::HAS_MANY, 'Package', 'client_id', 'order'=>'dt_change DESC'),
 			'calendar'=>array(self::HAS_MANY, 'Calendar', 'people_id'), // Все события календаря для этого человека
-			'value'=>array(self::HAS_MANY, 'PeopleAttr', 'people_id', 'index'=>'attribute_id'),
-			'attr'=>array(self::MANY_MANY, 'Attributes', 'people_attr(people_id, attribute_id)', 'with'=>'value', 'index'=>'type')
+			'values'=>array(self::HAS_MANY, 'PeopleAttr', 'people_id', 'index'=>'attribute_id'),
+			// следующая кострукция работает так: $client->['phone']->values[0]->value
+			'attr'=>array(self::MANY_MANY, 'Attributes', 'people_attr(people_id, attribute_id)', 'with'=>'values', 'condition'=>'`attr_attr`.`people_id`=`values`.`people_id`', 'index'=>'type')
 			);
 	}
 

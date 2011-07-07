@@ -14,8 +14,7 @@ class Attributes extends CActiveRecord {
     
     public function relations() {
 		return array(
-			'value'=>array(self::HAS_MANY, 'PeopleAttr', 'attribute_id'),
-			'groups'=>array(self::HAS_MANY, 'Attributes', 'parent_id', 'condition'=>'attributes.parent_id=0'),			
+			'values'=>array(self::HAS_MANY, 'PeopleAttr', 'attribute_id', 'joinType'=>'INNER JOIN'),
 			'parent'=>array(self::BELONGS_TO, 'Attributes', 'parent_id'),
 			'children'=>array(self::HAS_MANY, 'Attributes', 'parent_id')
 		);    

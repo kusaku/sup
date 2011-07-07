@@ -18,11 +18,10 @@
 		<!-- Скрипты по модулям -->
 		<script language="JavaScript" src="/js/calendar.js"></script>
 		<script language="JavaScript" src="/js/tabs.js"></script>
-		<script language="JavaScript" src="/js/billmanager.js"></script>
+		<script language="JavaScript" src="/js/billmgr.js"></script>
 		<script language="JavaScript" src="/js/redmine.js"></script>
 	</head>
 	<body>
 		<?= $content?>
 	</body>
-	>>>>>>> 11c404f4255768473795ea29354dc462a622e3a6
 </html>
