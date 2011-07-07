@@ -3,8 +3,9 @@
 class AppController extends Controller
 {
 
-	public function actionIndex()
+	public function actionIndex()	
 	{
+		
 		if ( Yii::app()->user->isGuest )
 			$this->redirect('/app/login'); // Незалогиненным тут не место!
 		else

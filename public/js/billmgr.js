@@ -11,7 +11,7 @@
  */
 function bmRegister(client_id){
     var client_id = client_id;
-    var form = $('form[name="megaform"]');
+    var form = $('#sup_popup form');
     $.ajax({
         type: 'POST',
         url: '/bm/register',
