@@ -14,12 +14,29 @@
  */
 class Redmine
 {
+/*	private static $config = array(
+		'allow_connect' => true, // Подключаться к редмайну? Если нет, то любое обращение будет возвращать FALSE
+		'protocol' => 'https',
+		'port' => '443',
+		'url' => "redmine.fabricasaitov.ru", //Без HTTP://
+		'targetProjectId' => 'suptask', // Целевой проект - в него будут попадать задачи
+	);/**/
+
 	private static $config = array(
-		'allow_connect'=>1, // Подключаться к редмайну? Если нет, то любое обращение будет возвращать FALSE
+		'allow_connect' => true, // Подключаться к редмайну? Если нет, то любое обращение будет возвращать FALSE
 		'protocol' => 'http',
+		'port' => '80',
 		'url' => "redmine.sandbox.loc", //Без HTTP://
-		'targetProjectId' => 1, // Целевой проект - в него будут попадать задачи
-	);
+		'targetProjectId' => '1', // Целевой проект - в него будут попадать задачи
+	);/**/
+
+/*	private static $config = array(
+		'allow_connect' => true, // Подключаться к редмайну? Если нет, то любое обращение будет возвращать FALSE
+		'protocol' => 'http',
+		'port' => '80',
+		'url' => "redmine.fabricasaitov.ru", //Без HTTP://
+		'targetProjectId' => 'suptask', // Целевой проект - в него будут попадать задачи
+	);/**/
 
 
 	private static function runRequest($restUrl, $method = 'GET', $data = "")
@@ -28,16 +45,12 @@ class Redmine
 		if ( !Redmine::$config['allow_connect'] ) return FALSE;
 
 		// Формируем правильный урл
-		$url = Redmine::$config['protocol'].'://'.
-			Yii::app()->user->login.':'.
-			Yii::app()->user->password.'@'.
-			Redmine::$config['url'];
+		$url = Redmine::$config['protocol'].'://'.Redmine::$config['url'];
 
         $method = mb_strtolower($method);
- 
         $curl = curl_init();
 
-        switch ($method) {
+		switch ($method) {
 			case "post":
 				curl_setopt($curl, CURLOPT_POST, 1);
 				if(isset($data)) curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
@@ -55,26 +68,30 @@ class Redmine
  
 		try {
 			curl_setopt($curl, CURLOPT_URL, $url.$restUrl);
-			curl_setopt($curl, CURLOPT_PORT , 80);
-			curl_setopt($curl, CURLOPT_VERBOSE, 0);
-			curl_setopt($curl, CURLOPT_HEADER, 0);
-			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($curl, CURLOPT_PORT, Redmine::$config['port']);
+			curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.":".Yii::app()->user->password );
+			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+			curl_setopt($curl, CURLOPT_COOKIESESSION, true);
+			curl_setopt($curl, CURLOPT_VERBOSE, false);
+			curl_setopt($curl, CURLOPT_HEADER, false);
+			curl_setopt($curl, CURLOPT_AUTOREFERER, false);
+			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 			curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "Charset=utf-8", "Content-length: ".strlen($data)));
  
 			$response = curl_exec($curl); 
 			if(!curl_errno($curl)){ 
-		  		$info = curl_getinfo($curl); 
-			} else { 
+		  		$info = curl_getinfo($curl);
+			} else {
 				curl_close($curl); 
 				return false;
 			}
- 
- 
 			curl_close($curl); 
 		} catch (Exception $e) {
     		return false;
 		}
- 
+
 		if($response) {
 			if(substr($response, 0, 1) == '<') {
 				return new SimpleXMLElement($response);
