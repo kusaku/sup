@@ -171,6 +171,7 @@ class PackageController extends Controller
 			{
 				$package->manager_id = Yii::app()->user->id;
 				$package->status_id = 17;
+				$package->dt_change = date('Y-m-d H:i:s');
 				$package->save();
 			}
 			
@@ -187,8 +188,14 @@ class PackageController extends Controller
 	{
 		$id	= Yii::app()->request->getParam('id');
 		$message = Yii::app()->request->getParam('message');
+
 		if ( $id & $message ){
 			Redmine::addNoteToIssue($id, $message);
+
+			$pack = Package::getById( Yii::app()->request->getParam('pack') );
+			$pack->dt_change = date('Y-m-d H:i:s');
+			$pack->save();
+
 			$issue = Redmine::getIssue($id);
 			foreach ($issue->journals->journal as $journal)
 			{

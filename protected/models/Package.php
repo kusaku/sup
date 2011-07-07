@@ -26,7 +26,19 @@ class Package extends CActiveRecord
 			'status'=>array(self::BELONGS_TO, 'Status', 'status_id'), // Связка со статусами
 			);
 	}
-    
+
+    public static function updateById($id)
+    {
+    	if ( $id ){
+			$pack = self::getById($id);
+			$pack->dt_change = date('Y-m-d H:i:s');
+			$pack->save();
+			return true;
+		} else {
+			return false;
+		}
+    }/**/
+
     public static function getById($id)
     {
     	return self::model()->find(array('condition'=>"id=$id", 'limit'=>1));

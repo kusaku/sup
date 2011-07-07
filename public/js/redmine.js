@@ -7,11 +7,13 @@
 function redmineSendMessage(issueId){
 	$('body').css('cursor','wait');
 	message = $('#redmineMessageInput'+issueId).val();
+	pack = $('#redmineMessageInput'+issueId).attr('pack');
 	$.ajax({
 		url: '/package/addRedmineMessage',
 		data: {
 			'id': issueId,
-			'message': message
+			'message': message,
+			'pack': pack
 		},
 		dataType: 'html',
 		success: function(data){

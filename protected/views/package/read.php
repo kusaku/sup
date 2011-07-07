@@ -99,7 +99,7 @@ foreach ($zserv as $value) {
 								print '<hr>';
 							}
 
-							print '<textarea class="redmineMessage" id ="redmineMessageInput'.$tab['to_redmine'].'"></textarea> <br><a onClick="redmineSendMessage('.$tab['to_redmine'].');" class="orangeButton" style="clear: both; float: right;">Опубликовать</a>';
+							print '<textarea class="redmineMessage" id ="redmineMessageInput'.$tab['to_redmine'].'" pack='.$pack->id.'></textarea> <br><a onClick="redmineSendMessage('.$tab['to_redmine'].');" class="orangeButton" style="clear: both; float: right;">Опубликовать</a>';
 						} else {
 							print 'Данные не получены! Вероятно задача #'.$tab['to_redmine'].' - "'.$tab['name'].'" не создана.<br><br>Для привязки задач к заказу обратитесь к администратору "'.Yii::app()->name['shortName'].'" или воспользуйтесь следующей формой:<br>';
 							print 'Введите номер задачи с которой производим связку #<input type="number" id="input'.$tab['serv_id'].'" max="999999" min="1" size="9"> <a onClick="bindRedmineIssue('.$pack->id.', '.$tab['serv_id'].')" class="orangeButton">Связать</a>';
