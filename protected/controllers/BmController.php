@@ -128,8 +128,6 @@ class BMController extends Controller {
 					 'addon_31'=>10,
 					 'addon_32'=>10),
 					
-
-			
 			// легкий
 			76=>array('price'=>39,
 					 'period'=>24,
@@ -151,8 +149,6 @@ class BMController extends Controller {
 					 'addon_40'=>1000,
 					 'addon_43'=>1,
 					 'addon_44'=>1),
-					
-
 			
 			// профессиональный
 			80=>array('price'=>47,
