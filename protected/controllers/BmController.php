@@ -15,7 +15,7 @@ class BMController extends Controller {
 		
 		$data = array();
 		foreach ($client->attr as $name=>$attr) {
-			$data[$name] = $attr->value[0]->value;
+			$data[$name] = $attr->values[0]->value;
 		}
 		//$data['confirm'] = @$data['passwd'];
 		$data['ptype'] = 'pcompany';
@@ -26,9 +26,8 @@ class BMController extends Controller {
 		
 		// при успешной регистрации сохряняем ID учетки в атрибутах
 		if ($result['success']) {
-			// 5003 == attribute_id для атрибута bm_id
-			isset($client->value[5003]) and $attr = $client->value[5003] or $attr = new PeopleAttr();
-			$attr->attribute_id = 5003;
+			$attr = new PeopleAttr();
+			$attr->attribute_id = Attributes::model()->findByAttributes(array('type'=>'bm_id'))->primaryKey;
 			$attr->people_id = $client->primaryKey;
 			$attr->value = $result['cdata']['user.id'];
 			$attr->save();
@@ -47,7 +46,7 @@ class BMController extends Controller {
 		$client_id = (int) Yii::app()->request->getParam('client_id');
 		$client = People::getById($client_id);
 		
-		$username = isset($client->attr['username']) ? $client->attr['username']->value[0]->value : '';
+		$username = isset($client->attr['username']) ? $client->attr['username']->values[0]->value : '';
 		
 		// от имени менеджера
 		$bmr = new BMRequest(true);
@@ -73,7 +72,7 @@ class BMController extends Controller {
 		
 		// клиент и его учетка
 		$client = $site->client;
-		$username = isset($client->attr['username']) ? $client->attr['username']->value[0]->value : '';
+		$username = isset($client->attr['username']) ? $client->attr['username']->values[0]->value : '';
 		
 		// от имени менеджера
 		$bmr = new BMRequest(true);
@@ -96,23 +95,84 @@ class BMController extends Controller {
 		}
 		
 		// данные для конкретного тарифа - с периодом и дополнениями
-		$prices = array(68=>array('price'=>39,
-				 'period'=>21,
-				 'addon_40'=>1000,
-				 'addon_43'=>1,
-				 'addon_44'=>1),
-				 69=>array('price'=>39,
-				 'period'=>22,
-				 'addon_40'=>1000,
-				 'addon_43'=>1,
-				 'addon_44'=>1),
-				 70=>array('price'=>39,
-				 'period'=>23,
-				 'addon_40'=>1000,
-				 'addon_43'=>1,
-				 'addon_44'=>1));
+		$prices = array(
+			// оптимальный
+			70=>array('price'=>27,
+					 'period'=>10,
+					 'addon_28'=>3000,
+					 'addon_31'=>10,
+					 'addon_32'=>10),
+					 71=>array('price'=>27,
+					 'period'=>7,
+					 'addon_28'=>3000,
+					 'addon_31'=>10,
+					 'addon_32'=>10),
+					 72=>array('price'=>27,
+					 'period'=>8,
+					 'addon_28'=>3000,
+					 'addon_31'=>10,
+					 'addon_32'=>10),
+					 73=>array('price'=>27,
+					 'period'=>47,
+					 'addon_28'=>3000,
+					 'addon_31'=>10,
+					 'addon_32'=>10),
+					 74=>array('price'=>27,
+					 'period'=>9,
+					 'addon_28'=>3000,
+					 'addon_31'=>10,
+					 'addon_31'=>10),
+					 75=>array('price'=>27,
+					 'period'=>46,
+					 'addon_28'=>3000,
+					 'addon_31'=>10,
+					 'addon_32'=>10),
+					
+			// легкий
+			76=>array('price'=>39,
+					 'period'=>24,
+					 'addon_40'=>1000,
+					 'addon_43'=>1,
+					 'addon_44'=>1),
+					 77=>array('price'=>39,
+					 'period'=>21,
+					 'addon_40'=>1000,
+					 'addon_43'=>1,
+					 'addon_44'=>1),
+					 78=>array('price'=>39,
+					 'period'=>22,
+					 'addon_40'=>1000,
+					 'addon_43'=>1,
+					 'addon_44'=>1),
+					 79=>array('price'=>39,
+					 'period'=>23,
+					 'addon_40'=>1000,
+					 'addon_43'=>1,
+					 'addon_44'=>1),
+			
+			// профессиональный
+			80=>array('price'=>47,
+					 'period'=>29,
+					 'addon_48'=>5000,
+					 'addon_51'=>20,
+					 'addon_52'=>20),
+					 81=>array('price'=>47,
+					 'period'=>26,
+					 'addon_48'=>5000,
+					 'addon_51'=>20,
+					 'addon_52'=>20),
+					 82=>array('price'=>47,
+					 'period'=>27,
+					 'addon_48'=>5000,
+					 'addon_51'=>20,
+					 'addon_52'=>20),
+					 83=>array('price'=>47,
+					 'period'=>28,
+					 'addon_48'=>5000,
+					 'addon_51'=>20,
+					 'addon_52'=>20));
 
-		
+			
 		// передаем данные
 		$data = array_merge($prices[$service_id], array('domain'=>$site->url, 'payfrom'=>'neworder'));
 		$result = $bmr->orderVhost($data);
@@ -158,7 +218,7 @@ class BMController extends Controller {
 		
 		// клиент и его учетка
 		$client = $site->client;
-		$username = isset($client->attr['username']) ? $client->attr['username']->value[0]->value : '';
+		$username = isset($client->attr['username']) ? $client->attr['username']->values[0]->value : '';
 		
 		// от имени менеджера
 		$bmr = new BMRequest(true);
@@ -186,11 +246,11 @@ class BMController extends Controller {
 		// если есть контакты домена, используем последний, иначе - создаем новый
 		if (! empty($result['cdata'])) {
 			$lastdc = array_pop($result['cdata']);
-			$lastdcid = $lastdc;
+			$lastdcid = $lastdc['id'];
 		} else {
 			$data = array();
 			foreach ($client->attr as $name=>$attr) {
-				$data[$name] = $attr->value[0]->value;
+				$data[$name] = $attr->values[0]->value;
 			}
 			$data['name'] = "AutoContact from SUP for $site->url";
 			
@@ -206,8 +266,41 @@ class BMController extends Controller {
 		}
 		
 		// данные для конкретного тарифа - с периодом и дополнениями
-		$prices = array(72=>array('price'=>38,
+		$prices = array(84=>array('price'=>54,
+				 'period'=>30,
+				 'autoprolong'=>30),
+				 85=>array('price'=>55,
+				 'period'=>34,
+				 'autoprolong'=>30),
+				 86=>array('price'=>56,
+				 'period'=>38,
+				 'autoprolong'=>30),
+				 87=>array('price'=>57,
+				 'period'=>42,
+				 'autoprolong'=>30),
+				 88=>array('price'=>38,
 				 'period'=>16,
+				 'autoprolong'=>30),
+				 89=>array('price'=>58,
+				 'period'=>48,
+				 'autoprolong'=>30),
+				 90=>array('price'=>59,
+				 'period'=>52,
+				 'autoprolong'=>30),
+				 91=>array('price'=>60,
+				 'period'=>56,
+				 'autoprolong'=>30),
+				 92=>array('price'=>61,
+				 'period'=>60,
+				 'autoprolong'=>30),
+				 93=>array('price'=>62,
+				 'period'=>64,
+				 'autoprolong'=>30),
+				 94=>array('price'=>63,
+				 'period'=>68,
+				 'autoprolong'=>30),
+				 95=>array('price'=>64,
+				 'period'=>72,
 				 'autoprolong'=>30));
 		
 		$data = array_merge($prices[$service_id], array('customer'=>$lastdcid, 'subjnic'=>$lastdcid, 'domain'=>$site->url, 'elid'=>$lastdcid, 'customertype'=>'person'));

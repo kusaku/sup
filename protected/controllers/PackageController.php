@@ -67,8 +67,6 @@ class PackageController extends Controller
 			$site->ftp = $_POST['site_ftp'];
 			$site->db = $_POST['site_db'];
 			$site->client_id = $_POST['pack_client_id'];
-			$site->bm_login = $_POST['site_bmlogin'];
-			$site->bm_password = $_POST['site_bmpassword'];
 
 			$site->save();
 			$pack->site_id = $site->id;
