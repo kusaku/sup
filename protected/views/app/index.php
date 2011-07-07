@@ -5,7 +5,7 @@
 	$month = $months[date('n')-1];
 ?>
 <!--	Всё для поп-ап окна	-->
-<div id="modal" onclick="alert('Жми кнопку ЗАКРЫТЬ ;)');"></div>
+<div id="modal"></div>
 <div id="sup_popup" class="popup"></div>
 <div id="sup_preloader" class="popup"><img src="/images/preloader.gif" boreder="0"></div>
 

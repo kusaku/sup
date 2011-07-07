@@ -128,7 +128,7 @@ class PackageController extends Controller
 			 */
 			
 			$issue = Redmine::addIssue(
-					'#'.$package->id.' '.$package->name,	// Название
+					'Заказ #'.$package->id.' '.$package->name,	// Название
 					$package->descr,	// Описание
 					0,	// Родительский проект
 					53,	// Кому назначена
@@ -169,6 +169,7 @@ class PackageController extends Controller
 			{
 				$package->manager_id = Yii::app()->user->id;
 				$package->status_id = 17;
+				$package->dt_change = date('Y-m-d H:i:s');
 				$package->save();
 			}
 			
@@ -179,14 +180,20 @@ class PackageController extends Controller
 	}
 
 	/*
-	 * Отмечаем заказ как не нужный - а врхив
+	 * Добавляем в Redmine новое сообщение
 	 */
 	public function actionAddRedmineMessage()
 	{
 		$id	= Yii::app()->request->getParam('id');
 		$message = Yii::app()->request->getParam('message');
+
 		if ( $id & $message ){
 			Redmine::addNoteToIssue($id, $message);
+
+			$pack = Package::getById( Yii::app()->request->getParam('pack') );
+			$pack->dt_change = date('Y-m-d H:i:s');
+			$pack->save();
+
 			$issue = Redmine::getIssue($id);
 			foreach ($issue->journals->journal as $journal)
 			{
@@ -198,7 +205,27 @@ class PackageController extends Controller
 		} else {
 			print 0;
 		}
+	}
 
+	public function actionBindRedmineIssue()
+	{
+		$issue_id	= (int) Yii::app()->request->getParam('issue_id');
+		$pack_id	= (int) Yii::app()->request->getParam('pack_id');
+		$serv_id	= (int) Yii::app()->request->getParam('serv_id');
+
+		if ( $issue_id & $pack_id & $serv_id ){
+			$s2p = Serv2pack::getByIds($serv_id, $pack_id);
+			$s2p->to_redmine = $issue_id;
+			$s2p->save();
+			print 1;
+		} elseif ( $issue_id & $pack_id ){
+			$pack = Package::getById($pack_id);
+			$pack->redmine_proj = $issue_id;
+			$pack->save();
+			print 1;
+		} else {
+			print 0;
+		}
 	}
 
 	/*
