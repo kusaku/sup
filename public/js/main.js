@@ -39,7 +39,8 @@ function prepareHtml(){
 	$('select').selectBox();
 	$('input[type="checkbox"], input[type="radio"]').radiocheckBox();
 	$('#sup_popup').draggable({
-		handle: '.clientHead'
+		handle: '.clientHead',
+		containment: 'parent'
 	});
 }
 
@@ -400,19 +401,19 @@ function saveAndProceed(what, where){
 		data: data,
 		//dataType: 'json',
 		success: function(data){
-            try {
-                data = jQuery.parseJSON(data)
-                if (data.success) {
+			try {
+				data = jQuery.parseJSON(data)
+				if (data.success) {
 					where(data.argument1, data.argument2, data.argument3);
-                }
-                else {
-                    alert(data.message)
-                }
-            } 
-            catch (e) {
-                // что-то пошло не так, json не вернулся
-				 alert('ааааа!')
-            }
-        }
+				}
+				else {
+					alert(data.message)
+				}
+			} 
+			catch (e) {
+				// что-то пошло не так, json не вернулся
+				alert('ааааа!')
+			}
+		}
 	});
 }

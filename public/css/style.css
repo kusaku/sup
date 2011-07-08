@@ -449,7 +449,6 @@ a:hover {
 }
 
 .columnsBody li .clientInfo span.clientName {
-    text-decoration: underline;
     display: block;
     position: relative;
     font-size: 14px;

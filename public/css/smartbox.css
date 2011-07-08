@@ -143,13 +143,14 @@
 
 .tipBox {
     background: #ff7b0b;
-    -moz-border-radius: 3px;
-    -khtml-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    border-radius: 3px;
+    -moz-border-radius: 6px;
+    -khtml-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
     color: #ffffff;
     padding: 7px;
 	z-index: 999999;
+	margin: 0px 7px;
 }
 
 .tipBox .tip {

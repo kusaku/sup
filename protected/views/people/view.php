@@ -10,11 +10,11 @@
 			<input type="text" value="<?=$people->firm?>" size="26" name="firm"/><label>Город: </label>
 			<input type="text" value="<?=$people->state?>" size="26" name="state"/><label>Примечание: </label>
 			<textarea name="descr" rows="3" cols="12"><?= $people->descr?></textarea>
-			<?php if (!empty($people->attr['bm_id']->values[0]->value)): ?>
-			<a style="padding:5px 20px;display:block;" id="linkid-<?= $people->primaryKey; ?>" onclick="bmOpen(<?= $people->primaryKey; ?>)" href="#">Открыть в BM (id <?= $people->attr['bm_id']->values[0]->value; ?>)</a>
+			<?php if (! empty($people->attr['bm_id']->values[0]->value)): ?>
+			<span><a class="add_open" id="linkid-<?= $people->primaryKey; ?>" onclick="bmOpen(<?= $people->primaryKey; ?>)" href="#"></a>Открыть BILLManager (id <?= $people->attr['bm_id']->values[0]->value ?>)</span>
 			<?php else : ?>
 			<?php if ($people->primaryKey): ?>
-			<a style="padding:5px 20px;display:block;" id="linkid-<?= $people->primaryKey; ?>" onclick="bmRegister(<?= $people->primaryKey; ?>)" href="#">Зарегистрировать в BM</a>
+			<span><a class="add_bm" id="linkid-<?= $people->primaryKey; ?>" onclick="bmRegister(<?= $people->primaryKey; ?>)" href="#"></a>Рег. в BILLManager</span>
 			<?php endif; ?>
 			<?php endif; ?>
 		</div>
