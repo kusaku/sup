@@ -87,7 +87,6 @@ class PackageController extends Controller
 		foreach($_POST['service'] as $id)
 		{
 			$s2p = new Serv2pack();
-
 			$s2p->serv_id = $id;
 			$s2p->pack_id = $pack->id;
 			$s2p->quant = $_POST['count'][$id];
@@ -95,6 +94,7 @@ class PackageController extends Controller
 			$s2p->descr = $_POST['descr'][$id];
 			$s2p->master_id = $_POST['master'][$id];
 			$s2p->dt_beg = $_POST['dt_beg'][$id];
+			$s2p->dt_end = $_POST['dt_end'][$id];
 			$s2p->save();
 		}
 

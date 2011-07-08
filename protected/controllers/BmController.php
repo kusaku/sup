@@ -128,6 +128,8 @@ class BMController extends Controller {
 					 'addon_31'=>10,
 					 'addon_32'=>10),
 					
+
+			
 			// легкий
 			76=>array('price'=>39,
 					 'period'=>24,
@@ -149,6 +151,8 @@ class BMController extends Controller {
 					 'addon_40'=>1000,
 					 'addon_43'=>1,
 					 'addon_44'=>1),
+					
+
 			
 			// профессиональный
 			80=>array('price'=>47,
@@ -178,9 +182,20 @@ class BMController extends Controller {
 		$result = $bmr->orderVhost($data);
 		
 		// период хостинга относительно now
-		$next = array(68=>'+3 month',
-				 69=>'+6 month',
-				 70=>'+12 month');
+		$next = array(70=>'+10 days',
+				 71=>'+3 month',
+				 72=>'+6 month',
+				 73=>'+9 month',
+				 74=>'+1 year',
+				 75=>'+2 year',
+				 76=>'+10 days',
+				 77=>'+3 month',
+				 78=>'+6 month',
+				 79=>'+1 year',
+				 80=>'+10 days',
+				 81=>'+3 month',
+				 82=>'+6 month',
+				 83=>'+1 year');
 		
 		// при успехе
 		if ($result['success']) {

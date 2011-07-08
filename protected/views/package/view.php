@@ -172,6 +172,12 @@ if ($package_id) {
 								<?php else : ?>
 								<input type="hidden" name="dt_beg[<?= $service->id?>]" value="<?= $dataTime?>">
 								<?php endif; ?>
+								<?php if ($active): ?>
+								<input type="hidden" name="dt_end[<?= $service->id?>]" value="<?= $ordered[$service->id]->dt_end?>">
+								<?php else : ?>
+								<input type="hidden" name="dt_end[<?= $service->id?>]" value="<?= $dataTime?>">
+								<?php endif; ?>
+								
 							</div>
 							<?php endforeach; ?>
 							<div class="projectPartBottom"></div>
