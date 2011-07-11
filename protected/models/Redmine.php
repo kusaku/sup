@@ -23,19 +23,19 @@ class Redmine
 	);/**/
 
 	private static $config = array(
-		'allow_connect' => true, // Подключаться к редмайну? Если нет, то любое обращение будет возвращать FALSE
+		'allow_connect' => true,
 		'protocol' => 'http',
 		'port' => '80',
-		'url' => "redmine.sandbox.loc", //Без HTTP://
-		'targetProjectId' => '1', // Целевой проект - в него будут попадать задачи
+		'url' => "redmine.sandbox.loc",
+		'targetProjectId' => '1',
 	);/**/
 
 /*	private static $config = array(
-		'allow_connect' => true, // Подключаться к редмайну? Если нет, то любое обращение будет возвращать FALSE
+		'allow_connect' => true,
 		'protocol' => 'http',
 		'port' => '80',
-		'url' => "redmine.fabricasaitov.ru", //Без HTTP://
-		'targetProjectId' => 'suptask', // Целевой проект - в него будут попадать задачи
+		'url' => "redmine.fabricasaitov.ru",
+		'targetProjectId' => 'suptask',
 	);/**/
 
 
