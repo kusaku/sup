@@ -133,6 +133,7 @@ function showPopUp(){
  */
 function hidePopUp(){
 	$('#sup_popup').fadeOut(0);
+	$('#sup_popup select.selectBox').selectBox('destroy');
 	$('#sup_preloader').hide(0); // Прячем preloader
 	$('#modal').fadeOut(0); // 200
 };

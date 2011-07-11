@@ -13,13 +13,13 @@
         <div class="login_form">
             <img src="/images/logo.png" class="login_form_img"/>
             <div class="row">
-                <?php echo $form->labelEx($model, 'Login'); ?>
+                <?php echo $form->labelEx($model, 'Имя пользователя'); ?>
                 <br>
                 <?php echo $form->textField($model, 'username'); ?>
                 <?php echo $form->error($model, 'username'); ?>
             </div>
             <div class="row">
-                <?php echo $form->labelEx($model, 'Password'); ?>
+                <?php echo $form->labelEx($model, 'Пароль'); ?>
                 <br>
                 <?php echo $form->passwordField($model, 'password'); ?>
                 <?php echo $form->error($model, 'password'); ?>
@@ -28,7 +28,7 @@
             </div>
             <div class="row rememberMe">
                 <?php echo $form->checkBox($model, 'rememberMe'); ?>
-                <?php echo $form->label($model, 'Remember me'); ?>
+                <?php echo $form->label($model, 'Запомнить меня'); ?>
                 <?php echo $form->error($model, 'rememberMe'); ?>
             </div>
             <div class="row_buttons">

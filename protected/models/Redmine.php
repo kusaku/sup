@@ -118,7 +118,7 @@ class Redmine
 		$users = Redmine::runRequest('/users.xml?limit=100&status=', 'GET', '');
 		$usersArray = array();
 		foreach ($users as $user) {
-			$usersArray[ (string)$user->login ] = (int)$user->id;
+			$usersArray[ trim( mb_strToLower( (string)$user->login ) ) ] = (int)$user->id;
 			//$usersArray[ md5( (string)$user->login ) ] = (string)$user->login;
 		}
 		return $usersArray;
@@ -131,10 +131,10 @@ class Redmine
 	 */
 	public static function getUserByLogin($login) {
 		if ( $login ){
-			$login = mb_strToLower( $login );
+			$login = trim( mb_strToLower( $login ) );
 			$users = Redmine::runRequest('/users.xml?status=&limit=100', 'GET', '');
 			foreach ($users as $user) {
-				if ( mb_strToLower( $user->login ) == $login ){
+				if ( trim( mb_strToLower( $user->login ) ) == $login ){
 					return $user;
 				}
 			}
