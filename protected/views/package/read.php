@@ -86,7 +86,8 @@ foreach ($zserv as $value) {
 						print '<div id="tabContent'.$tab['serv_id'].'" class="tabContent '.$hidden.'">';
 
 						if ( $issue ){
-							print $issue->subject.' ('.$issue->done_ratio.'%)';
+							print $issue->subject.' ('.$issue->done_ratio.'%)<br>';
+							print 'Задача в Redmine #'.$tab['to_redmine'];
 							print '<div class="progressBar"><div class="progressStat" style="width:'.$issue->done_ratio.'%">'.$issue->done_ratio.'%</div></div>';
 							print 'Иполнитель: '.$issue->assigned_to['name'].'<br>';
 							print 'Описание: '.str_replace("\n", '<br>', $issue->description).'<br>';

@@ -113,6 +113,8 @@ class PackageController extends Controller
 			
 			if ( Yii::app()->request->getParam('message') != '' )
 			$package->descr = $package->descr."\nПодробности оплаты: ".Yii::app()->request->getParam('message');
+
+			$usersArray = Redmine::getUsersArray();
 			$package->status_id = 50;
 
 			/* этот блок тут только для наглядного описания входных параметров
@@ -144,7 +146,7 @@ class PackageController extends Controller
 						'#'.$package->id.' '.$service->service->name,	// Название
 						'Задача по проекту #'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
 						0,	// Родительский проект
-						53,	// Кому назначена
+						$usersArray[mb_strToLower($service->master->login)],	// Кому назначена
 						$package->redmine_proj);	// Родительская задача
 
 				$service->to_redmine = $issue->id;
