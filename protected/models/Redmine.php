@@ -104,15 +104,47 @@ class Redmine
 
 	/**
 	 * Возвращаем список всех пользователей
-	 * @return <type>
+	 * @return Object
 	 */
 	public static function getUsers() {
 		return Redmine::runRequest('/users.xml', 'GET', '');
 	}
+
+	/**
+	 * Возвращаем массив вида Array( [alaksey.d] => 50 [elena.c] => 39 [igor.p] => 5 ) соответствие Login-ID
+	 * @return Array
+	 */
+	public static function getUsersArray() {
+		$users = Redmine::runRequest('/users.xml?limit=100&status=', 'GET', '');
+		$usersArray = array();
+		foreach ($users as $user) {
+			$usersArray[ trim( mb_strToLower( (string)$user->login ) ) ] = (int)$user->id;
+			//$usersArray[ md5( (string)$user->login ) ] = (string)$user->login;
+		}
+		return $usersArray;
+	}
+
+	/**
+	 * Возвращаем пользователя Redmine по его логину.
+	 * @param String $login
+	 * @return Object
+	 */
+	public static function getUserByLogin($login) {
+		if ( $login ){
+			$login = trim( mb_strToLower( $login ) );
+			$users = Redmine::runRequest('/users.xml?status=&limit=100', 'GET', '');
+			foreach ($users as $user) {
+				if ( trim( mb_strToLower( $user->login ) ) == $login ){
+					return $user;
+				}
+			}
+		}
+		return false;
+	}
  
 	/**
 	 * Возвращаем список всех проектов. Не используется, но коль реалезовано - пусть остаётся.
-	 * @return <type>
+	 * @return Object
 	 */
 	public static function getProjects() {
 		return Redmine::runRequest('/projects.xml', 'GET', '');
@@ -121,7 +153,7 @@ class Redmine
 	/**
 	 * Возвращаем все задачи проекта. Не используется.
 	 * @param <type> $projectId
-	 * @return <type>
+	 * @return Object
 	 */
 	public static function getIssues($projectId = null) {
 		// Если проект не передали, то используем проект по умолчанию
@@ -133,7 +165,7 @@ class Redmine
 	 * Возвращает задачу с комментариями.
 	 *
 	 * @param int $IssueId
-	 * @return object
+	 * @return Object
 	 */
 	public static function getIssue($IssueId) {
 		return Redmine::runRequest('/issues/'.$IssueId.'.xml?include=journals', 'GET', '');

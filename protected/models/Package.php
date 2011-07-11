@@ -20,11 +20,9 @@ class Package extends CActiveRecord {
 					 'client_id'),
 					 'services'=>array(self::MANY_MANY,
 					
-
-			
-				// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
-				'Service',
-					 'serv2pack(pack_id, serv_id)'),
+			// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
+			'Service',
+					'serv2pack(pack_id, serv_id)'),
 					
 
 				
@@ -51,7 +49,7 @@ class Package extends CActiveRecord {
 	
 	public static function updateById($id) {
 		if ($id) {
-			$pack = self::getById($id);
+			$pack = Package::getById($id);
 			$pack->dt_change = date('Y-m-d H:i:s');
 			$pack->save();
 			return true;

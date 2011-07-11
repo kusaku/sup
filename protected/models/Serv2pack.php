@@ -19,7 +19,8 @@ class Serv2pack extends CActiveRecord
     {
 		return array(
 			'package'=>array(self::BELONGS_TO,	'Package',	'pack_id'),
-			'service'=>array(self::BELONGS_TO,	'Service',	'serv_id')
+			'service'=>array(self::BELONGS_TO,	'Service',	'serv_id'),
+			'master'=>array(self::BELONGS_TO,	'People',	'master_id'), // Связка с мастером
 			);
 	}
 	

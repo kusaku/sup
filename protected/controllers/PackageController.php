@@ -113,25 +113,15 @@ class PackageController extends Controller
 			
 			if ( Yii::app()->request->getParam('message') != '' )
 			$package->descr = $package->descr."\nПодробности оплаты: ".Yii::app()->request->getParam('message');
+
+			$usersArray = Redmine::getUsersArray();
 			$package->status_id = 50;
 
-			/* этот блок тут только для наглядного описания входных параметров
-			addIssue(
-			 * $subject,
-			 * $description,
-			 * $project_id,
-			 * $assignmentUserId = 1,
-			 * $parentIssueId = 0,
-			 * $category_id = 1,
-			 * $created_on = false,
-			 * $due_date = false)
-			 */
-			
 			$issue = Redmine::addIssue(
 					'Заказ #'.$package->id.' '.$package->name,	// Название
 					$package->descr,	// Описание
 					0,	// Родительский проект
-					53,	// Кому назначена
+					$usersArray[ trim( (string)Yii::app()->user->login ) ],	// Кому назначена - себе
 					0);	// Родительская задача
 
 			$package->redmine_proj = $issue->id;
@@ -143,8 +133,8 @@ class PackageController extends Controller
 				$issue = Redmine::addIssue(
 						'#'.$package->id.' '.$service->service->name,	// Название
 						'Задача по проекту #'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
-						0,	// Родительский проект
-						53,	// Кому назначена
+						0,	// Родительский проект - возьмётся из настроек редмайна
+						$usersArray[ trim( mb_strToLower($service->master->login) ) ],	// Кому назначена
 						$package->redmine_proj);	// Родительская задача
 
 				$service->to_redmine = $issue->id;

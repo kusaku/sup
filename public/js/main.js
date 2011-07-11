@@ -2,6 +2,14 @@
  * Автоматическая загрузка - выполнится как загрузится страница.
  */
 $(function(){
+	//	Показываем кнопку очистки поля автокомплита при незавершенном поиске
+	$("#searchClient").keyup(function(){
+		if ( $(this).val().length > 2 ){
+			$("#buttonClear").removeClass('hidden');
+		} else {
+			$("#buttonClear").addClass('hidden');
+		}
+	});
 	//Автокомплит - поиск на главной странице.
 	$("#searchClient").autocomplete({
 		source: "/people/GlobalSearchJSON",
@@ -16,10 +24,6 @@ $(function(){
 	$('input.cbox').live('change', function(){
 		sumka();
 	});
-	$('#sup_popup').hide(0); // Прячем всплывающее окно
-	$('#sup_preloader').hide(0); // Прячем preloader
-	$('#modal').hide(0); // И фон всплывающего окна
-	$("#buttonClear").addClass('hidden'); // Прячем кнопку очистки поиска
 	loadData(); // Загружаем заказы на главную страницу
 	loadCalendar();
 	$.datepicker.setDefaults($.datepicker.regional["ru"]); // Устанавливаем локаль для календаря
@@ -130,6 +134,7 @@ function showPopUp(){
  */
 function hidePopUp(){
 	$('#sup_popup').fadeOut(0);
+	$('#sup_popup select.selectBox').selectBox('destroy');
 	$('#sup_preloader').hide(0); // Прячем preloader
 	$('#modal').fadeOut(0); // 200
 };

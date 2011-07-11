@@ -10,7 +10,7 @@
 		<link href="/css/sup.css" rel="stylesheet" type="text/css" />
 		<link href="/css/tabs.css" rel="stylesheet" type="text/css" />
 		<link href="/css/calendar.css" rel="stylesheet" type="text/css" />
-		<script language="JavaScript" src="/js/jquery-1.5.2.js"></script>
+		<script language="JavaScript" src="/js/jquery-1.6.2.min.js"></script>
 		<script language="JavaScript" src="/js/jquery.ui.datepicker-ru.js"></script>
 		<script language="JavaScript" src="/js/jquery-ui-1.8.11.custom.min.js"></script>
 		<script language="JavaScript" src="/js/jquery.smartBox.min.js"></script>
