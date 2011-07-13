@@ -35,15 +35,15 @@ function bmRegister(client_id){
 				data = jQuery.parseJSON(data)
 				// при удаче меняем ссылку
 				if (data.success) {
-					form.find('#linkid' + client_id).parent().html('<a class="add_open" id="linkid-<?= $client->primaryKey; ?>" onclick="bmOpen(' + client_id + ')" href="#"></a> Открыть BILLManager (id ' + data.cdata['user.id'] + ')');
+					$('#linkid-' + client_id).parent().html('<a href="#" onclick="saveAndProceed(\'#sup_popup form\', function(success){if (success) bmOpen(' + client_id + '); else $(\'#linkid-' + client_id + '\').tipBox(\'Ошибка сохранения!\').tipBox(\'show\');});" id="linkid-' + client_id + '" class="add_open"></a>Открыть BILLManager');
 				}
 				else {
 					var msg = 'Ошибка';
 					(data.code) && (msg += ' #' + data.code + ' - ' + errors[data.code]);
-					(data.val) && (msg += ': ' + data.val);
-					(data.msg) && (msg += ' ' + data.msg);
+					(data.msg) && (msg += ' - ' + data.msg);
+					(data.val) && (msg += ' (' + data.val + ')');
 					
-					var field = $('#' + data.val ? data.val : 'notexist');
+					var field = form.find('#' + (data.val ? data.val : 'notexist'));
 					if (field.length) {
 						field.tipBox(msg);
 						var parent = field.parents(':hidden');
@@ -106,8 +106,8 @@ function bmOpen(client_id){
 				else {
 					var msg = 'Ошибка';
 					(data.code) && (msg += ' #' + data.code + ' - ' + errors[data.code]);
-					(data.val) && (msg += ': ' + data.val);
-					(data.msg) && (msg += ' ' + data.msg);
+					(data.msg) && (msg += ' - ' + data.msg);
+					(data.val) && (msg += ' (' + data.val + ')');
 					$('#linkid-' + client_id).tipBox(msg).tipBox('show');
 				}
 				return false;
@@ -142,8 +142,8 @@ function bmVHost(site_id, package_id, service_id){
 				else {
 					var msg = 'Ошибка';
 					(data.code) && (msg += ' #' + data.code + ' - ' + errors[data.code]);
-					(data.val) && (msg += ': ' + data.val);
-					(data.msg) && (msg += ' ' + data.msg);
+					(data.msg) && (msg += ' - ' + data.msg);
+					(data.val) && (msg += ' (' + data.val + ')');
 					$('#linkid-' + package_id + '-' + service_id).tipBox(msg).tipBox('show');
 				}
 				return false;
@@ -178,8 +178,8 @@ function bmDomainName(site_id, package_id, service_id){
 				else {
 					var msg = 'Ошибка';
 					(data.code) && (msg += ' #' + data.code + ' - ' + errors[data.code]);
-					(data.val) && (msg += ': ' + data.val);
-					(data.msg) && (msg += ' ' + data.msg);
+					(data.msg) && (msg += ' - ' + data.msg);
+					(data.val) && (msg += ' (' + data.val + ')');
 					$('#linkid-' + package_id + '-' + service_id).tipBox(msg).tipBox('show');
 				}
 				return false;

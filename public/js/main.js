@@ -36,7 +36,7 @@ $(function(){
  */
 function prepareHtml(){
 	// замена стандартных элементов
-	$('select').selectBox();
+	// $('select').selectBox();
 	$('input[type="checkbox"], input[type="radio"]').radiocheckBox();
 	$('#sup_popup').draggable({
 		handle: '.clientHead',
@@ -111,16 +111,12 @@ function showPopUp(){
 	$('#sup_popup').html($('#sup_popup').html() + '<a id="popup_close" onClick="hidePopUp()"></a>');
 	
 	var left = Math.round($(document).width() / 2) - Math.round($('#sup_popup').width() / 2);
-	if (left < 1) 
-		left = 0;
 	var top = Math.round($(window).height() / 2) - Math.round($('#sup_popup').height() / 2);
-	if (top > 10) 
-		top = 10;
-	if (top < 1) 
-		top = 0;
 	
-	$('#sup_popup').css('left', left + 'px');
-	$('#sup_popup').css('top', top + 'px');
+	$('#sup_popup').css({
+		'left': left,
+		'top': top
+	});
 	
 	prepareHtml();
 };
@@ -128,7 +124,9 @@ function showPopUp(){
 /* 
  * Прячем всплвающее окно.
  */
-function hidePopUp(){
+function hidePopUp(){	
+	// разрушение селектбоксов 
+	//$('#sup_popup select').selectBox('destroy');
 	$('#sup_popup').fadeOut(0);
 	$('#sup_preloader').hide(0); // Прячем preloader
 	$('#modal').fadeOut(0); // 200
@@ -393,6 +391,12 @@ function selectTab(id){
  */
 function saveAndProceed(what, where){
 	var form = $(what);
+	
+	if (!form.length) {
+		where(false);
+		return false;
+	}
+	
 	var data = form.serialize();
 	data += '&isAJAX=true';
 	$.ajax({
@@ -403,17 +407,17 @@ function saveAndProceed(what, where){
 		success: function(data){
 			try {
 				data = jQuery.parseJSON(data)
-				if (data.success) {
-					where(data.argument1, data.argument2, data.argument3);
-				}
-				else {
-					alert(data.message)
-				}
+				//alert(data.success);
+				where(data.success);
 			} 
 			catch (e) {
 				// что-то пошло не так, json не вернулся
-				alert('ааааа!')
+				where(false);
 			}
+		},
+		error: function(data){
+			where(false);
 		}
 	});
+	return false;
 }
