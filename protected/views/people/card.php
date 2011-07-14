@@ -53,7 +53,7 @@ $summa = 0;
 			</div>
 			<?php if (! empty($client->attr['bm_id']->values[0]->value)): ?>
 			<div class="column">				
-				<span><a class="add_open" id="linkid-<?= $client->primaryKey; ?>" onclick="bmOpen(<?= $client->primaryKey; ?>)" href="#"></a> Открыть BILLManager (id <?= $client->attr['bm_id']->values[0]->value; ?>)</span>
+				<span><a class="add_open" id="linkid-<?= $client->primaryKey; ?>" onclick="bmOpen(<?= $client->primaryKey; ?>)" href="#"></a> Открыть BILLManager</span>
 			</div>
 			<?php else : ?>
 			<div class="column">				

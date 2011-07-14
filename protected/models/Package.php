@@ -13,7 +13,13 @@ class Package extends CActiveRecord {
 	}
 	
 	public function relations() {
-		return array(// Связка с менеджером 'manager'=>array(self::BELONGS_TO, 'People', 'manager_id'),
+		return array(
+			// Связка с менеджером
+			'manager'=>array(self::BELONGS_TO,
+					 'People',
+					 'manager_id'),
+					
+			
 			// Связка с клиентом
 			'client'=>array(self::BELONGS_TO,
 					 'People',
@@ -23,28 +29,22 @@ class Package extends CActiveRecord {
 			// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
 			'Service',
 					'serv2pack(pack_id, serv_id)'),
-					
-
 				
 			// Связка с сервисами. Возвращает все сервисы вместе с данными из serv2pack (blablabla->quant, blablabla->service->name)
 			'servPack'=>array(self::HAS_MANY,
 					 'Serv2pack',
 					 'pack_id',
 					 'with'=>'service'),
-					
-
 			
 			// Связка с сайтом
 			'site'=>array(self::BELONGS_TO,
 					 'Site',
 					 'site_id'),
-					
-
 			
 			// Связка со статусами
 			'status'=>array(self::BELONGS_TO,
 					 'Status',
-					 'status_id'), );
+					 'status_id') );
 	}
 	
 	public static function updateById($id) {
@@ -56,10 +56,12 @@ class Package extends CActiveRecord {
 		} else {
 			return false;
 		}
-	}/**/
+	}
+	
 	public static function getById($id) {
 		return self::model()->find(array('condition'=>"id=$id", 'limit'=>1));
 	}
+	
 	public static function getTop($count = 100) {
 		return self::model()->findAll(array('select'=>'client_id, status_id, dt_change, dt_beg', 'condition'=>"(manager_id=".Yii::app()->user->id.") or (manager_id=0)", 'order'=>'dt_change DESC, dt_beg DESC', 'limit'=>$count));
 	}
@@ -168,7 +170,8 @@ switch ($package->status_id):
 	case 17:
 		print '<div class="projectState">			<strong class="uppper">Не оплачен!</strong>
 					<a onClick="addPay('.$package->id.', '.$client_id.');" class="icon"><img src="images/icon04.png" title="Заказ оплачен"/></a>
-					<a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<!--a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a-->
+					<a onClick="SelectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a></div>';
 		break;
 		

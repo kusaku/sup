@@ -9,6 +9,7 @@ class BMController extends Controller {
 	 * @return
 	 */
 	public function actionRegister() {
+	
 		// клиент
 		$client_id = (int) Yii::app()->request->getParam('client_id');
 		$client = People::getById($client_id);
@@ -26,7 +27,7 @@ class BMController extends Controller {
 		
 		// при успешной регистрации сохряняем ID учетки в атрибутах
 		if ($result['success']) {
-			$attr = new PeopleAttr();
+			$attr = $client->attr['bm_id']->values[0] or $attr = new PeopleAttr();
 			$attr->attribute_id = Attributes::model()->findByAttributes(array('type'=>'bm_id'))->primaryKey;
 			$attr->people_id = $client->primaryKey;
 			$attr->value = $result['cdata']['user.id'];
@@ -34,6 +35,7 @@ class BMController extends Controller {
 		}
 		
 		// вывод результатов
+		!$result['success'] and $result['code'] == 4 and $result['msg'] = Attributes::model()->findByAttributes(array('type'=>$result['val']))->name;
 		print(json_encode($result));
 	}
 	
@@ -53,6 +55,7 @@ class BMController extends Controller {
 		$result = $bmr->getAuthKey(array('username'=>$username));
 		
 		// вывод результатов
+		!$result['success'] and $result['code'] == 4 and $result['msg'] = Attributes::model()->findByAttributes(array('type'=>$result['val']))->name;
 		print(json_encode($result));
 	}
 	
@@ -80,6 +83,7 @@ class BMController extends Controller {
 		
 		// при ошибке - выход
 		if (!$result['success']) {
+			$result['code'] == 4 and $result['msg'] = Attributes::model()->findByAttributes(array('type'=>$result['val']))->name;
 			print(json_encode($result));
 			return;
 		}
@@ -90,6 +94,7 @@ class BMController extends Controller {
 		
 		// при ошибке авторизации - выход
 		if (!$result['success']) {
+			$result['code'] == 4 and $result['msg'] = Attributes::model()->findByAttributes(array('type'=>$result['val']))->name;
 			print(json_encode($result));
 			return;
 		}
@@ -214,6 +219,7 @@ class BMController extends Controller {
 		}
 		
 		// вывод результатов
+		!$result['success'] and $result['code'] == 4 and $result['msg'] = Attributes::model()->findByAttributes(array('type'=>$result['val']))->name;
 		print(json_encode($result));
 	}
 	
@@ -241,6 +247,7 @@ class BMController extends Controller {
 		
 		// при ошибке - выход
 		if (!$result['success']) {
+			$result['code'] == 4 and $result['msg'] = Attributes::model()->findByAttributes(array('type'=>$result['val']))->name;
 			print(json_encode($result));
 			return;
 		}
@@ -251,6 +258,7 @@ class BMController extends Controller {
 		
 		// при ошибке авторизации - выход
 		if (!$result['success']) {
+			$result['code'] == 4 and $result['msg'] = Attributes::model()->findByAttributes(array('type'=>$result['val']))->name;
 			print(json_encode($result));
 			return;
 		}
@@ -273,6 +281,7 @@ class BMController extends Controller {
 			
 			// при ошибке создания - выход
 			if (!$result['success']) {
+				$result['code'] == 4 and $result['msg'] = Attributes::model()->findByAttributes(array('type'=>$result['val']))->name;
 				print(json_encode($result));
 				return;
 			}
@@ -339,6 +348,7 @@ class BMController extends Controller {
 		}
 		
 		// вывод результатов
+		!$result['success'] and $result['code'] == 4 and $result['msg'] = Attributes::model()->findByAttributes(array('type'=>$result['val']))->name;
 		print(json_encode($result));
 	}
 }

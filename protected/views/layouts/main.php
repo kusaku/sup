@@ -5,6 +5,8 @@
 		<title><?= Yii::app()->name['name']?></title>
 		<link href="/css/reset.css" rel="stylesheet" type="text/css" />
 		<link href="/css/ui-lightness/jquery-ui-1.8.11.custom.css" rel="stylesheet" type="text/css" />
+		<link href="/js/jwysiwyg/jquery.wysiwyg.css" rel="stylesheet" type="text/css" />
+		<!-- CSS по модулям -->		
 		<link href="/css/smartbox.css" rel="stylesheet" type="text/css" />
 		<link href="/css/style.css" rel="stylesheet" type="text/css" />
 		<link href="/css/sup.css" rel="stylesheet" type="text/css" />
@@ -20,6 +22,8 @@
 		<script language="JavaScript" src="/js/tabs.js"></script>
 		<script language="JavaScript" src="/js/billmgr.js"></script>
 		<script language="JavaScript" src="/js/redmine.js"></script>
+		<script language="JavaScript" src="/js/mail.js"></script>
+		<script language="JavaScript" src="/js/jwysiwyg/jquery.wysiwyg.js"></script>
 	</head>
 	<body>
 		<?= $content?>

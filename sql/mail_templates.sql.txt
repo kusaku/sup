@@ -1,0 +1,23 @@
+-- phpMyAdmin SQL Dump
+-- version 3.3.7deb5build0.10.10.1
+-- http://www.phpmyadmin.net
+--
+-- Хост: localhost
+-- Время создания: Июл 14 2011 г., 14:49
+-- Версия сервера: 5.1.49
+-- Версия PHP: 5.3.3-1ubuntu9.5
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `mail_templates`
+--
+
+CREATE TABLE IF NOT EXISTS `mail_templates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `people_id` int(11) NOT NULL,
+  `name` varchar(128) NOT NULL DEFAULT 'Шаблон по-умолчанию',
+  `subject` text NOT NULL,
+  `body` text NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM;

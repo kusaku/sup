@@ -85,7 +85,7 @@ class PeopleController extends Controller {
 			}
 			
 			if (@$data['isAJAX'])
-				print(json_encode(array('success'=>true, 'argument1'=>0, 'argument2'=>$people->primaryKey, 'argument3'=>0)));
+				print(json_encode(array('success'=>true)));
 			else
 				// Возвращаемся к редактируемому (добавляемому) элементу
 				//$this->redirect(Yii::app()->homeUrl.'people/'.$people->id);

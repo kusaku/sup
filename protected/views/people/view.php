@@ -11,10 +11,10 @@
 			<input type="text" value="<?=$people->state?>" size="26" name="state"/><label>Примечание: </label>
 			<textarea name="descr" rows="3" cols="12"><?= $people->descr?></textarea>
 			<?php if (! empty($people->attr['bm_id']->values[0]->value)): ?>
-			<span><a class="add_open" id="linkid-<?= $people->primaryKey; ?>" onclick="bmOpen(<?= $people->primaryKey; ?>)" href="#"></a>Открыть BILLManager (id <?= $people->attr['bm_id']->values[0]->value ?>)</span>
+			<span><a class="add_open" id="linkid-<?= $people->primaryKey; ?>" onclick="saveAndProceed('#sup_popup form', function(success){if (success) bmOpen(<?= $people->primaryKey; ?>); else $('#linkid-<?= $people->primaryKey; ?>').tipBox('Ошибка сохранения!').tipBox('show');});" href="#"></a>Открыть BILLManager</span>
 			<?php else : ?>
 			<?php if ($people->primaryKey): ?>
-			<span><a class="add_bm" id="linkid-<?= $people->primaryKey; ?>" onclick="bmRegister(<?= $people->primaryKey; ?>)" href="#"></a>Рег. в BILLManager</span>
+			<span><a class="add_bm" id="linkid-<?= $people->primaryKey; ?>" onclick="saveAndProceed('#sup_popup form', function(success){if (success) bmRegister(<?= $people->primaryKey; ?>); else $('#linkid-<?= $people->primaryKey; ?>').tipBox('Ошибка сохранения!').tipBox('show');});" href="#"></a>Рег. в BILLManager</span>
 			<?php endif; ?>
 			<?php endif; ?>
 		</div>
@@ -36,7 +36,7 @@
 	</form>
 	<div class="buttons">
 		<p><span class="orange">* - обязательные поля</span></p>
-		<a onclick="saveAndProceed('#sup_popup form', Package)" class="plus" title="Сохранить клиента и добавить ему заказ"></a>
+		<a onclick="saveAndProceed('#sup_popup form', function(success){if (success) Package(0, <?= $people->primaryKey;?>); else alert('Ошибка сохранения!')});" class="plus" title="Сохранить клиента и добавить ему заказ"></a>
 		<a onClick="document.forms['megaform'].submit();" class="buttonSave">Сохранить</a>
 		<a class="buttonCancel" onClick="hidePopUp()">Отмена</a>
 	</div>
