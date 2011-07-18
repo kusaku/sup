@@ -13,7 +13,10 @@ class Package extends CActiveRecord {
 	}
 	
 	public function relations() {
-		return array(// Связка с менеджером 'manager'=>array(self::BELONGS_TO, 'People', 'manager_id'),
+		return array(
+			// Связка с менеджером
+			'manager'=>array(self::BELONGS_TO, 'People', 'manager_id'),
+
 			// Связка с клиентом
 			'client'=>array(self::BELONGS_TO,
 					 'People',

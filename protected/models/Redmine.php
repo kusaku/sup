@@ -28,6 +28,8 @@ class Redmine
 		'port' => '80',
 		'url' => "redmine.sandbox.loc",
 		'targetProjectId' => '1',
+		'rootLogin' => 'dmitry.k',
+		'rootPassword' => 'Ij3Ohmee',
 	);/**/
 
 /*	private static $config = array(
@@ -36,7 +38,9 @@ class Redmine
 		'port' => '80',
 		'url' => "redmine.fabricasaitov.ru",
 		'targetProjectId' => 'suptask',
-	);/**/
+ 		'rootLogin' => 'sup',
+		'rootPassword' => 'zVRaDio(5mWEdFW',
+ 	);/**/
 
 
 	private static function runRequest($restUrl, $method = 'GET', $data = "")
@@ -69,7 +73,12 @@ class Redmine
 		try {
 			curl_setopt($curl, CURLOPT_URL, $url.$restUrl);
 			curl_setopt($curl, CURLOPT_PORT, Redmine::$config['port']);
-			curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.":".Yii::app()->user->password );
+			
+			if ( substr($restUrl, 1, 9) != 'users.xml' )
+				curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.":".Yii::app()->user->password );
+			else
+				curl_setopt($curl, CURLOPT_USERPWD, Redmine::$config['rootLogin'].":".Redmine::$config['rootPassword'] );
+
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
@@ -78,7 +87,7 @@ class Redmine
 			curl_setopt($curl, CURLOPT_HEADER, false);
 			curl_setopt($curl, CURLOPT_AUTOREFERER, false);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "Charset=utf-8", "Content-length: ".strlen($data)));
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "Charset=utf-8", "Redmine-API-Key: 8IK6FPceSHv9PKw2zIGM", "Content-length: ".strlen($data)));
  
 			$response = curl_exec($curl); 
 			if(!curl_errno($curl)){ 
@@ -93,7 +102,7 @@ class Redmine
 		}
 
 		if($response) {
-			if(substr($response, 0, 1) == '<') {
+			if(substr($response, 0, 5) == '<?xml') {
 				return new SimpleXMLElement($response);
 			} else {
 				return false;
@@ -186,24 +195,21 @@ class Redmine
 	 *
 	 * @param string $subject
 	 * @param text $description
-	 * @param int $project_id
 	 * @param int $assignmentUserId
 	 * @param int $parentIssueId
-	 * @param int $category_id
 	 * @param <type> $created_on
 	 * @param <type> $due_date
 	 * @return 
 	 */
-	public static function addIssue($subject, $description, $project_id, $assignmentUserId = 1, $parentIssueId = 0, $category_id = 1, $created_on = false, $due_date = false) {
+	public static function addIssue($subject, $description, $assignmentUserId = 1, $parentIssueId = 0, $created_on = false, $due_date = false) {
 		$priority_id = 4;
  
 		$xml = new SimpleXMLElement('<?xml version="1.0"?><issue></issue>');
 		$xml->addChild('subject', htmlspecialchars($subject));
-//		$xml->addChild('project_id', $project_id);
 		$xml->addChild('project_id', Redmine::$config['targetProjectId']); // Берём проект из настроек
 		$xml->addChild('priority_id', $priority_id);
 		$xml->addChild('description', htmlspecialchars($description));
-		$xml->addChild('category_id', $category_id);
+//		$xml->addChild('category_id', $category_id);
 		if($parentIssueId) $xml->addChild('parent_issue_id', $parentIssueId);
 		if($created_on) $xml->addChild('start_date', $created_on);		
 		if($due_date) $xml->addChild('due_date', $due_date);

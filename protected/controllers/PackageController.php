@@ -120,7 +120,6 @@ class PackageController extends Controller
 			$issue = Redmine::addIssue(
 					'Заказ #'.$package->id.' '.$package->name,	// Название
 					$package->descr,	// Описание
-					0,	// Родительский проект
 					$usersArray[ trim( (string)Yii::app()->user->login ) ],	// Кому назначена - себе
 					0);	// Родительская задача
 
@@ -130,11 +129,12 @@ class PackageController extends Controller
 			$package->save();
 
 			foreach ($package->servPack as $service) {
+				$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
+
 				$issue = Redmine::addIssue(
 						'#'.$package->id.' '.$service->service->name,	// Название
 						'Задача по проекту #'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
-						0,	// Родительский проект - возьмётся из настроек редмайна
-						$usersArray[ trim( mb_strToLower($service->master->login) ) ],	// Кому назначена
+						$master,	// Кому назначена
 						$package->redmine_proj);	// Родительская задача
 
 				$service->to_redmine = $issue->id;
