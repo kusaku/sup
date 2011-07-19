@@ -1,0 +1,29 @@
+-- phpMyAdmin SQL Dump
+-- version 2.11.9.5
+-- http://www.phpmyadmin.net
+--
+-- Хост: localhost
+-- Время создания: Июл 19 2011 г., 11:35
+-- Версия сервера: 5.0.51
+-- Версия PHP: 5.2.17-0.dotdeb.0
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+--
+-- База данных: `partner`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `calendar`
+--
+
+CREATE TABLE IF NOT EXISTS `calendar` (
+  `id` int(11) NOT NULL auto_increment,
+  `people_id` int(11) NOT NULL,
+  `date` datetime NOT NULL,
+  `message` text  NOT NULL,
+  `status` int(11) NOT NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM ;

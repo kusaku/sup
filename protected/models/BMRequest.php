@@ -214,48 +214,32 @@ class BMRequest extends ISPRequest {
 	
 		$key = BMRequest::generateKey(32);
 		
-		$post = array('func'=>'session.newkey',
-				 'key'=>$key);
+		$post = array('func'=>'session.newkey', 'key'=>$key);
 		$this->loggedIn or $post['authinfo'] = $this->isManager ? BM_MANAGER.':'.BM_PASSWORD : @$data['username'].':'.@$data['passwd'];
 		$post = array_merge($data, $post);
 		
 		$result = $this->setPost($post)->exec()->result();
 		
 		if ($result === false) {
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error');
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error');
 		} elseif ($result->error) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>(int) $result->error['code'],
-					 'val'=>(string) $result->error['val'],
-					 'msg'=>(string) $result->error['msg'],
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>(int) $result->error['code'], 'val'=>(string) $result->error['val'], 'msg'=>(string) $result->error['msg'], 'cdata'=>$cdata);
 		} elseif ($result->ok) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>true,
-					 'code'=>$this->errcode(),
-					 'username'=>@$data['username'],
-					 'key'=>$key,
-					 'cdata'=>$cdata);
+			return array('success'=>true, 'code'=>$this->errcode(), 'username'=>@$data['username'], 'key'=>$key, 'cdata'=>$cdata);
 		} else {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error',
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error', 'cdata'=>$cdata);
 		}
 	}
 	
@@ -264,48 +248,47 @@ class BMRequest extends ISPRequest {
 	 * @param array $data ассоциативный массив с данными
 	 * @return array $result
 	 */
+	 
 	public function register($data = array()) {
+		return $this->accounts($data, true);
+	}
 	
-		$post = array('func'=>'register',
-				 'sok'=>'ok');
+	/**
+	 * XXX в текущей реализации не работает получение данных!!!
+	 * изменение/получении информации о пользователе, плательщике, учетке
+	 * @param array $data ассоциативный массив с данными
+	 * @param bool $save сохранить данные
+	 * @return array $result
+	 */
+	public function accounts($data = array(), $save = false) {
+	
+		$post = array('func'=>'register');
+		$save and $post['sok'] = 'ok';
 		$post = array_merge($data, $post);
 		
 		$result = $this->setPost($post)->exec()->result();
 		
 		if ($result === false) {
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error');
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error');
 		} elseif ($result->error) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>(int) $result->error['code'],
-					 'val'=>(string) $result->error['val'],
-					 'msg'=>(string) $result->error['msg'],
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>(int) $result->error['code'], 'val'=>(string) $result->error['val'], 'msg'=>(string) $result->error['msg'], 'cdata'=>$cdata);
 			
 		} elseif ($result->ok) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>true,
-					 'code'=>$this->errcode(),
-					 'cdata'=>$cdata);
+			return array('success'=>true, 'code'=>$this->errcode(), 'cdata'=>$cdata);
 		} else {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error',
-					 'cdata'=>$cdata);
+			return array('success'=>true, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error', 'cdata'=>$cdata);
 		}
 	}
 	
@@ -316,27 +299,19 @@ class BMRequest extends ISPRequest {
 	 */
 	public function login($data = array()) {
 	
-		$post = array('func'=>'auth',
-				 'sok'=>'ok');
+		$post = array('func'=>'auth', 'sok'=>'ok');
 		$post = array_merge($data, $post);
 		
 		$result = $this->setPost($post)->exec()->result();
 		
 		if ($result === false) {
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error');
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error');
 		} elseif ($result->authfail) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'username',
-					 'msg'=>'Auth fail',
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'username', 'msg'=>'Auth fail', 'cdata'=>$cdata);
 		} elseif ($result->auth) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
@@ -345,18 +320,13 @@ class BMRequest extends ISPRequest {
 			// установка сессии
 			$this->setCookie($result->auth['id']);
 			$this->loggedIn = true;
-			return array('success'=>true,
-					 'cdata'=>$cdata);
+			return array('success'=>true, 'cdata'=>$cdata);
 		} else {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error',
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error', 'cdata'=>$cdata);
 		}
 	}
 	
@@ -366,16 +336,12 @@ class BMRequest extends ISPRequest {
 	 */
 	public function logout() {
 	
-		$post = array('func'=>'logon',
-				 'sok'=>'ok');
+		$post = array('func'=>'logon', 'sok'=>'ok');
 		
 		$result = $this->setPost($post)->exec()->result();
 		
 		if ($result === false) {
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error');
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error');
 		} else {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
@@ -384,9 +350,7 @@ class BMRequest extends ISPRequest {
 			// сброс сессии
 			$this->setCookie();
 			$this->loggedIn = false;
-			return array('success'=>true,
-					 'code'=>$this->errcode(),
-					 'cdata'=>$cdata);
+			return array('success'=>true, 'code'=>$this->errcode(), 'cdata'=>$cdata);
 		}
 	}
 	
@@ -398,10 +362,7 @@ class BMRequest extends ISPRequest {
 	 */
 	public function orderDomain($data = array()) {
 	
-		$post = array('func'=>'domain.order.4',
-				 'sok'=>'ok',
-				 'operation'=>'register',
-				 'payfrom'=>'neworder');
+		$post = array('func'=>'domain.order.4', 'sok'=>'ok', 'operation'=>'register', 'payfrom'=>'neworder');
 		$this->loggedIn or $post['authinfo'] = $this->isManager ? BM_MANAGER.':'.BM_PASSWORD : @$data['username'].':'.@$data['passwd'];
 		// XXX регистратор должен быть установлен 1 для spb.ru и msk.ru
 		$post['registrar'] = 2;
@@ -410,38 +371,25 @@ class BMRequest extends ISPRequest {
 		$result = $this->setPost($post)->exec()->result();
 		
 		if ($result === false) {
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error');
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error');
 		} elseif ($result->error) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>(int) $result->error['code'],
-					 'val'=>(string) $result->error['val'],
-					 'msg'=>(string) $result->error['msg'],
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>(int) $result->error['code'], 'val'=>(string) $result->error['val'], 'msg'=>(string) $result->error['msg'], 'cdata'=>$cdata);
 		} elseif ($result->ok) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>true,
-					 'code'=>$this->errcode(),
-					 'cdata'=>$cdata);
+			return array('success'=>true, 'code'=>$this->errcode(), 'cdata'=>$cdata);
 		} else {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error',
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error', 'cdata'=>$cdata);
 		}
 	}
 	
@@ -452,46 +400,32 @@ class BMRequest extends ISPRequest {
 	 */
 	public function orderVhost($data = array()) {
 	
-		$post = array('func'=>'vhost.order.5',
-				 'sok'=>'ok');
+		$post = array('func'=>'vhost.order.5', 'sok'=>'ok');
 		$this->loggedIn or $post['authinfo'] = $this->isManager ? BM_MANAGER.':'.BM_PASSWORD : @$data['username'].':'.@$data['passwd'];
 		$post = array_merge($data, $post);
 		
 		$result = $this->setPost($post)->exec()->result();
 		
 		if ($result === false) {
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error');
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error');
 		} elseif ($result->error) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>(int) $result->error['code'],
-					 'val'=>(string) $result->error['val'],
-					 'msg'=>(string) $result->error['msg'],
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>(int) $result->error['code'], 'val'=>(string) $result->error['val'], 'msg'=>(string) $result->error['msg'], 'cdata'=>$cdata);
 		} elseif ($result->ok) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>true,
-					 'code'=>$this->errcode(),
-					 'cdata'=>$cdata);
+			return array('success'=>true, 'code'=>$this->errcode(), 'cdata'=>$cdata);
 		} else {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error',
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error', 'cdata'=>$cdata);
 		}
 	}
 	
@@ -510,20 +444,13 @@ class BMRequest extends ISPRequest {
 		$result = $this->setPost($post)->exec()->result();
 		
 		if ($result === false) {
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error');
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error');
 		} elseif ($result->error) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>(int) $result->error['code'],
-					 'val'=>(string) $result->error['val'],
-					 'msg'=>(string) $result->error['msg'],
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>(int) $result->error['code'], 'val'=>(string) $result->error['val'], 'msg'=>(string) $result->error['msg'], 'cdata'=>$cdata);
 		} else {
 			$cdata = array();
 			foreach ($result as $elem) {
@@ -533,11 +460,7 @@ class BMRequest extends ISPRequest {
 				}
 				$cdata[$celem['id']] = $celem;
 			}
-			return array('success'=>true,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error',
-					 'cdata'=>$cdata);
+			return array('success'=>true, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'List of items', 'cdata'=>$cdata);
 		}
 	}
 	
@@ -561,30 +484,19 @@ class BMRequest extends ISPRequest {
 		$result = $this->setPost($post)->exec()->result();
 		
 		if ($result === false) {
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error');
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error');
 		} elseif ($result->error) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>(int) $result->error['code'],
-					 'val'=>(string) $result->error['val'],
-					 'msg'=>(string) $result->error['msg'],
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>(int) $result->error['code'], 'val'=>(string) $result->error['val'], 'msg'=>(string) $result->error['msg'], 'cdata'=>$cdata);
 		} else {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>true,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error',
-					 'cdata'=>$cdata);
+			return array('success'=>true, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'Item successfully edited!', 'cdata'=>$cdata);
 		}
 	}
 	
@@ -625,8 +537,7 @@ class BMRequest extends ISPRequest {
 	 */
 	public function deleteItem($data, $type) {
 	
-		$post = array('func'=>"$type.delete",
-				 'sok'=>'ok');
+		$post = array('func'=>"$type.delete", 'sok'=>'ok');
 		$this->loggedIn or $post['authinfo'] = $this->isManager ? BM_MANAGER.':'.BM_PASSWORD : @$data['username'].':'.@$data['passwd'];
 		
 		$post = array_merge($data, $post);
@@ -634,30 +545,19 @@ class BMRequest extends ISPRequest {
 		$result = $this->setPost($post)->exec()->result();
 		
 		if ($result === false) {
-			return array('success'=>false,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error');
+			return array('success'=>false, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'BILLManager error');
 		} elseif ($result->error) {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>false,
-					 'code'=>(int) $result->error['code'],
-					 'val'=>(string) $result->error['val'],
-					 'msg'=>(string) $result->error['msg'],
-					 'cdata'=>$cdata);
+			return array('success'=>false, 'code'=>(int) $result->error['code'], 'val'=>(string) $result->error['val'], 'msg'=>(string) $result->error['msg'], 'cdata'=>$cdata);
 		} else {
 			$cdata = array();
 			foreach ($result as $name=>$value) {
 				$cdata[$name] = (string) $value;
 			}
-			return array('success'=>true,
-					 'code'=>$this->errcode(),
-					 'val'=>'',
-					 'msg'=>'BILLManager error',
-					 'cdata'=>$cdata);
+			return array('success'=>true, 'code'=>$this->errcode(), 'val'=>'', 'msg'=>'Item successfully deleted!', 'cdata'=>$cdata);
 		}
 	}
 	

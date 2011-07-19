@@ -9,16 +9,13 @@ class MailTemplates extends CActiveRecord {
 	}
 	
 	public function relations() {
-		return array('owner'=>array(self::BELONGS_TO,
-				 'People',
-				 'people_id',
-				 'joinType'=>'INNER JOIN'));
+		return array('owner'=>array(self::BELONGS_TO, 'People', 'people_id', 'joinType'=>'INNER JOIN'));
 	}
 	
 	/**
 	 *
 	 * @param int $id
-	 * @return MailTemplates $obj
+	 * @return MailTemplates
 	 */
 	public function getById($id) {
 		return self::model()->findByPk($id);
@@ -68,21 +65,5 @@ class MailTemplates extends CActiveRecord {
 	 */
 	public function getSubjectFor($client) {
 		return $this->getTplFor($client, $this->subject);
-	}	
-}
-
-class MailLog extends CActiveRecord {
-	public static function model($className = __CLASS__) {
-		return parent::model($className);
-	}
-	
-	public function tableName() {
-		return 'mail_log';
-	}
-	
-	public function relations() {
-		return array('template'=>array(self::BELONGS_TO,
-				 'MailLog',
-				 'mail_template_id'));
 	}
 }

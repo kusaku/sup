@@ -721,7 +721,7 @@ a:hover {
 	vertical-align: middle;
 }
 
-.newClientWindow input[type = "text"], .newClientWindow input[type = "password"] {
+.newClientWindow input[type = "text"], .newClientWindow input[type = "password"], .newClientWindow select {
     display: inline-block;
     width: 150px;
     height: 18px;

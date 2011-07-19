@@ -40,7 +40,7 @@ $(function(){
  */
 function prepareHtml(){
 	// замена стандартных элементов
-	// $('select').selectBox();
+	$('select').selectBox();
 	$('input[type="checkbox"], input[type="radio"]').radiocheckBox();
 	$('#sup_popup').draggable({
 		handle: '.clientHead',
@@ -64,7 +64,6 @@ function searchClear(){
 function Package(package_id, client_id){
 	$('body').css('cursor', 'wait');
 	$('.ui-widget-content').hide();
-	hidePopUp();
 	showPopUpLoader();
 	$("#searchClient").val('');
 	$.ajax({
@@ -130,9 +129,8 @@ function showPopUp(){
  */
 function hidePopUp(){	
 	// разрушение селектбоксов 
-	//$('#sup_popup select').selectBox('destroy');
+	$('#sup_popup select').selectBox('destroy');
 	$('#sup_popup').fadeOut(0);
-	$('#sup_popup select.selectBox').selectBox('destroy');
 	$('#sup_preloader').hide(0); // Прячем preloader
 	$('#modal').fadeOut(0); // 200
 };
@@ -178,7 +176,7 @@ function CardShowHide(id){
 function sumka(){
 	var sum = 0;
 	$(".cbox").each(function(){
-		if ($(this).attr('checked') == true) {
+		if ($(this).attr('checked') == 'checked') {
 			var price = $('#price' + $(this).val()).val();
 			var count = $('#count' + $(this).val()).val();
 			var res = price * count;
@@ -201,6 +199,8 @@ function loadSites(client_id, selected){
 			'selected': selected
 		},
 		success: function(data){
+			// разрушение селектбоксов 
+			$('#site_selector select').selectBox('destroy');
 			$('#site_selector').html(data);
 			prepareHtml();
 		}
@@ -218,6 +218,8 @@ function loadNewSite(){
 			'no_button': true
 		},
 		success: function(data){
+			// разрушение селектбоксов 
+			$('#site_selector select').selectBox('destroy');
 			$('#site_selector').html(data);
 			prepareHtml();
 		}

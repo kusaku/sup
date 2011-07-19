@@ -15,36 +15,23 @@ class Package extends CActiveRecord {
 	public function relations() {
 		return array(
 			// Связка с менеджером
-			'manager'=>array(self::BELONGS_TO,
-					 'People',
-					 'manager_id'),
-					
+			'manager'=>array(self::BELONGS_TO, 'People', 'manager_id'),
+
 			
 			// Связка с клиентом
-			'client'=>array(self::BELONGS_TO,
-					 'People',
-					 'client_id'),
-					 'services'=>array(self::MANY_MANY,
-					
-			// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
-			'Service',
-					'serv2pack(pack_id, serv_id)'),
+			'client'=>array(self::BELONGS_TO, 'People', 'client_id'), 'services'=>array(self::MANY_MANY,
+			
+				// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
+				'Service', 'serv2pack(pack_id, serv_id)'),
 				
 			// Связка с сервисами. Возвращает все сервисы вместе с данными из serv2pack (blablabla->quant, blablabla->service->name)
-			'servPack'=>array(self::HAS_MANY,
-					 'Serv2pack',
-					 'pack_id',
-					 'with'=>'service'),
+			'servPack'=>array(self::HAS_MANY, 'Serv2pack', 'pack_id', 'with'=>'service'),
 			
 			// Связка с сайтом
-			'site'=>array(self::BELONGS_TO,
-					 'Site',
-					 'site_id'),
+			'site'=>array(self::BELONGS_TO, 'Site', 'site_id'),
 			
 			// Связка со статусами
-			'status'=>array(self::BELONGS_TO,
-					 'Status',
-					 'status_id') );
+			'status'=>array(self::BELONGS_TO, 'Status', 'status_id'));
 	}
 	
 	public static function updateById($id) {
@@ -103,7 +90,8 @@ class Package extends CActiveRecord {
 			<div class="tipsBottom"></div>
 		</div>
 	</span>
-	<a onClick='clientCard(<?=$client->id?>)'>Карточка клиента</a>
+	<a onClick="clientCard(<?=$client->id?>)">Карточка клиента</a>
+	<a style="float:right;" onClick="loggerForm(<?=$client->id?>)">Добавить запись</a>
 </div>
 <?php 
 $packs = $client->packages;

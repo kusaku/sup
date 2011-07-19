@@ -15,9 +15,6 @@ class People extends CActiveRecord
         return 'people';
     }
     
-    /*
-    	Описаны отношения с другими таблицами БД
-    */
     public function relations() 
     {
 		return array(
@@ -31,7 +28,7 @@ class People extends CActiveRecord
 			'values'=>array(self::HAS_MANY, 'PeopleAttr', 'people_id', 'index'=>'attribute_id'),
 			's2p'=>array(self::HAS_MANY, 'Serv2pack', 'master_id'),
 
-			// следующая кострукция работает так: $client->['phone']->values[0]->value
+			// следующая кострукция работает так: $client->attr['phone']->values[0]->value
 			'attr'=>array(self::MANY_MANY, 'Attributes', 'people_attr(people_id, attribute_id)', 'with'=>'values', 'condition'=>'`attr_attr`.`people_id`=`values`.`people_id`', 'index'=>'type')
 			);
 	}

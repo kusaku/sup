@@ -80,8 +80,10 @@ class PeopleController extends Controller {
 				$attr->people_id = $people->primaryKey;
 				if ( empty($attr->attr->regexp) || preg_match($attr->attr->regexp, $value)) {
 					$attr->value = $value;
-					$attr->save();
+				} else {
+					$attr->value = $attr->attr->defval;
 				}
+				$attr->save();
 			}
 			
 			if (@$data['isAJAX'])
