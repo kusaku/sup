@@ -115,7 +115,7 @@ class PackageController extends Controller
 			$package->descr = $package->descr."\nПодробности оплаты: ".Yii::app()->request->getParam('message');
 
 			$usersArray = Redmine::getUsersArray();
-			$package->status_id = 50;
+			$package->status_id = 30;
 
 			$issue = Redmine::addIssue(
 					'Заказ #'.$package->id.' '.$package->name,	// Название
@@ -126,6 +126,40 @@ class PackageController extends Controller
 			$package->redmine_proj = $issue->id;
 			$package->dt_change = date('Y-m-d H:i:s');
 
+			$package->save();
+
+			/*
+			 * Убрано, т.к. менеджеры не хотят создавать задачи сразу. 
+			 *
+			foreach ($package->servPack as $service) {
+				$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
+
+				$issue = Redmine::addIssue(
+						'#'.$package->id.' '.$service->service->name,	// Название
+						'Задача по проекту #'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
+						$master,	// Кому назначена
+						$package->redmine_proj);	// Родительская задача
+
+				$service->to_redmine = $issue->id;
+				$service->save();
+			}/**/
+			
+			// Возвращаем данные для замены аяксом
+			Package::genClientBlock($package->client_id);
+		}
+	}
+
+	/*
+	 * Отдаём
+	 */
+	public function actionToWork()
+	{
+		if ( Yii::app()->request->getParam('id') )
+		{
+			$package = Package::getById( Yii::app()->request->getParam('id') );
+			$usersArray = Redmine::getUsersArray();
+			$package->status_id = 50;
+			$package->dt_change = date('Y-m-d H:i:s');
 			$package->save();
 
 			foreach ($package->servPack as $service) {
@@ -140,11 +174,10 @@ class PackageController extends Controller
 				$service->to_redmine = $issue->id;
 				$service->save();
 			}
-			
+
 			// Возвращаем данные для замены аяксом
 			Package::genClientBlock($package->client_id);
 		}
-
 	}
 
 	/*

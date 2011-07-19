@@ -171,18 +171,34 @@ switch ($package->status_id):
 		break;
 	case 17:
 		print '<div class="projectState">			<strong class="uppper">Не оплачен!</strong>
-					<a onClick="addPay('.$package->id.', '.$client_id.');" class="icon"><img src="images/icon04.png" title="Заказ оплачен"/></a>
+					<a onClick="addPay('.$package->id.', '.$client_id.');" class="icon"><img src="images/icon04.png" title="Поставить оплату"/></a>
 					<a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
-					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a></div>';
+					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+				</div>';
 		break;
 		
-	case 50:
-		print '<div class="projectState">			<strong>Выполняется</strong>
+	case 30:
+		print '<div class="projectState">
 					<div class="progressBar">
 						<div class="progressStat" style="width:'.$percent.'%">'.$percent.'%</div>
-					</div></div>';
+					</div>
+					<a onClick="alert(123123);" class="icon"><img src="images/towork.png" title="Отдать в работу все заказанные услуги"/></a>
+					<a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+				</div>';
 		break;
-		
+
+	case 50:
+		print '<div class="projectState">
+					<div class="progressBar">
+						<div class="progressStat" style="width:'.$percent.'%">'.$percent.'%</div>
+					</div>
+					<a onClick="alert(123123);" class="icon"><img src="images/complete.png" title="Все работы выполнены"/></a>
+					<a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+				</div>';
+		break;
+
 	case 70:
 		print '<div class="projectState"><strong class="done">Выполнен!</strong><br/>
 					<a href="#" class="icon"><img src="images/icon01.png" title="Подготовить документы к отправке"/></a>
