@@ -34,12 +34,19 @@ class Logger extends CActiveRecord {
 		$record->client_id = (int) $attributes['client_id'];
 		$record->manager_id = (int) $attributes['manager_id'];
 		$record->info = (string) $attributes['info'];
-		;
 		$record->dt = date('Y-m-d h:i:s');
 		if ($record->insert())
 			return $record;
 		else
 			return null;
+	}
+	
+	/**
+	 * 
+	 * @return 
+	 */
+	public function scopes() {
+		return array('lastfirst'=>array('order'=>'dt DESC'));
 	}
 	
 	/**
@@ -49,10 +56,10 @@ class Logger extends CActiveRecord {
 	 */
 	public function get($var) {
 		if (is_numeric($var)) {
-			return self::model()->findAllByAttributes(array('client_id'=>$var));
+			return self::model()->lastfirst()->findAllByAttributes(array('client_id'=>$var));
 		}
 		if (is_string($var)) {
-			return self::model()->findAllByAttributes(array('dt'=>date('Y-m-d h:i:s', strtotime($var))));
+			return self::model()->lastfirst()->findAllByAttributes(array('dt'=>date('Y-m-d h:i:s', strtotime($var))));
 		}
 	}
 }
