@@ -7,7 +7,6 @@
  * @param {Object} client_id
  */
 function SelectMailTemplate(client_id){
-	hidePopUp();
 	showPopUpLoader();
 	$.ajax({
 		url: '/mail/list',
@@ -22,6 +21,9 @@ function SelectMailTemplate(client_id){
 	});
 }
 
+/**
+ * 
+ */
 function EditMailTemplates() {
 	hidePopUp();
 	showPopUpLoader();
@@ -36,6 +38,9 @@ function EditMailTemplates() {
 	});
 };
 
+/**
+ * 
+ */
 function SendMail() {
 	$.ajax({
 		url: '/mail/send',

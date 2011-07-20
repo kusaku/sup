@@ -23,5 +23,9 @@ class Attributes extends CActiveRecord {
 	public function getGroups() {
          return self::model()->findAllByAttributes(array('parent_id'=>0));  
 	}
+	
+	public function getByType($name) {
+         return self::model()->findByAttributes(array('type'=>$name)); 
+	}	
 }
 ?>

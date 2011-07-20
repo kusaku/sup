@@ -23,7 +23,7 @@ function bmRegister(client_id){
 	var client_id = client_id;
 	var form = $('#sup_popup form');
 	$.ajax({
-		type: 'POST',
+		type: 'GET',
 		url: '/bm/register',
 		data: {
 			'client_id': client_id
@@ -76,7 +76,7 @@ function bmRegister(client_id){
  */
 function bmOpen(client_id){
 	$.ajax({
-		type: 'POST',
+		type: 'GET',
 		url: '/bm/open',
 		data: {
 			'client_id': client_id
@@ -125,7 +125,7 @@ function bmOpen(client_id){
  */
 function bmVHost(site_id, package_id, service_id){
 	$.ajax({
-		type: 'POST',
+		type: 'GET',
 		url: '/bm/ordervhost',
 		data: {
 			'site_id': site_id,
@@ -161,7 +161,7 @@ function bmVHost(site_id, package_id, service_id){
  */
 function bmDomainName(site_id, package_id, service_id){
 	$.ajax({
-		type: 'POST',
+		type: 'GET',
 		url: '/bm/orderdomain',
 		data: {
 			'site_id': site_id,
