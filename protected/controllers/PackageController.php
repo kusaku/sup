@@ -4,6 +4,7 @@ class PackageController extends Controller
 {
 	public function actionIndex()
 	{
+		//print get_class();
 		$this->renderPartial('index',array('client_id'=>Yii::app()->request->getParam('client_id')));
 	}
 
@@ -21,7 +22,7 @@ class PackageController extends Controller
 			$status = $pack->status_id;
 		}
 		
-		if ( $status == 50 )
+		if ( $status > 17 ) // Больше его нельзя редактировать - только читать.
 				$this->renderPartial('read',array( 'package_id'=>$package_id, 'pack'=>$pack ) );
 		else
 		if ( $client_id || $package_id )
@@ -103,7 +104,7 @@ class PackageController extends Controller
 	}
 
 	/*
-	 * Отмечаем заказ как оплаченный
+	 * Отмечаем заказ как оплаченный. Создём задачу по самому заказу (родительскую задачу).
 	 */
 	public function actionAddPay()
 	{
@@ -117,42 +118,59 @@ class PackageController extends Controller
 			$usersArray = Redmine::getUsersArray();
 			$package->status_id = 30;
 
-			$issue = Redmine::addIssue(
-					'Заказ #'.$package->id.' '.$package->name,	// Название
-					$package->descr,	// Описание
-					$usersArray[ trim( (string)Yii::app()->user->login ) ],	// Кому назначена - себе
-					0);	// Родительская задача
+			$issue = Redmine::addIssue('Заказ #'.$package->id.' '.$package->name,$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
 
 			$package->redmine_proj = $issue->id;
 			$package->dt_change = date('Y-m-d H:i:s');
 
 			$package->save();
 
-			/*
-			 * Убрано, т.к. менеджеры не хотят создавать задачи сразу. 
-			 *
-			foreach ($package->servPack as $service) {
-				$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
-
-				$issue = Redmine::addIssue(
-						'#'.$package->id.' '.$service->service->name,	// Название
-						'Задача по проекту #'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
-						$master,	// Кому назначена
-						$package->redmine_proj);	// Родительская задача
-
-				$service->to_redmine = $issue->id;
-				$service->save();
-			}/**/
-			
 			// Возвращаем данные для замены аяксом
 			Package::genClientBlock($package->client_id);
 		}
 	}
 
+
 	/*
-	 * Отдаём
+	 * Создаём задачу по запросу. Если нет родительской, то и её создаём.
 	 */
-	public function actionToWork()
+	public function actionNewRedmineIssue()
+	{
+		$pack_id = Yii::app()->request->getParam('pack_id');
+		$serv_id = Yii::app()->request->getParam('serv_id');
+		if ( $pack_id )	{
+			$package = Package::getById( $pack_id );
+			$usersArray = Redmine::getUsersArray();
+
+			if ( !$package->redmine_proj ){
+				$issue = Redmine::addIssue('Заказ #'.$package->id.' '.$package->name,$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
+				$package->redmine_proj = $issue->id;
+			}
+
+			$package->dt_change = date('Y-m-d H:i:s');
+			$package->save();
+
+			if ( $serv_id )	{
+				$service = Serv2pack::getByIds($serv_id, $pack_id);
+				$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
+				$issue = Redmine::addIssue(
+					'#'.$package->id.' '.$service->service->name,	// Название
+					'Задача по проекту #'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
+					$master,	// Кому назначена
+					$package->redmine_proj);	// Родительская задача
+
+				$service->to_redmine = $issue->id;
+				$service->save();
+			}
+
+			$this->renderPartial('issue', array('issue_id'=>$issue->id, 'pack_id'=>$pack_id));
+		} else print 0;
+	}
+
+	/*
+	 * Отдать в работу весь заказ - создать задачи по всем заказанным услугам.
+	 */
+	public function actionCreateAllRedmineIssues()
 	{
 		if ( Yii::app()->request->getParam('id') )
 		{
@@ -160,19 +178,27 @@ class PackageController extends Controller
 			$usersArray = Redmine::getUsersArray();
 			$package->status_id = 50;
 			$package->dt_change = date('Y-m-d H:i:s');
+
+			if ( !$package->redmine_proj ){
+				$issue = Redmine::addIssue('Заказ #'.$package->id.' '.$package->name,$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
+				$package->redmine_proj = $issue->id;
+			}
+
 			$package->save();
 
 			foreach ($package->servPack as $service) {
 				$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
 
-				$issue = Redmine::addIssue(
-						'#'.$package->id.' '.$service->service->name,	// Название
-						'Задача по проекту #'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
-						$master,	// Кому назначена
-						$package->redmine_proj);	// Родительская задача
+				if ( !$service->to_redmine ){
+					$issue = Redmine::addIssue(
+							'#'.$package->id.' '.$service->service->name,	// Название
+							'Задача по проекту #'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
+							$master,	// Кому назначена
+							$package->redmine_proj);	// Родительская задача
 
-				$service->to_redmine = $issue->id;
-				$service->save();
+					$service->to_redmine = $issue->id;
+					$service->save();
+				}
 			}
 
 			// Возвращаем данные для замены аяксом
@@ -209,22 +235,16 @@ class PackageController extends Controller
 	{
 		$id	= Yii::app()->request->getParam('id');
 		$message = Yii::app()->request->getParam('message');
+		$pack_id = Yii::app()->request->getParam('pack');
 
-		if ( $id & $message ){
+		if ( $id && $message ){
 			Redmine::addNoteToIssue($id, $message);
 
 			$pack = Package::getById( Yii::app()->request->getParam('pack') );
 			$pack->dt_change = date('Y-m-d H:i:s');
 			$pack->save();
 
-			$issue = Redmine::getIssue($id);
-			foreach ($issue->journals->journal as $journal)
-			{
-				$str = $journal->user['name'].' ('.date('d-m-Y H:i', strtotime($journal->created_on)).')<br>';
-				$str .= nl2br(htmlspecialchars($journal->notes));
-				$str .= '<hr>';
-			}
-			print $str;
+			$this->renderPartial('issue', array('issue_id'=>$id, 'pack_id'=>$pack_id));
 		} else {
 			print 0;
 		}
@@ -236,12 +256,12 @@ class PackageController extends Controller
 		$pack_id	= (int) Yii::app()->request->getParam('pack_id');
 		$serv_id	= (int) Yii::app()->request->getParam('serv_id');
 
-		if ( $issue_id & $pack_id & $serv_id ){
+		if ( $issue_id && $pack_id && $serv_id ){
 			$s2p = Serv2pack::getByIds($serv_id, $pack_id);
 			$s2p->to_redmine = $issue_id;
 			$s2p->save();
 			print 1;
-		} elseif ( $issue_id & $pack_id ){
+		} elseif ( $issue_id && $pack_id && !$serv_id){
 			$pack = Package::getById($pack_id);
 			$pack->redmine_proj = $issue_id;
 			$pack->save();

@@ -35,6 +35,17 @@ $(function(){
 });
 
 /*
+ *	Прячем попап при нажатии Esc.
+ */
+$(document).keyup(function(e){
+	if(e.keyCode == 27){
+		hidePopUp();
+	}
+});
+
+
+
+/*
  * Подготовка динимаческого html при его загрузке и изменении
  */
 function prepareHtml(){
