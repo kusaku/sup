@@ -165,31 +165,6 @@ $summa = 0;
 					}
 				print '</div>';
 				?>
-				<?php if (count($records = Logger::get($client->primaryKey))): ?>
-				<div class="orderBlock" id="orderBlock0">
-					<div class="header">
-						<a onClick="CardShowHide(0)" class="arrow"></a>
-						<a onClick="CardShowHide(0)">Записи в журнале</a>
-					</div>
-					<div class="orderPart hidden">
-						<?php foreach ($records as $record): ?>
-						<div class="subPart">
-							<div class="column1">
-								<p class="label">Менеджер:</p>
-								<p><?= People::getNameById($record->manager_id)?></p>
-							</div>
-							<div class="column2">
-								<p class="label">Дата:</p>
-								<p><?= $record->dt; ?></p>
-							</div>
-							<div style="clear:both;padding:5px 0px;">
-								<?= $record->info; ?>
-							</div>
-						</div>
-						<?php endforeach; ?>
-					</div>
-				</div>
-				<?php endif; ?>
 			</div>
 			<div class="buttons">
 				<!--	<a onClick="document.forms['megaform'].submit();" class="buttonSave">Сохранить</a>

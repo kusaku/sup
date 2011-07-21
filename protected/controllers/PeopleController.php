@@ -6,12 +6,48 @@
  * Партнёты
  */
 class PeopleController extends Controller {
+
+
+	/**
+	 * Использовать фильтр прав доступа
+	 * @return
+	 */
+	public function filters() {
+		return array(
+			'accessControl'
+		);
+	}
+	
+	/**
+	 * Параметры фильтра прав доступа
+	 * @return array
+	 */
+	public function accessRules() {
+		// доступные роли:
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		return array(
+			array(
+				'allow', 'actions'=>array(
+					'getClients', 'getMamagers', 'index', 'view', 'save', 'globalSearchJSON', 'card'
+				), 'roles'=>array(
+					'admin', 'moder', 'topmanager', 'manager', 'master'
+				),
+			), array(
+				'deny', 'users'=>array(
+					'*'
+				),
+			),
+		);
+	}
+	
 	/*
 	 Возвращаем всех клиентов
 	 */
 	public function actionGetClients() {
 		$peoples = PeopleGroup::getById(7)->peoples;
-		$this->renderPartial('getlist', array('peoples'=>$peoples));
+		$this->renderPartial('getlist', array(
+			'peoples'=>$peoples
+		));
 	}
 	
 	/*
@@ -19,7 +55,9 @@ class PeopleController extends Controller {
 	 */
 	public function actionGetManagers() {
 		$peoples = PeopleGroup::getById(4)->peoples;
-		$this->renderPartial('getlist', array('peoples'=>$peoples));
+		$this->renderPartial('getlist', array(
+			'peoples'=>$peoples
+		));
 	}
 	
 	/*
@@ -27,7 +65,9 @@ class PeopleController extends Controller {
 	 */
 	public function actionIndex() {
 		$peoples = People::getAll();
-		$this->render('index', array('peoples'=>$peoples));
+		$this->render('index', array(
+			'peoples'=>$peoples
+		));
 	}
 	
 	/*
@@ -48,7 +88,9 @@ class PeopleController extends Controller {
 			$people->parent_id = $parent;
 		}
 		
-		$this->renderPartial('view', array('people'=>$people));
+		$this->renderPartial('view', array(
+			'people'=>$people
+		));
 	}
 	
 	/*
@@ -87,7 +129,9 @@ class PeopleController extends Controller {
 			}
 			
 			if (@$data['isAJAX'])
-				print(json_encode(array('success'=>true)));
+				print(json_encode(array(
+					'success'=>true
+				)));
 			else
 				// Возвращаемся к редактируемому (добавляемому) элементу
 				//$this->redirect(Yii::app()->homeUrl.'people/'.$people->id);
@@ -116,7 +160,8 @@ class PeopleController extends Controller {
 		
 		$so = sizeof($peoples) - 1;
 		$res = '[';
-		$r = array();
+		$r = array(
+		);
 		foreach ($peoples as $key=>$people)
 			$r[] = ' {"id": "'.$people["id"].'","label": "'.$people["label"].'", "mail": "'.$people["mail"].'"}';
 			
@@ -127,7 +172,8 @@ class PeopleController extends Controller {
 	
 	public function actionCard() {
 		if (Yii::app()->request->getParam('id'))
-			$this->renderPartial('card', array('client_id'=>Yii::app()->request->getParam('id')));
+			$this->renderPartial('card', array(
+				'client_id'=>Yii::app()->request->getParam('id')
+			));
 	}
-	
 }

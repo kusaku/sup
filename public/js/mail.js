@@ -1,7 +1,6 @@
 /**
  * @author aks
  */
-
 /**
  * Список доступных шаблонов для отправки письма клиенту
  * @param {Object} client_id
@@ -17,14 +16,18 @@ function SelectMailTemplate(client_id){
 		success: function(data){
 			$('#sup_popup').html(data);
 			showPopUp();
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#sup_popup').text(textStatus);
+			showPopUp();
 		}
 	});
 }
 
 /**
- * 
+ *
  */
-function EditMailTemplates() {
+function EditMailTemplates(){
 	hidePopUp();
 	showPopUpLoader();
 	$.ajax({
@@ -34,14 +37,18 @@ function EditMailTemplates() {
 			$('#sup_popup').html(data);
 			showPopUp();
 			$('#sup_popup textarea').wysiwyg();
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#sup_popup').text(textStatus);
+			showPopUp();
 		}
 	});
 };
 
 /**
- * 
+ *
  */
-function SendMail() {
+function SendMail(){
 	$.ajax({
 		url: '/mail/send',
 		dataType: 'html',
@@ -51,8 +58,11 @@ function SendMail() {
 		},
 		success: function(data){
 			hidePopUp();
-			$('#sup_preloader').hide(0); // Прячем preloader
 			alert(data);
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			hidePopUp();
+			alert(textStatus);
 		}
-	});	
+	});
 }

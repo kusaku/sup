@@ -1,13 +1,50 @@
 <?php 
 class MailController extends Controller {
+
+	/**
+	 * Использовать фильтр прав доступа
+	 * @return
+	 */
+	public function filters() {
+		return array(
+			'accessControl'
+		);
+	}
+	
+	/**
+	 * Параметры фильтра прав доступа
+	 * @return array
+	 */
+	public function accessRules() {
+		// доступные роли:
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		return array(
+			array(
+				'allow', 'actions'=>array(
+					'index', 'list', 'send', 'saveTemplate'
+				), 'roles'=>array(
+					'admin', 'moder', 'topmanager', 'manager', 'master'
+				),
+			), array(
+				'deny', 'users'=>array(
+					'*'
+				),
+			),
+		);
+	}
+	
 	public function actionIndex() {
 		$templates = MailTemplates::model()->findAll('people_id='.Yii::app()->user->id.' or people_id = 0');
-		$this->renderPartial('index', array('templates'=>$templates));
+		$this->renderPartial('index', array(
+			'templates'=>$templates
+		));
 	}
 	
 	public function actionList($client_id = 0) {
 		$templates = MailTemplates::model()->findAll('people_id='.Yii::app()->user->id.' or people_id = 0');
-		$this->renderPartial('list', array('client_id'=>$client_id, 'templates'=>$templates));
+		$this->renderPartial('list', array(
+			'client_id'=>$client_id, 'templates'=>$templates
+		));
 	}
 	
 	public function actionSend($client_id = 0, $template_id = 0) {
@@ -42,7 +79,9 @@ class MailController extends Controller {
 		} else {
 			$message = (!$client ? 'Клиент' : 'Шаблон').' не существует!';
 		}
-		$this->renderPartial('send', array('message'=>$message));
+		$this->renderPartial('send', array(
+			'message'=>$message
+		));
 	}
 	
 	public function actionSaveTemplate() {
@@ -58,13 +97,17 @@ class MailController extends Controller {
 				$template->name = @$name[$pk];
 				$template->subject = @$subject[$pk];
 				$template->body = @$body[$pk];
-				$template->save();				
+				$template->save();
 			}
 			catch(Exception $e) {
-				exit(json_encode(array('success'=>false, 'message'=>'Ошибка сохранения...')));
-			}			
+				exit(json_encode(array(
+					'success'=>false, 'message'=>'Ошибка сохранения...'
+				)));
+			}
 		}
-		exit(json_encode(array('success'=>true)));
+		exit(json_encode(array(
+			'success'=>true
+		)));
 	}
 }
 

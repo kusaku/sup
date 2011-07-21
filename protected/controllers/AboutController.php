@@ -1,15 +1,44 @@
-<?php
+<?php 
+class AboutController extends Controller {
 
-class AboutController extends Controller
-{
-	public function actionIndex()
-	{
+	/**
+	 * Использовать фильтр прав доступа
+	 * @return
+	 */
+	public function filters() {
+		return array(
+			'accessControl'
+		);
+	}
+	
+	/**
+	 * Параметры фильтра прав доступа
+	 * @return array
+	 */
+	public function accessRules() {
+		// доступные роли:
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		return array(
+			array(
+				'allow', 'actions'=>array(
+					'index', 'test'
+				), 'roles'=>array(
+					'admin'
+				),
+			), array(
+				'deny', 'users'=>array(
+					'*'
+				),
+			),
+		);
+	}
+	
+	public function actionIndex() {
 		$this->renderPartial('index');
 	}
-
-	public function actionTest()
-	{
+	
+	public function actionTest() {
 		$this->renderPartial('test');
 	}
-
+	
 }

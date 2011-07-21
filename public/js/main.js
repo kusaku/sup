@@ -4,9 +4,10 @@
 $(function(){
 	//	Показываем кнопку очистки поля автокомплита при незавершенном поиске
 	$("#searchClient").keyup(function(){
-		if ( $(this).val().length > 2 ){
+		if ($(this).val().length > 2) {
 			$("#buttonClear").removeClass('hidden');
-		} else {
+		}
+		else {
 			$("#buttonClear").addClass('hidden');
 		}
 	});
@@ -79,6 +80,9 @@ function Package(package_id, client_id){
 			$('#sup_popup').html(data);
 			showPopUp();
 			$('body').css('cursor', 'default');
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#sup_popup').text(textStatus);
 		}
 	});
 };
@@ -96,10 +100,12 @@ function loadData(client_id){
 		dataType: 'html',
 		success: function(data){
 			$('#sup_content').html(data);
-			
 			// скрываем заказы клиента - все кроме первого
 			$('.forhide').hide(0);
 			flagsUpdate();
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#sup_content').text(textStatus);
 		}
 	});
 };
@@ -127,7 +133,7 @@ function showPopUp(){
 /* 
  * Прячем всплвающее окно.
  */
-function hidePopUp(){	
+function hidePopUp(){
 	// разрушение селектбоксов 
 	$('#sup_popup select').selectBox('destroy');
 	$('#sup_popup').fadeOut(0);
@@ -203,7 +209,11 @@ function loadSites(client_id, selected){
 			$('#site_selector select').selectBox('destroy');
 			$('#site_selector').html(data);
 			prepareHtml();
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#site_selector').text(textStatus);
 		}
+		
 	});
 };
 
@@ -222,6 +232,9 @@ function loadNewSite(){
 			$('#site_selector select').selectBox('destroy');
 			$('#site_selector').html(data);
 			prepareHtml();
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#site_selector').text(textStatus);
 		}
 	});
 };
@@ -246,6 +259,9 @@ function addPay(package_id, liid){
 				success: function(data){
 					$('#li' + liid).replaceWith(data);
 					flagsUpdate();
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					$('#li' + liid).replaceWith($('<span/>').text(textStatus));
 				}
 			});
 		}
@@ -263,6 +279,9 @@ function takePack(package_id, liid){
 			success: function(data){
 				$('#li' + liid).replaceWith(data);
 				flagsUpdate();
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				$('#li' + liid).replaceWith($('<span/>').text(textStatus));
 			}
 		});
 	}
@@ -282,6 +301,10 @@ function addEditClient(id, parent){
 		success: function(data){
 			$('#sup_popup').html(data);
 			showPopUp(); // Окно сформировано - показываем его
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#sup_popup').text(textStatus);
+			showPopUp(); // Окно сформировано - показываем его
 		}
 	});
 }
@@ -299,6 +322,10 @@ function editDomain(id, client_id){
 		},
 		success: function(data){
 			$('#sup_popup').html(data);
+			showPopUp(); // Окно сформировано - показываем его
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#sup_popup').text(textStatus);
 			showPopUp(); // Окно сформировано - показываем его
 		}
 	});
@@ -341,6 +368,9 @@ function decline(package_id, liid){
 			success: function(data){
 				$('#li' + liid).replaceWith(data);
 				flagsUpdate();
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				$('#li' + liid).replaceWith($('<span/>').text(textStatus));
 			}
 		});
 	}
@@ -365,6 +395,10 @@ function clientCard(id){
 		success: function(data){
 			$('#sup_popup').html(data);
 			showPopUp(); // Окно сформировано - показываем его
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#sup_popup').text(textStatus);
+			showPopUp(); // Окно сформировано - показываем его
 		}
 	});
 }
@@ -378,6 +412,10 @@ function about(){
 		dataType: 'html',
 		success: function(data){
 			$('#sup_popup').html(data);
+			showPopUp(); // Окно сформировано - показываем его
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#sup_popup').text(textStatus);
 			showPopUp(); // Окно сформировано - показываем его
 		}
 	});
