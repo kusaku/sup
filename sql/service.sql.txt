@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `service` (
   PRIMARY KEY (`id`),
   KEY `parent_id` (`parent_id`,`form`),
   KEY `measure` (`measure`)
-) ENGINE=MyISAM;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 INSERT INTO `service` (`id`, `name`, `price`, `discount`, `parent_id`, `descr`, `duration`, `form`, `sort_order`, `measure`, `exclusive`) VALUES
 (1, 'Создание сайта', 0, 0, 0, '', 0, 0, 100, 1, 1),

@@ -132,12 +132,21 @@ if ($package_id) {
 					<?php foreach (Service::getAllByParent(0) as $group): ?>
 					<div class="projectBlock">
 						<div class="header">
-							<a onClick="$('#projectPart<?= $group->id?>').toggleClass('hidden')"><?= $group->name?>:</a>
+							<a onClick="$('#projectPart<?= $group->id?>').removeClass('hidden').children().removeClass('hidden'); $(this).attr('onClick', '$(\'#projectPart<?= $group->id?>\').toggleClass(\'hidden\');')"><?= $group->name?>:</a>
 							<!--a href="#" class="showHidden">показать неактивные</a-->
 						</div>
-						<div class="projectPart hidden" id="projectPart<?= $group->id?>">
+						<?php
+							// Предварительная проверка, есть-ли в блоке заказанные услуги. Если есть, что блок будем выводить раскрытым.
+							$active = false;
+							foreach (Service::getAllByParent($group->id) as $service){
+								$active = (bool)isset($ordered[$service->id]);
+								if ($active) break;
+							}
+						?>
+
+						<div class="projectPart <?=$active ? '' : 'hidden'?>" id="projectPart<?= $group->id?>">
 							<?php foreach (Service::getAllByParent($group->id) as $service): ?>
-							<div class="subPart">
+							<div class="subPart  <?=isset($ordered[$service->id]) ? '' : 'hidden';?>">
 								<?php 
 								$active = isset($ordered[$service->id]) ? ' checked="checked"' : false; // Это заказанная услуга!! УРА, товарищи!
 								$dataTime = date('Y-m-d H:i:s');

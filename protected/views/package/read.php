@@ -82,28 +82,14 @@ foreach ($zserv as $value) {
 					$hidden = '';
 					foreach ($tabs as $tab)
 					{
-						$issue = Redmine::getIssue($tab['to_redmine']);
 						print '<div id="tabContent'.$tab['serv_id'].'" class="tabContent '.$hidden.'">';
 
-						if ( $issue ){
-							print $issue->subject.' ('.$issue->done_ratio.'%)<br>';
-							print 'Задача в Redmine #'.$tab['to_redmine'];
-							print '<div class="progressBar"><div class="progressStat" style="width:'.$issue->done_ratio.'%">'.$issue->done_ratio.'%</div></div>';
-							print 'Иполнитель: '.$issue->assigned_to['name'].'<br>';
-							print 'Описание: '.str_replace("\n", '<br>', $issue->description).'<br>';
-							print '<hr>';
-
-							foreach ($issue->journals->journal as $journal)
-							{
-								print $journal->user['name'].' ('.date('d-m-Y H:i', strtotime($journal->created_on)).')<br>';
-								print nl2br(htmlspecialchars($journal->notes));
-								print '<hr>';
-							}
-
-							print '<textarea class="redmineMessage" id ="redmineMessageInput'.$tab['to_redmine'].'" pack='.$pack->id.'></textarea> <br><a onClick="redmineSendMessage('.$tab['to_redmine'].');" class="orangeButton" style="clear: both; float: right;">Опубликовать</a>';
+						if ( $tab['to_redmine'] ){
+							$this->renderPartial('issue', array('issue_id'=>$tab['to_redmine'], 'pack_id'=>$pack->id));
 						} else {
-							print 'Данные не получены! Вероятно задача #'.$tab['to_redmine'].' - "'.$tab['name'].'" не создана.<br><br>Для привязки задач к заказу обратитесь к администратору "'.Yii::app()->name['shortName'].'" или воспользуйтесь следующей формой:<br>';
-							print 'Введите номер задачи с которой производим связку #<input type="number" id="input'.$tab['serv_id'].'" max="999999" min="1" size="9"> <a onClick="bindRedmineIssue('.$pack->id.', '.$tab['serv_id'].')" class="orangeButton">Связать</a>';
+							print '<br><br>Данные не получены! Вероятно задача #'.$tab['to_redmine'].' - "'.$tab['name'].'" не создана. <a onClick="newRedmineIssue('.$pack->id.', '.$tab['serv_id'].')" class="orangeButton">Создать задачу</a><br><br><br>';
+							print 'Для привязки существующих задач к заказу воспользуйтесь следующей формой:<br>';
+							print 'Введите номер задачи с которой производим связку #<input type="number" id="input'.$tab['serv_id'].'" max="999999" min="1" size="9"> <a onClick="bindRedmineIssue('.$pack->id.', '.$tab['serv_id'].')" class="orangeButton">Связать</a><br>';
 						}
 						print '</div>';
 
