@@ -8,6 +8,7 @@ print 'Иполнитель: '.$issue->assigned_to['name'].'<br>';
 print 'Описание: '.str_replace("\n", '<br>', $issue->description).'<br>';
 print '<hr>';
 
+if ($issue->journals->journal)
 foreach ($issue->journals->journal as $journal)
 {
 	print $journal->user['name'].' ('.date('d-m-Y H:i', strtotime($journal->created_on)).')<br>';

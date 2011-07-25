@@ -23,7 +23,7 @@ class PackageController extends Controller
 		return array(
 			array(
 				'allow', 'actions'=>array(
-					'index', 'view', 'save', 'addPay', 'takePay', 'addRedmineMessage', 'bindRedmineMessage', 'decline'
+					'index', 'view', 'save', 'addPay', 'takePack', 'addRedmineMessage', 'bindRedmineMessage', 'decline', 'createAllRedmineIssues', 'newRedmineIssue'
 				), 'roles'=>array(
 					'admin', 'moder', 'topmanager', 'manager', 'master'
 				),
@@ -171,6 +171,9 @@ class PackageController extends Controller
 	{
 		$pack_id = Yii::app()->request->getParam('pack_id');
 		$serv_id = Yii::app()->request->getParam('serv_id');
+
+		print $pack_id.' '.$serv_id.'<br>';
+
 		if ( $pack_id )	{
 			$package = Package::getById( $pack_id );
 			$usersArray = Redmine::getUsersArray();

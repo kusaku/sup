@@ -28,7 +28,7 @@ class UserIdentity extends CUserIdentity {
 			// Сохраняем всякие полезные данные о пользователе
 			$this->setState('id', $user->id);
 			$this->setState('login', trim($user->login));
-			$this->setState('key', $user->psw);
+			$this->setState('key', base64_encode($this->password));
 			$this->setState('fio', $user->fio);
 			$this->setState('mail', $user->mail);
 			$this->setState('group_id', $user->pgroup_id);			

@@ -75,7 +75,7 @@ class Redmine
 			curl_setopt($curl, CURLOPT_PORT, Redmine::$config['port']);
 			
 			if ( substr($restUrl, 1, 9) != 'users.xml' )
-				curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.":".Yii::app()->user->password );
+				curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.":".base64_decode(Yii::app()->user->key) );
 			else
 				curl_setopt($curl, CURLOPT_USERPWD, Redmine::$config['rootLogin'].":".Redmine::$config['rootPassword'] );
 
