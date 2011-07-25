@@ -5,6 +5,38 @@
 class BMController extends Controller {
 
 	/**
+	 * Использовать фильтр прав доступа
+	 * @return
+	 */
+	public function filters() {
+		return array(
+			'accessControl'
+		);
+	}
+	
+	/**
+	 * Параметры фильтра прав доступа
+	 * @return array
+	 */
+	public function accessRules() {
+		// доступные роли:
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		return array(
+			array(
+				'allow', 'actions'=>array(
+					'register', 'open', 'updateAttributes', 'orderVhost', 'orderDomain'
+				), 'roles'=>array(
+					'admin', 'moder', 'topmanager', 'manager', 'master'
+				),
+			), array(
+				'deny', 'users'=>array(
+					'*'
+				),
+			),
+		);
+	}
+	
+	/**
 	 * Регистрирует клиента в биллинге
 	 * @return
 	 */
@@ -12,7 +44,8 @@ class BMController extends Controller {
 		// клиент
 		$client = People::getById($client_id);
 		
-		$data = array();
+		$data = array(
+		);
 		foreach ($client->attr as $name=>$attr) {
 			$data[$name] = $attr->values[0]->value;
 		}
@@ -30,7 +63,8 @@ class BMController extends Controller {
 			$attr->save();
 			
 			// пробуем отредактировать плательщика
-			$data = array();
+			$data = array(
+			);
 			foreach ($client->attr as $name=>$attr) {
 				if (! empty($attr->values[0]->value)) {
 					$data[$name] = $attr->values[0]->value;
@@ -68,7 +102,9 @@ class BMController extends Controller {
 		$username = isset($result['cdata'][$bm_id]) ? $result['cdata'][$bm_id]['name'] : (isset($client->attr['username']) ? $client->attr['username']->values[0]->value : '');
 		
 		// получаем временный ключ для входа
-		$result = $bmr->getAuthKey(array('username'=>$username));
+		$result = $bmr->getAuthKey(array(
+			'username'=>$username
+		));
 		
 		// вывод результатов
 		!$result['success'] and $result['code'] == 4 and $result['msg'] = Attributes::getByType($result['val'])->name;
@@ -92,7 +128,9 @@ class BMController extends Controller {
 		$bmr = new BMRequest(true);
 		
 		// получаем логин
-		$result = $bmr->viewItem(array('elid'=>$bm_id), 'user');
+		$result = $bmr->viewItem(array(
+			'elid'=>$bm_id
+		), 'user');
 		
 		// при ошибке  - выход
 		if (!$result['success']) {
@@ -109,11 +147,15 @@ class BMController extends Controller {
 		$values[$id]->save();
 		
 		// получаем ключ для входа
-		$result = $bmr->getAuthKey(array('username'=>$username));
+		$result = $bmr->getAuthKey(array(
+			'username'=>$username
+		));
 		
 		// от имени пользователя - выполняем вход
 		$bmr = new BMRequest();
-		$result = $bmr->login(array('username'=>$username, 'key'=>$result['key']));
+		$result = $bmr->login(array(
+			'username'=>$username, 'key'=>$result['key']
+		));
 		
 		// при ошибке авторизации - выход
 		if (!$result['success']) {
@@ -125,7 +167,9 @@ class BMController extends Controller {
 		// получим данные учетки
 		$result = $bmr->listItems('user');
 		$item = array_pop($result['cdata']);
-		$result = $bmr->viewItem(array('elid'=>$item['id']), 'user');
+		$result = $bmr->viewItem(array(
+			'elid'=>$item['id']
+		), 'user');
 		
 		if ($result['success']) {
 			foreach ($result['cdata'] as $name=>$value) {
@@ -140,7 +184,9 @@ class BMController extends Controller {
 		// получим данные плательщика
 		$result = $bmr->listItems('profile');
 		$item = array_pop($result['cdata']);
-		$result = $bmr->viewItem(array('elid'=>$item['id']), 'profile');
+		$result = $bmr->viewItem(array(
+			'elid'=>$item['id']
+		), 'profile');
 		
 		if ($result['success']) {
 			foreach ($result['cdata'] as $name=>$value) {
@@ -155,10 +201,13 @@ class BMController extends Controller {
 		// XXX получим данные аккаунта (не работает)
 		$result = $bmr->listItems('account');
 		$item = array_pop($result['cdata']);
-		$result = $bmr->viewItem(array('elid'=>$item['id']), 'account');
+		$result = $bmr->viewItem(array(
+			'elid'=>$item['id']
+		), 'account');
 		
 		if ($result['success']) {
-			$item = array_pop($result['cdata']) or $item = array();
+			$item = array_pop($result['cdata']) or $item = array(
+			);
 			
 			foreach ($result['cdata'] as $name=>$value) {
 				if (Attributes::getByType($name)) {
@@ -172,10 +221,13 @@ class BMController extends Controller {
 		// XXX получим данные контактов домена
 		$result = $bmr->listItems('domaincontact');
 		$item = array_pop($result['cdata']);
-		$result = $bmr->viewItem(array('elid'=>$item['id']), 'domaincontact');
+		$result = $bmr->viewItem(array(
+			'elid'=>$item['id']
+		), 'domaincontact');
 		
 		if ($result['success']) {
-			$item = array_pop($result['cdata']) or $item = array();
+			$item = array_pop($result['cdata']) or $item = array(
+			);
 			
 			foreach ($result['cdata'] as $name=>$value) {
 				if (Attributes::getByType($name)) {
@@ -201,7 +253,9 @@ class BMController extends Controller {
 		
 		// от имени менеджера
 		$bmr = new BMRequest(true);
-		$result = $bmr->getAuthKey(array('username'=>$username));
+		$result = $bmr->getAuthKey(array(
+			'username'=>$username
+		));
 		
 		// при ошибке - выход
 		if (!$result['success']) {
@@ -212,7 +266,9 @@ class BMController extends Controller {
 		
 		// от имени пользователя
 		$bmr = new BMRequest();
-		$result = $bmr->login(array('username'=>$username, 'key'=>$result['key']));
+		$result = $bmr->login(array(
+			'username'=>$username, 'key'=>$result['key']
+		));
 		
 		// при ошибке авторизации - выход
 		if (!$result['success']) {
@@ -224,20 +280,53 @@ class BMController extends Controller {
 		// данные для конкретного тарифа - с периодом и дополнениями
 		$prices = array(
 			// оптимальный
-			70=>array('price'=>27, 'period'=>10, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10), 71=>array('price'=>27, 'period'=>7, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10), 72=>array('price'=>27, 'period'=>8, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10), 73=>array('price'=>27, 'period'=>47, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10), 74=>array('price'=>27, 'period'=>9, 'addon_28'=>3000, 'addon_31'=>10, 'addon_31'=>10), 75=>array('price'=>27, 'period'=>46, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10),
+			70=>array(
+				'price'=>27, 'period'=>10, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10
+			), 71=>array(
+				'price'=>27, 'period'=>7, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10
+			), 72=>array(
+				'price'=>27, 'period'=>8, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10
+			), 73=>array(
+				'price'=>27, 'period'=>47, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10
+			), 74=>array(
+				'price'=>27, 'period'=>9, 'addon_28'=>3000, 'addon_31'=>10, 'addon_31'=>10
+			), 75=>array(
+				'price'=>27, 'period'=>46, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10
+			),
 			
 			// легкий
-			76=>array('price'=>39, 'period'=>24, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1), 77=>array('price'=>39, 'period'=>21, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1), 78=>array('price'=>39, 'period'=>22, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1), 79=>array('price'=>39, 'period'=>23, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1),
+			76=>array(
+				'price'=>39, 'period'=>24, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1
+			), 77=>array(
+				'price'=>39, 'period'=>21, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1
+			), 78=>array(
+				'price'=>39, 'period'=>22, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1
+			), 79=>array(
+				'price'=>39, 'period'=>23, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1
+			),
 			
 			// профессиональный
-			80=>array('price'=>47, 'period'=>29, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20), 81=>array('price'=>47, 'period'=>26, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20), 82=>array('price'=>47, 'period'=>27, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20), 83=>array('price'=>47, 'period'=>28, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20));
-			
+			80=>array(
+				'price'=>47, 'period'=>29, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20
+			), 81=>array(
+				'price'=>47, 'period'=>26, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20
+			), 82=>array(
+				'price'=>47, 'period'=>27, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20
+			), 83=>array(
+				'price'=>47, 'period'=>28, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20
+			)
+		);
+		
 		// передаем данные
-		$data = array_merge($prices[$service_id], array('domain'=>$site->url, 'payfrom'=>'neworder'));
+		$data = array_merge($prices[$service_id], array(
+			'domain'=>$site->url, 'payfrom'=>'neworder'
+		));
 		$result = $bmr->orderVhost($data);
 		
 		// период хостинга относительно now
-		$next = array(70=>'+10 days', 71=>'+3 month', 72=>'+6 month', 73=>'+9 month', 74=>'+1 year', 75=>'+2 year', 76=>'+10 days', 77=>'+3 month', 78=>'+6 month', 79=>'+1 year', 80=>'+10 days', 81=>'+3 month', 82=>'+6 month', 83=>'+1 year');
+		$next = array(
+			70=>'+10 days', 71=>'+3 month', 72=>'+6 month', 73=>'+9 month', 74=>'+1 year', 75=>'+2 year', 76=>'+10 days', 77=>'+3 month', 78=>'+6 month', 79=>'+1 year', 80=>'+10 days', 81=>'+3 month', 82=>'+6 month', 83=>'+1 year'
+		);
 		
 		// при успехе
 		if ($result['success']) {
@@ -280,7 +369,9 @@ class BMController extends Controller {
 		
 		// от имени менеджера
 		$bmr = new BMRequest(true);
-		$result = $bmr->getAuthKey(array('username'=>$username));
+		$result = $bmr->getAuthKey(array(
+			'username'=>$username
+		));
 		
 		// при ошибке - выход
 		if (!$result['success']) {
@@ -291,7 +382,9 @@ class BMController extends Controller {
 		
 		// от имени пользователя
 		$bmr = new BMRequest();
-		$result = $bmr->login(array('username'=>$username, 'key'=>$result['key']));
+		$result = $bmr->login(array(
+			'username'=>$username, 'key'=>$result['key']
+		));
 		
 		// при ошибке авторизации - выход
 		if (!$result['success']) {
@@ -308,7 +401,8 @@ class BMController extends Controller {
 			$lastdc = array_pop($result['cdata']);
 			$lastdcid = $lastdc['id'];
 		} else {
-			$data = array();
+			$data = array(
+			);
 			foreach ($client->attr as $name=>$attr) {
 				$data[$name] = $attr->values[0]->value;
 			}
@@ -327,9 +421,37 @@ class BMController extends Controller {
 		}
 		
 		// данные для конкретного тарифа - с периодом и дополнениями
-		$prices = array(84=>array('price'=>54, 'period'=>30, 'autoprolong'=>30), 85=>array('price'=>55, 'period'=>34, 'autoprolong'=>30), 86=>array('price'=>56, 'period'=>38, 'autoprolong'=>30), 87=>array('price'=>57, 'period'=>42, 'autoprolong'=>30), 88=>array('price'=>38, 'period'=>16, 'autoprolong'=>30), 89=>array('price'=>58, 'period'=>48, 'autoprolong'=>30), 90=>array('price'=>59, 'period'=>52, 'autoprolong'=>30), 91=>array('price'=>60, 'period'=>56, 'autoprolong'=>30), 92=>array('price'=>61, 'period'=>60, 'autoprolong'=>30), 93=>array('price'=>62, 'period'=>64, 'autoprolong'=>30), 94=>array('price'=>63, 'period'=>68, 'autoprolong'=>30), 95=>array('price'=>64, 'period'=>72, 'autoprolong'=>30));
+		$prices = array(
+			84=>array(
+				'price'=>54, 'period'=>30, 'autoprolong'=>30
+			), 85=>array(
+				'price'=>55, 'period'=>34, 'autoprolong'=>30
+			), 86=>array(
+				'price'=>56, 'period'=>38, 'autoprolong'=>30
+			), 87=>array(
+				'price'=>57, 'period'=>42, 'autoprolong'=>30
+			), 88=>array(
+				'price'=>38, 'period'=>16, 'autoprolong'=>30
+			), 89=>array(
+				'price'=>58, 'period'=>48, 'autoprolong'=>30
+			), 90=>array(
+				'price'=>59, 'period'=>52, 'autoprolong'=>30
+			), 91=>array(
+				'price'=>60, 'period'=>56, 'autoprolong'=>30
+			), 92=>array(
+				'price'=>61, 'period'=>60, 'autoprolong'=>30
+			), 93=>array(
+				'price'=>62, 'period'=>64, 'autoprolong'=>30
+			), 94=>array(
+				'price'=>63, 'period'=>68, 'autoprolong'=>30
+			), 95=>array(
+				'price'=>64, 'period'=>72, 'autoprolong'=>30
+			)
+		);
 		
-		$data = array_merge($prices[$service_id], array('customer'=>$lastdcid, 'subjnic'=>$lastdcid, 'domain'=>$site->url, 'elid'=>$lastdcid, 'customertype'=>'person'));
+		$data = array_merge($prices[$service_id], array(
+			'customer'=>$lastdcid, 'subjnic'=>$lastdcid, 'domain'=>$site->url, 'elid'=>$lastdcid, 'customertype'=>'person'
+		));
 		
 		$result = $bmr->orderDomain($data);
 		

@@ -20,8 +20,8 @@ return array(
 		'adminEmail'=>'webmaster@example.com',
 	),	
 		
-	// preloading 'log' component
-	'preload'=>array('log'),
+	// preloading 'authManager' component
+	'preload'=>array('authManager'),
 		
 	// реализуем реестр - хранение и получение данных.
 	'onBeginRequest'=>array('Registry', 'registryLoad'),
@@ -48,9 +48,16 @@ return array(
 	),
 		
 	// application components
-	'components'=>array('user'=>array(
-			// enable cookie-based authentication
+	'components'=>array(
+	
+		'user'=>array(
 			'allowAutoLogin'=>true,
+			'loginUrl'=>array('/app/login'),
+		),
+		
+		'authManager'=>array(
+			'class'=>'AuthManager',
+			'defaultRoles'=>array('guest'),
 		),
 		
 		// uncomment the following to enable URLs in path-format
@@ -69,7 +76,7 @@ return array(
 			'username'=>'root',
 			'password'=>'root',
 			'charset'=>'utf8',
-			'emulatePrepare'=>true,
+//			'emulatePrepare'=>true,
 //			'enableProfiling'=>true,
 		),
 		
@@ -78,14 +85,14 @@ return array(
 			'errorAction'=>'app/error',
 		),
 		
-//		'log'=>array(
-//			'class'=>'CLogRouter',
-//			'routes'=>array(
-//			array(
-//				'class'=>'CWebLogRoute',
-//				'levels'=>'trace',
-//				),
-//			),
-//		),
+		'log'=>array(
+			'class'=>'CLogRouter',
+			'routes'=>array(
+			array(
+				'class'=>'CWebLogRoute',
+				'levels'=>'trace',
+				),
+			),
+		),
 	),		
 );

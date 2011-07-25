@@ -2,6 +2,39 @@
 
 class PackageController extends Controller
 {
+	
+	/**
+	 * Использовать фильтр прав доступа
+	 * @return
+	 */
+	public function filters() {
+		return array(
+			'accessControl'
+		);
+	}
+	
+	/**
+	 * Параметры фильтра прав доступа
+	 * @return array
+	 */
+	public function accessRules() {
+		// доступные роли:
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		return array(
+			array(
+				'allow', 'actions'=>array(
+					'index', 'view', 'save', 'addPay', 'takePay', 'addRedmineMessage', 'bindRedmineMessage', 'decline'
+				), 'roles'=>array(
+					'admin', 'moder', 'topmanager', 'manager', 'master'
+				),
+			), array(
+				'deny', 'users'=>array(
+					'*'
+				),
+			),
+		);
+	}
+		
 	public function actionIndex()
 	{
 		$this->renderPartial('index',array('client_id'=>Yii::app()->request->getParam('client_id')));
