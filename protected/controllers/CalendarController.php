@@ -61,12 +61,16 @@ class CalendarController extends Controller {
 				
 			$event->people_id = $data['people_id'] ? $data['people_id'] : Yii::app()->user->id;
 			$event->date = date('Y-m-d', strtotime($data['date']));
-			//$event->date = $data['date'];
 			$event->message = $data['message'];
+			$event->interval = (int)$data['interval'];
 			$event->status = 1;
 			
 			$event->save();
-			$this->redirect(Yii::app()->homeUrl);
+			if ($data['NOredirect'])
+				return 1;
+			else
+				$this->redirect(Yii::app()->homeUrl);
+
 		} else
 			return 0;
 	}
@@ -97,6 +101,16 @@ class CalendarController extends Controller {
 				$event = Calendar::GetById($id);
 				$event->status = 0;
 				$event->save();
+				if ( $event->interval > 0 ){
+					self::actionSave(array(
+						'event_id'=>0,
+						'people_id'=>$event->people_id,
+						'date'=> date('Y-m-d', (int)strtotime($event->date. " + {$event->interval} month") ),
+						'message'=>$event->message,
+						'interval'=>$event->interval,
+						'NOredirect'=>true,
+					));
+				}
 				print 1;
 			}
 		}
