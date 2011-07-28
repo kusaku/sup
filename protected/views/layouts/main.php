@@ -25,6 +25,7 @@
 		<script language="JavaScript" src="/js/mail.js"></script>
 		<script language="JavaScript" src="/js/jwysiwyg/jquery.wysiwyg.js"></script>
 		<script language="JavaScript" src="/js/logger.js"></script>
+		<script language="JavaScript" src="/js/reports.js"></script>
 	</head>
 	<body>
 		<?= $content?>

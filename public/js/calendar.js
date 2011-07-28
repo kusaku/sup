@@ -17,7 +17,7 @@ function loadCalendar(){
 			$('.eventReadyButton').bind('click', function(){
 				calendarEventReady(this);
 			});
-			$("#calendarDock").slideUp(0);
+			//$("#calendarDock").slideUp(0); // По умолчанию скрывать события.
 
 			if ( $("#calendarDock").children().size() > 0 )
 				$("#eventsCount").html($("#calendarDock").children().size());

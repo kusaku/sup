@@ -71,7 +71,8 @@ class Package extends CActiveRecord {
 			
 ?>
 <div class="clientInfo">
-	<span class="clientName"><a onClick="addEditClient(<?=$client->id?>)"><?= $client->fio?></a>
+	<span class="clientName">
+		<a onClick="addEditClient(<?=$client->id?>)"><?= $client->fio?></a>
 		<div class="tips">
 			<div class="tipsTop"></div>
 			<div class="tipsBody">
@@ -91,7 +92,7 @@ class Package extends CActiveRecord {
 	</span>
 	<a onClick="Package(0, <?=$client->id?>)" title="Создать новый заказ" >Новый заказ</a>&nbsp;&nbsp;
 	<a onClick='clientCard(<?=$client->id?>)'>Карточка клиента</a>&nbsp;&nbsp;
-	<a style="float:right;" onClick="loggerForm(<?=$client->id?>)">Добавить запись</a>
+	<a onClick="loggerForm(<?=$client->id?>)">Журнал</a>
 </div>
 <?php 
 $packs = $client->packages;
@@ -126,7 +127,7 @@ if ($packs)
 		
 ?>
 <div class="projectType">
-	<a onClick="Package(<?=$package->id?>, 0)" class="type">Заказ #<?= $package->id?>:&nbsp;<?= $package->name?></a>
+	<a onClick="Package(<?=$package->id?>, 0)" class="type">Заказ №<?= $package->id?>:&nbsp;<?= $package->name?></a>
 	<a onClick="Package(<?=$package->id?>, 0)" class="more">
 		<?php 
 		if ($package->summa)

@@ -27,8 +27,22 @@ function ShowMasters($id, $masters, $sel = false) {
 	return $res;
 }
 
+/* 
+ * Возвращаем 
+ */
+function GetManagers(){
+	$res = "<select id='newManager' name='newManager'>\n<option value=\"0\">Не передавать</option>";
+	$peoples = PeopleGroup::getById(4)->peoples;
+	foreach ($peoples as $people) {
+		//if ( $people->id != Yii::app()->user->id )
+			$res = $res."<option value=\"$people->id\">$people->fio</option>\n";
+	}
+	$res = $res."</select>\n";
+	return $res;
+}
+
+
 //  Возвращаем SELECT с выбором сайта. Ипользуются сайты, закреплённые за проектам клиентами
-//  XXX НУЖНО ПЕРЕДЕЛАТЬ - AJAX
 function sites($client_id, $sel = 0) {
 	$sites = Site::getAllByClient($client_id);
 	$res = "<select name=\"pack_site_id\"><option value=\"0\">--нет--</option>";
@@ -196,12 +210,15 @@ if ($package_id) {
 				</div>
 			</div>
 			<?php endif; ?>
+			<div class="buttons">
+				<a onClick="document.forms['megaform'].submit();" class="buttonSave">Сохранить</a>
+				<!--a href="javascript:alert('Пока не работает');" class="buttonSaveExit">Сохранить и выйти</a--><a onClick="hidePopUp()" class="buttonCancel">Отмена</a>
+				<?php if ($package_id) 
+					print "<span>Передать заказ менеджеру: ".getManagers()."</span>";
+				?>
+				<span id="summa"></span>
+			</div>
 		</form>
-		<div class="buttons">
-			<a onClick="document.forms['megaform'].submit();" class="buttonSave">Сохранить</a>
-			<!--a href="javascript:alert('Пока не работает');" class="buttonSaveExit">Сохранить и выйти</a--><a onClick="hidePopUp()" class="buttonCancel">Отмена</a>
-			<span id="summa"></span>
-		</div>
 	</div>
 </div>
 <?php 
