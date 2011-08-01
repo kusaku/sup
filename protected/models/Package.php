@@ -15,23 +15,30 @@ class Package extends CActiveRecord {
 	public function relations() {
 		return array(
 			// Связка с менеджером
-			'manager'=>array(self::BELONGS_TO, 'People', 'manager_id'),
-
-			
+			'manager'=>array(
+				self::BELONGS_TO, 'People', 'manager_id'
+			),
 			// Связка с клиентом
-			'client'=>array(self::BELONGS_TO, 'People', 'client_id'), 'services'=>array(self::MANY_MANY,
-			
+			'client'=>array(
+				self::BELONGS_TO, 'People', 'client_id'
+			), 'services'=>array(
+				self::MANY_MANY,
 				// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
-				'Service', 'serv2pack(pack_id, serv_id)'),
-				
+				'Service', 'serv2pack(pack_id, serv_id)'
+			),
 			// Связка с сервисами. Возвращает все сервисы вместе с данными из serv2pack (blablabla->quant, blablabla->service->name)
-			'servPack'=>array(self::HAS_MANY, 'Serv2pack', 'pack_id', 'with'=>'service'),
-			
+			'servPack'=>array(
+				self::HAS_MANY, 'Serv2pack', 'pack_id', 'with'=>'service'
+			),
 			// Связка с сайтом
-			'site'=>array(self::BELONGS_TO, 'Site', 'site_id'),
-			
+			'site'=>array(
+				self::BELONGS_TO, 'Site', 'site_id'
+			),
 			// Связка со статусами
-			'status'=>array(self::BELONGS_TO, 'Status', 'status_id'));
+			'status'=>array(
+				self::BELONGS_TO, 'Status', 'status_id'
+			)
+		);
 	}
 	
 	public static function updateById($id) {
@@ -46,12 +53,50 @@ class Package extends CActiveRecord {
 	}
 	
 	public static function getById($id) {
-		return self::model()->find(array('condition'=>"id=$id", 'limit'=>1));
+		return self::model()->find(array(
+			'condition'=>"id=$id", 'limit'=>1
+		));
 	}
 	
 	public static function getTop($count = 100) {
-		return self::model()->findAll(array('select'=>'client_id, status_id, dt_change, dt_beg', 'condition'=>"(manager_id=".Yii::app()->user->id.") or (manager_id=0)", 'order'=>'dt_change DESC, dt_beg DESC', 'limit'=>$count));
+		return self::model()->findAll(array(
+			'select'=>'client_id, status_id, dt_change, dt_beg', 'condition'=>"(manager_id=".Yii::app()->user->id.") or (manager_id=0)", 'order'=>'dt_change DESC, dt_beg DESC', 'limit'=>$count
+		));
 	}
+	
+	/**
+	 * Возвращает проекты менеджера
+	 * @param int $manager_id [optional]
+	 * @return Package
+	 */
+	public static function getProjects($manager_id = null) {
+		isset($manager_id) or $manager_id = Yii::app()->user->id;
+		return self::model()->findAll(array(
+			'condition'=>"manager_id=$manager_id", 'order'=>'dt_change DESC, dt_beg DESC'
+		));
+	}
+	
+	/**
+	 * ограничение области запроса и порядка
+	 * @return array
+	 */
+	public function scopes() {
+		return array(
+			'byclient'=>array(
+				'order'=>'client_id ASC'
+			), 
+			'bychanged'=>array(
+				'order'=>'dt_change ASC'
+			), 
+			'lastmonth'=>array(
+				'condition'=>'dt_change > SUBDATE(NOW(), INTERVAL 1 MONTH)'
+			), 
+			'lastyear'=>array(
+				'condition'=>'dt_change > SUBDATE(NOW(), INTERVAL 1 YEAR)'
+			),
+		);
+	}
+	
 	/*
 	 * Возвращаем блок заказов клиента
 	 * Выводится на главной странице при входе и при изменении заказа (аяксом)
@@ -162,21 +207,18 @@ switch ($package->status_id):
 					<a onClick="SelectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a></div>';
 		break;
-		
 	case 50:
 		print '<div class="projectState">			<strong>Выполняется</strong>
 					<div class="progressBar">
 						<div class="progressStat" style="width:'.$percent.'%">'.$percent.'%</div>
 					</div></div>';
 		break;
-		
 	case 70:
 		print '<div class="projectState"><strong class="done">Выполнен!</strong><br/>
 					<a href="#" class="icon"><img src="images/icon01.png" title="Подготовить документы к отправке"/></a>
 					<a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a href="#" class="icon"><img src="images/icon03.png" title="В архив"/></a></div>';
 		break;
-		
 	default:
 		print '<div class="projectState"><br/>'.@$package->status->name.'</div>';
 		break;

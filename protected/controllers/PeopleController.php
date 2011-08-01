@@ -28,7 +28,7 @@ class PeopleController extends Controller {
 		return array(
 			array(
 				'allow', 'actions'=>array(
-					'getClients', 'getMamagers', 'index', 'view', 'save', 'globalSearchJSON', 'card'
+					'getClients', 'getManagers', 'index', 'view', 'save', 'globalSearchJSON', 'card'
 				), 'roles'=>array(
 					'admin', 'moder', 'topmanager', 'manager', 'master'
 				),

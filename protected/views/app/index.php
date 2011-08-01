@@ -18,7 +18,7 @@
 		<ul>
 			<li><a onClick="editCalendarEvent(0)" class="addOrder">Напоминание</a></li>
 			<li><a onClick="addEditClient(0)" class="addClient">Добавить клиента</a></li>
-			<li><a href="javascript:alert('Пока не работает')" class="lastDone">Последние выполненные</a></li>
+			<li><a onClick="selectReportType()" class="lastDone">Создать отчет</a></li>
 			<li><a href="http://doc.fabricasaitov.ru/" target="_blanck" class="notWorked">Wiki-справка</a></li>
 		</ul>
 		<form method="post" action="#">
