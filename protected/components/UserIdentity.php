@@ -7,14 +7,12 @@ define('LDAP_BASE_DN', 'dc=fabricasaitov,dc=ru');
 define('LDAP_READ_USER_CN', 'cn=readLDAP,'.LDAP_BASE_DN);
 define('LDAP_READ_USER_PWD', 'eNgoo8na');
 
-
 /**
  * UserIdentity represents the data needed to identity a user.
  * It contains the authentication method that checks if the provided
  * data can identity the user.
  */
 class UserIdentity extends CUserIdentity {
-
 	/**
 	 * аутентификация по LDAP
 	 * @return array
@@ -100,7 +98,6 @@ class UserIdentity extends CUserIdentity {
 						$user->pgroup_id = 7;
 						break;
 				}
-				
 				$user->save();
 			}
 			

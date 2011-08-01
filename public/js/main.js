@@ -18,7 +18,6 @@ $(function(){
 		select: function(event, ui){
 			$("#buttonClear").removeClass('hidden');
 			loadData(ui.item.id);
-			clientCard(ui.item.id);
 		}
 	});
 	// считаем сумму при изменении опций в пакете
@@ -34,6 +33,15 @@ $(function(){
 		$('.supAccordion > div').not($(this).next()).slideUp();
 	});
 	prepareHtml();
+});
+
+/*
+ * Прячем попап при нажатии Esc.
+ */
+$(document).keyup(function(e){
+	if (e.keyCode == 27) {
+		hidePopUp();
+	}
 });
 
 /*
@@ -100,6 +108,7 @@ function loadData(client_id){
 		dataType: 'html',
 		success: function(data){
 			$('#sup_content').html(data);
+			$("#searchClient").focus();
 			// скрываем заказы клиента - все кроме первого
 			$('.forhide').hide(0);
 			flagsUpdate();
@@ -182,7 +191,7 @@ function CardShowHide(id){
 function sumka(){
 	var sum = 0;
 	$(".cbox").each(function(){
-		if ($(this).attr('checked') == 'checked') {
+		if ($(this).attr('checked') == 'checked' | $(this).attr('checked') == true) {
 			var price = $('#price' + $(this).val()).val();
 			var count = $('#count' + $(this).val()).val();
 			var res = price * count;

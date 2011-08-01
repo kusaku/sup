@@ -84,14 +84,11 @@ class Package extends CActiveRecord {
 		return array(
 			'byclient'=>array(
 				'order'=>'client_id ASC'
-			), 
-			'bychanged'=>array(
+			), 'bychanged'=>array(
 				'order'=>'dt_change ASC'
-			), 
-			'lastmonth'=>array(
+			), 'lastmonth'=>array(
 				'condition'=>'dt_change > SUBDATE(NOW(), INTERVAL 1 MONTH)'
-			), 
-			'lastyear'=>array(
+			), 'lastyear'=>array(
 				'condition'=>'dt_change > SUBDATE(NOW(), INTERVAL 1 YEAR)'
 			),
 		);
@@ -105,7 +102,6 @@ class Package extends CActiveRecord {
 	 * Предвосхищая вопросы: Да, мне не стыдно за это.
 	 *
 	 * Планы: Перенести всё это безобразие во View
-	 *
 	 */
 	public static function genClientBlock($client_id) {
 		$client = People::getById($client_id);
@@ -117,7 +113,7 @@ class Package extends CActiveRecord {
 			
 ?>
 <div class="clientInfo">
-	<span class="clientName"><a onClick="addEditClient(<?=$client->id?>)"><?= $client->fio?></a><a onClick="Package(0, <?=$client->id?>)" title="Создать новый заказ" class="plus"></a>
+	<span class="clientName"><a onClick="addEditClient(<?=$client->id?>)"><?= $client->fio?></a>
 		<div class="tips">
 			<div class="tipsTop"></div>
 			<div class="tipsBody">
@@ -135,8 +131,7 @@ class Package extends CActiveRecord {
 			<div class="tipsBottom"></div>
 		</div>
 	</span>
-	<a onClick="clientCard(<?=$client->id?>)">Карточка клиента</a>
-	<a style="float:right;" onClick="loggerForm(<?=$client->id?>)">Добавить запись</a>
+	<a onClick="Package(0, <?=$client->id?>)" title="Создать новый заказ">Новый заказ</a>&nbsp;&nbsp;<a onClick='clientCard(<?=$client->id?>)'>Карточка клиента</a>&nbsp;&nbsp;<a style="float:right;" onClick="loggerForm(<?=$client->id?>)">Добавить запись</a>
 </div>
 <?php 
 $packs = $client->packages;
@@ -201,17 +196,22 @@ switch ($package->status_id):
 		print '<div class="projectState"><br/>'.@$package->status->name.'</div>';
 		break;
 	case 17:
-		print '<div class="projectState">			<strong class="uppper">Не оплачен!</strong>
-					<a onClick="addPay('.$package->id.', '.$client_id.');" class="icon"><img src="images/icon04.png" title="Заказ оплачен"/></a>
-					<!--a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a-->
+		print '<div class="projectState">
+					<strong class="uppper">Не оплачен!</strong>
+					<a onClick="addPay('.$package->id.', '.$client_id.');" class="icon"><img src="images/icon04.png" title="Поставить оплату"/></a>
 					<a onClick="SelectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
-					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a></div>';
+					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+			</div>';
 		break;
 	case 50:
-		print '<div class="projectState">			<strong>Выполняется</strong>
+		print '<div class="projectState">
 					<div class="progressBar">
 						<div class="progressStat" style="width:'.$percent.'%">'.$percent.'%</div>
-					</div></div>';
+					</div>
+					<a onClick="alert(123123);" class="icon"><img src="images/complete.png" title="Все работы выполнены"/></a>
+					<a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+				</div>';
 		break;
 	case 70:
 		print '<div class="projectState"><strong class="done">Выполнен!</strong><br/>
@@ -232,6 +232,7 @@ endswitch;
 </div>
 </div>
 <?php 
+// XXX непонятная переменная здесь:
 $forhide = ' forhide';
 }
 print "</li>";

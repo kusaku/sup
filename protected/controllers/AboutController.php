@@ -9,8 +9,38 @@ class AboutController extends Controller {
 		return array(
 			'accessControl'
 		);
+<<<<<<< HEAD
+=======
 	}
 	
+	/**
+	 * Параметры фильтра прав доступа
+	 * @return array
+	 */
+	public function accessRules() {
+		// доступные роли:
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		return array(
+			array(
+				'allow', 'actions'=>array(
+					'index', 'test'
+				), 'roles'=>array(
+					'admin'
+				),
+			), array(
+				'deny', 'users'=>array(
+					'*'
+				),
+			),
+		);
+	}
+	
+	public function actionIndex() {
+		$this->renderPartial('index');
+>>>>>>> refs/remotes/shared/master
+	}
+	
+<<<<<<< HEAD
 	/**
 	 * Параметры фильтра прав доступа
 	 * @return array
@@ -81,6 +111,8 @@ class AboutController extends Controller {
 		
 	}
 	
+=======
+>>>>>>> refs/remotes/shared/master
 	public function actionTest() {
 		$this->renderPartial('test');
 	}
