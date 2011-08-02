@@ -61,7 +61,10 @@ class Package extends CActiveRecord {
 	
 	public static function getTop($count = 100) {
 		return self::model()->findAll(array(
-			'select'=>'client_id, status_id, dt_change, dt_beg', 'condition'=>"(manager_id=".Yii::app()->user->id.") or (manager_id=0)", 'order'=>'dt_change DESC, dt_beg DESC', 'limit'=>$count
+			'condition'=>'manager_id=0 OR manager_id='.Yii::app()->user->id,
+			'group'=>'client_id',
+			'order'=>'dt_change DESC, dt_beg DESC', 
+			'limit'=>$count
 		));
 	}
 	
@@ -91,7 +94,7 @@ class Package extends CActiveRecord {
 				'condition'=>'dt_change > SUBDATE(NOW(), INTERVAL 1 MONTH)'
 			), 'lastyear'=>array(
 				'condition'=>'dt_change > SUBDATE(NOW(), INTERVAL 1 YEAR)'
-			),
+			),		
 		);
 	}
 	
@@ -133,9 +136,9 @@ class Package extends CActiveRecord {
 			<div class="tipsBottom"></div>
 		</div>
 	</span>
-	<a onClick="Package(0, <?=$client->id?>)" title="Создать новый заказ" >Новый заказ</a>&nbsp;&nbsp;
-	<a onClick='clientCard(<?=$client->id?>)'>Карточка клиента</a>&nbsp;&nbsp;
-	<a onClick="loggerForm(<?=$client->id?>)">Журнал</a>
+	<a onClick="Package(0, <?=$client->id?>)" title="Создать новый заказ">Новый заказ</a>&nbsp;&nbsp;
+	<a onClick="clientCard(<?=$client->id?>)" title="Просмотреть заказы клиента">Карточка клиента</a>&nbsp;&nbsp;
+	<a onClick="loggerForm(<?=$client->id?>)" title="Просмотреть журнал">Журнал</a>
 </div>
 <?php 
 $packs = $client->packages;
@@ -203,16 +206,15 @@ switch ($package->status_id):
 		print '<div class="projectState">
 					<strong class="uppper">Не оплачен!</strong>
 					<a onClick="addPay('.$package->id.', '.$client_id.', '.$package->summa.');" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a>
-					<a onClick="SelectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<a onClick="selectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 			</div>';
 		break;
-
 	case 20:
 		print '<div class="projectState">
 					<strong class="uppper">Част. опл.</strong>
 					<a onClick="addPay('.$package->id.', '.$client_id.', '.($package->summa - $package->paid).');" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.($package->summa - $package->paid).' руб.)"/></a>
-					<a onClick="SelectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<a onClick="selectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 			</div>';
 		break;
@@ -223,25 +225,24 @@ switch ($package->status_id):
 						<div class="progressStat" style="width:'.$percent.'%">'.$percent.'%</div>
 					</div>
 					<a onClick="alert(123123);" class="icon"><img src="images/towork.png" title="Отдать в работу все заказанные услуги"/></a>
-					<a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<a onClick="selectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 				</div>';
 		break;
-
 	case 50:
 		print '<div class="projectState">
 					<div class="progressBar">
 						<div class="progressStat" style="width:'.$percent.'%">'.$percent.'%</div>
 					</div>
 					<a onClick="alert(123123);" class="icon"><img src="images/complete.png" title="Все работы выполнены"/></a>
-					<a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<a onClick="selectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 				</div>';
 		break;
 	case 70:
 		print '<div class="projectState"><strong class="done">Выполнен!</strong><br/>
 					<a href="#" class="icon"><img src="images/icon01.png" title="Подготовить документы к отправке"/></a>
-					<a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<a onClick="selectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a href="#" class="icon"><img src="images/icon03.png" title="В архив"/></a></div>';
 		break;
 	default:
@@ -257,7 +258,6 @@ endswitch;
 </div>
 </div>
 <?php 
-// XXX непонятная переменная здесь:
 $forhide = ' forhide';
 }
 print "</li>";

@@ -60,15 +60,46 @@
 			<div class="tipsBottom"></div>
 		</div>-->
 	</div>
+
+	<?php if(Yii::app()->user->checkAccess('admin')): ?>
+	<div class="tabs" style="clear:both;">
+		<div cls="tabs">
+			<span class="tab selected" onclick="selectTab(1001)">Проекты</span>
+			<span class="tab" onclick="selectTab(1002)">Отчеты</span>
+			<span class="tab" onclick="selectTab(1003)">Пользователи</span>
+		</div>
+		<div id="tabContent1001" class="tabContent">
+			<ul class="columnsHead">
+				<li><a href="#" class="colClient">Клиент</a></li>
+				<li><a href="#" class="colOrder">Заказ</a></li>
+				<li><a href="#" class="colState">Состояние</a></li>
+				<li><a href="#" class="colDomain">Домен</a></li>
+				<li><a href="#" class="colDate active desc">Дата</a></li>
+			</ul>		
+			<div id="sup_content">
+				<?php $this->forward('/package', false); ?>
+			</div>
+		</div>
+		<div id="tabContent1002" class="tabContent hidden">
+			<?php $this->renderPartial('/app/users'); ?>			
+		</div>
+		<div id="tabContent1003" class="tabContent hidden">
+			<?php $this->renderPartial('/app/users'); ?>
+		</div>
+	</div>
+	<?php else: ?>
 	<ul class="columnsHead">
 		<li><a href="#" class="colClient">Клиент</a></li>
 		<li><a href="#" class="colOrder">Заказ</a></li>
 		<li><a href="#" class="colState">Состояние</a></li>
 		<li><a href="#" class="colDomain">Домен</a></li>
 		<li><a href="#" class="colDate active desc">Дата</a></li>
-	</ul>
-
-	<div id="sup_content"></div>
+	</ul>		
+	<div id="sup_content">
+		<?php $this->forward('/package', false); ?>
+	</div>	
+	<?php endif; ?>
 
 </div>
+
 <div style="position: fixed; top: 0; left: 0; height: 10px; width: 10px;" onClick="about()"></div>

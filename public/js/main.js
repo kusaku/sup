@@ -24,7 +24,6 @@ $(function(){
 	$('input.cbox').live('change', function(){
 		sumka();
 	});
-	loadData(); // Загружаем заказы на главную страницу
 	loadCalendar();
 	$.datepicker.setDefaults($.datepicker.regional["ru"]); // Устанавливаем локаль для календаря
 	// реализация аккордеона

@@ -3,6 +3,13 @@
 	<div class="clientHead">Информация о клиенте</div>
 	<form action="/people/save" method="POST" name="megaform">
 		<div style="float:left;width:275px;">
+			<label>
+				Роль: 
+			</label>		
+			<?php $this->renderPartial('/app/roles', array(
+				'select'=>Yii::app()->user->checkAccess('admin') or Yii::app()->user->checkAccess('moder'),
+				'user'=>$people,
+			)); ?>
 			<input type="hidden" name="id" value="<?=$people->id?>"><input type="hidden" name="parent_id" value="<?=$people->parent_id?>">
 			<label>
 				Имя<span class="orange">*</span>: 

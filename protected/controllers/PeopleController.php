@@ -7,7 +7,6 @@
  */
 class PeopleController extends Controller {
 
-
 	/**
 	 * Использовать фильтр прав доступа
 	 * @return
@@ -108,7 +107,14 @@ class PeopleController extends Controller {
 			$people->fio = $data['fio'];
 			$people->parent_id = $data['parent_id']; // ID клиента. Если задано, это это контактное лицо клиента.
 			$people->mail = $data['mail'];
-			$people->pgroup_id = 7; // Просто клиент
+			
+			// роль пользователя может изменить только админ или модер
+			if (Yii::app()->user->checkAccess('admin') or Yii::app()->user->checkAccess('moder')) {
+				$people->pgroup_id = $data['pgroup_id'];
+			} else {
+				$people->pgroup_id = 7; // Просто клиент
+			}
+			
 			$people->state = $data['state'];
 			$people->phone = $data['phone'];
 			$people->firm = $data['firm'];

@@ -5,7 +5,7 @@
  * Список доступных шаблонов для отправки письма клиенту
  * @param {Object} client_id
  */
-function SelectMailTemplate(client_id){
+function selectMailTemplate(client_id){
 	showPopUpLoader();
 	$.ajax({
 		url: '/mail/list',
