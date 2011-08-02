@@ -264,21 +264,25 @@ function loadNewSite(){
 /*	
  * Отмечаем заказ как оплаченный.
  */
-function addPay(package_id, liid){
+function addPay(package_id, liid, summ){
 $('#modal').fadeIn(0);
 	if (package_id != null) {
 		var msg = 'Подробности платежа';
 		var message = prompt("Провести оплату заказа #" + package_id + "?", msg);
-		if (message != null) // Нажали ОК
-		{
+
+		if (message != null)
+			var summa = prompt("Оплаченная сумма", summ);
+
+		if (message != null && summa != null){
 			$('#modal').fadeIn(0);
 			if (message == msg)
-				message = ""; // Ели ничего не ввели, то сообщение очищаем
+				message = ""; // Если ничего не ввели, то сообщение очищаем
 			$.ajax({
 				url: '/package/addpay/' + package_id,
 				dataType: 'html',
 				data: {
-					'message': message
+					'message': message,
+					'summa': summa
 				},
 				success: function(data){
 					$('#li' + liid).replaceWith(data);

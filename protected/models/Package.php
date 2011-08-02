@@ -20,12 +20,15 @@ class Package extends CActiveRecord {
 			// Связка с клиентом
 			'client'=>array(self::BELONGS_TO, 'People', 'client_id'), 'services'=>array(self::MANY_MANY,
 			
-				// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
-				'Service', 'serv2pack(pack_id, serv_id)'),
+			// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
+			'Service', 'serv2pack(pack_id, serv_id)'),
 				
 			// Связка с сервисами. Возвращает все сервисы вместе с данными из serv2pack (blablabla->quant, blablabla->service->name)
 			'servPack'=>array(self::HAS_MANY, 'Serv2pack', 'pack_id', 'with'=>'service'),
-			
+
+			// Оплыты по заказу
+			'payments'=>array(self::HAS_MANY, 'Payment', 'package_id'),
+
 			// Связка с сайтом
 			'site'=>array(self::BELONGS_TO, 'Site', 'site_id'),
 			
@@ -159,12 +162,21 @@ switch ($package->status_id):
 	case 17:
 		print '<div class="projectState">
 					<strong class="uppper">Не оплачен!</strong>
-					<a onClick="addPay('.$package->id.', '.$client_id.');" class="icon"><img src="images/icon04.png" title="Поставить оплату"/></a>
+					<a onClick="addPay('.$package->id.', '.$client_id.', '.$package->summa.');" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a>
 					<a onClick="SelectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 			</div>';
 		break;
-		
+
+	case 20:
+		print '<div class="projectState">
+					<strong class="uppper">Част. опл.</strong>
+					<a onClick="addPay('.$package->id.', '.$client_id.', '.($package->summa - $package->paid).');" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.($package->summa - $package->paid).' руб.)"/></a>
+					<a onClick="SelectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+			</div>';
+		break;
+
 	case 30:
 		print '<div class="projectState">
 					<div class="progressBar">

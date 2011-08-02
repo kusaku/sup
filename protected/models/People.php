@@ -18,18 +18,19 @@ class People extends CActiveRecord
     public function relations() 
     {
 		return array(
-			'people_group'=>array(self::BELONGS_TO, 'PeopleGroup', 'pgroup_id'),
-			'my_packages'=>array(self::HAS_MANY, 'Package', 'manager_id'),
-			'my_sites'=>array(self::HAS_MANY, 'Site', 'client_id'),
-			'contacts'=>array(self::HAS_MANY, 'People', 'parent_id'),
-			'parent'=>array(self::BELONGS_TO,'People',	'parent_id'),
-			'packages'=>array(self::HAS_MANY, 'Package', 'client_id', 'order'=>'dt_change DESC'),
-			'calendar'=>array(self::HAS_MANY, 'Calendar', 'people_id'), // Все события календаря для этого человека
-			'values'=>array(self::HAS_MANY, 'PeopleAttr', 'people_id', 'index'=>'attribute_id'),
-			's2p'=>array(self::HAS_MANY, 'Serv2pack', 'master_id'),
+			'people_group'=>array(self::BELONGS_TO,	'PeopleGroup', 'pgroup_id'),
+			'my_packages'=>array(self::HAS_MANY,	'Package', 'manager_id'),
+			'my_sites'=>array(self::HAS_MANY,	'Site', 'client_id'),
+			'contacts'=>array(self::HAS_MANY,	'People', 'parent_id'),
+			'parent'=>array(self::BELONGS_TO,	'People',	'parent_id'),
+			'packages'=>array(self::HAS_MANY,	'Package', 'client_id', 'order'=>'dt_change DESC'),
+			'calendar'=>array(self::HAS_MANY,	'Calendar', 'people_id'), // Все события календаря для этого человека
+			'values'=>array(self::HAS_MANY,		'PeopleAttr', 'people_id', 'index'=>'attribute_id'),
+			's2p'=>array(self::HAS_MANY,		'Serv2pack', 'master_id'),
+			'rekviz'=>array(self::HAS_MANY,		'Rekviz', 'people_id'),
 
 			// следующая кострукция работает так: $client->attr['phone']->values[0]->value
-			'attr'=>array(self::MANY_MANY, 'Attributes', 'people_attr(people_id, attribute_id)', 'with'=>'values', 'condition'=>'`attr_attr`.`people_id`=`values`.`people_id`', 'index'=>'type')
+			'attr'=>array(self::MANY_MANY,		'Attributes', 'people_attr(people_id, attribute_id)', 'with'=>'values', 'condition'=>'`attr_attr`.`people_id`=`values`.`people_id`', 'index'=>'type')
 			);
 	}
 

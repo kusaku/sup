@@ -69,8 +69,7 @@ class PackageController extends Controller
 		$client = People::GetById($_POST['pack_client_id']);
 		/* Если заказ по контактному лицу, вешаем заказ на клиента, на не на это контактное лицо.
 		 */
-		if ( !empty($client->parent_id) )
-		{
+		if ( !empty($client->parent_id) ){
 			$_POST['pack_client_id'] = $client->parent_id;
 			$_POST['pack_descr'] = 'Контактное лицо: '.$client->fio."\n".'Телефон: '.$client->phone."\n".'EMail: '.$client->mail."\n".$_POST['pack_descr'];
 		}
@@ -148,27 +147,39 @@ class PackageController extends Controller
 	 * Отмечаем заказ как оплаченный. Создём задачу по самому заказу (родительскую задачу).
 	 */
 	public function actionAddPay() {
-		if ( Yii::app()->request->getParam('id') )
-		{
+		$summa = (int)Yii::app()->request->getParam('summa');
+		if ( Yii::app()->request->getParam('id') && $summa != 0 ){
 			$package = Package::getById( Yii::app()->request->getParam('id') );
-			
+
 			if ( Yii::app()->request->getParam('message') != '' )
 				$package->descr = $package->descr."\nПодробности оплаты: ".Yii::app()->request->getParam('message');
 
 			Logger::put( array('client_id'=>$package->client_id, 'manager_id'=>Yii::app()->user->id,'info'=>'Оплачен заказ №'.$package->id."<br> Подробности: ".Yii::app()->request->getParam('message')) );
 
 			$usersArray = Redmine::getUsersArray();
-			$package->status_id = 30;
+			
+			$package->status_id = $summa >= ($package->summa - $package->paid) ? 30 : 20;
+
+			$pay = new Payment();
+			$pay->name = 'Оплата заказа '.$package->name;
+			$pay->dt = date('Y-m-d');
+			$pay->package_id = $package->id;
+			$pay->amount = abs($summa);
+			$pay->debit = $summa > 0 ? 1 : -1;
+			$pay->rekvizit_id = 0;
+			$pay->save();
 
 			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name,$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
 
+			$package->paid += $summa;
 			$package->redmine_proj = $issue->id;
 			$package->dt_change = date('Y-m-d H:i:s');
 
 			$package->save();
 
-			// Возвращаем данные для замены аяксом
-			Package::genClientBlock($package->client_id);
+			Package::genClientBlock($package->client_id);	// Возвращаем данные для замены аяксом
+		} else {
+			print 'Возникла ошибка!';
 		}
 	}
 

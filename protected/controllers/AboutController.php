@@ -23,7 +23,7 @@ class AboutController extends Controller {
 				'allow', 'actions'=>array(
 					'index', 'test'
 				), 'roles'=>array(
-					'admin'
+					'admin', 'manager'
 				),
 			), array(
 				'deny', 'users'=>array(
