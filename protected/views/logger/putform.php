@@ -12,7 +12,7 @@
 				<a onClick="CardShowHide(0)" class="arrow"></a>
 				<a onClick="CardShowHide(0)">Записи в журнале</a>
 			</div>
-			<div style="max-height:300px;overflow:auto;" class="orderPart hidden">
+			<div style="max-height:300px;overflow:auto;" class="orderPart">
 				<?php foreach ($records as $record): ?>
 				<div class="subPart">
 					<div class="column1">

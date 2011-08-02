@@ -142,7 +142,7 @@ a:hover {
 
 .userBar ul li a.addOrder {
     background: url(../images/ubutton1.png) 0 0 no-repeat;
-    width: 109px;
+    width: 100px;
 }
 
 .userBar ul li a.addClient {
@@ -150,14 +150,20 @@ a:hover {
     width: 125px;
 }
 
-.userBar ul li a.lastDone {
+.userBar ul li a.Reports {
     background: url(../images/ubutton1.png) 0 -62px no-repeat;
-    width: 178px;
+    width: 100px;
 }
 
-.userBar ul li a.notWorked {
+.userBar ul li a.Mailing {
+    background: url(../images/ubutton1.png) 0 0 no-repeat;
+    width: 129px;
+}
+
+.userBar ul li a.Wiki {
     background: url(../images/ubutton1.png) 0 -93px no-repeat;
-    width: 120px;
+    width: 40px;
+	float: right;
 }
 
 .userBar .searchClient {
@@ -432,7 +438,7 @@ a:hover {
 .columnsBody li a.moreClick, .columnsBody li a.lessClick {
     display: block;
     width: 10px;
-    height: 20px;
+    height: 100%;
     position: absolute;
     left: 0;
     bottom: 0;
@@ -468,8 +474,8 @@ a:hover {
     height: auto;
     overflow: hidden;
     position: absolute;
-    left: 0;
-    top: 12px;
+    left: 20;
+    bottom: 15px;
     z-index: 2;
 }
 
@@ -477,7 +483,7 @@ a:hover {
     display: block;
     width: 192px;
     height: 14px;
-    background: url(../images/tipstop2.png) 0 0 no-repeat;
+    background: url(../images/tips2top2.png) 0 0 no-repeat;
 }
 
 .columnsBody li .clientInfo span.clientName:hover .tips .tipsBody {
@@ -491,8 +497,8 @@ a:hover {
 .columnsBody li .clientInfo span.clientName:hover .tips .tipsBottom {
     display: block;
     width: 192px;
-    height: 15px;
-    background: url(../images/tipsbot2.png) 0 0 no-repeat;
+    height: 22px;
+    background: url(../images/tips2bot2.png) 0 0 no-repeat;
 }
 
 .columnsBody li .projectBox {

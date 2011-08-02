@@ -18,7 +18,7 @@ class Calendar extends CActiveRecord
 	public function relations()
 	{
 		return array(
-			'people'=>array(self::BELONGS_TO,'People',	'people_id'),
+			'people'=>array(self::BELONGS_TO,	'People',	'people_id'),
 			);
 	}
 

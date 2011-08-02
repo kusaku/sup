@@ -49,7 +49,7 @@ $(document).keyup(function(e){
  */
 function prepareHtml(){
 	// замена стандартных элементов
-	$('select').selectBox();
+//	$('select').selectBox(); // Отключено, т.к. возникают сложности 
 	$('input[type="checkbox"], input[type="radio"]').radiocheckBox();
 	$('#sup_popup').draggable({
 		handle: '.clientHead',
@@ -123,6 +123,13 @@ function loadData(client_id){
  * Показываем всплвающее окно.
  */
 function showPopUp(){
+	$('#sup_popup').attr('scrollPos', $(window).scrollTop());
+	$(window).bind('scroll', function(){
+		$('body').animate({scrollTop:$('#sup_popup').attr('scrollPos')}, 300, function(){
+			$('body').stop(true);
+		});
+	});
+
 	$('#modal').fadeIn(0); // 200
 	$('#sup_preloader').hide(0); // Прячем preloader
 	$('#sup_popup').show(0);
@@ -130,7 +137,9 @@ function showPopUp(){
 	
 	var left = Math.round($(document).width() / 2) - Math.round($('#sup_popup').width() / 2);
 	var top = Math.round($(window).height() / 2) - Math.round($('#sup_popup').height() / 2);
-	
+
+	if (top > 10) top = 10; // Так проще работать с маленьким экраном.
+
 	$('#sup_popup').css({
 		'left': left,
 		'top': top
@@ -145,6 +154,8 @@ function showPopUp(){
 function hidePopUp(){
 	// разрушение селектбоксов 
 	$('#sup_popup select').selectBox('destroy');
+
+	$(window).unbind('scroll');
 	$('#sup_popup').fadeOut(0);
 	$('#sup_preloader').hide(0); // Прячем preloader
 	$('#modal').fadeOut(0); // 200
@@ -251,30 +262,39 @@ function loadNewSite(){
 /*	
  * Отмечаем заказ как оплаченный.
  */
-function addPay(package_id, liid){
+function addPay(package_id, liid, summ){
+$('#modal').fadeIn(0);
 	if (package_id != null) {
 		var msg = 'Подробности платежа';
 		var message = prompt("Провести оплату заказа #" + package_id + "?", msg);
-		if (message != null) // Нажали ОК
-		{
-			if (message == msg) 
-				message = ""; // Ели ничего не ввели, то сообщение очищаем
+
+		if (message != null)
+			var summa = prompt("Оплаченная сумма", summ);
+
+		if (message != null && summa != null){
+			$('#modal').fadeIn(0);
+			if (message == msg)
+				message = ""; // Если ничего не ввели, то сообщение очищаем
 			$.ajax({
 				url: '/package/addpay/' + package_id,
 				dataType: 'html',
 				data: {
-					'message': message
+					'message': message,
+					'summa': summa
 				},
 				success: function(data){
 					$('#li' + liid).replaceWith(data);
 					flagsUpdate();
+					$('#modal').fadeOut(0);
 				},
 				error: function(jqXHR, textStatus, errorThrown){
+					$('#modal').fadeOut(0);
 					$('#li' + liid).replaceWith($('<span/>').text(textStatus));
 				}
 			});
 		}
 	}
+	$('#modal').fadeOut(0);
 }
 
 /*	

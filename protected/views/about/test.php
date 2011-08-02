@@ -1,19 +1,15 @@
 <?php
-
-
-$peoples = PeopleGroup::getById(5)->peoples;
-
-$usersArray = Redmine::getUsersArray();
-
-
-foreach ($peoples as $people) {
-	print_r(array(
-		$people->login,
-		$usersArray[ trim( (string)$people->login ) ],
-		));	// Родительская задача
-print '<br>';
-
-}/**/
-
+$package = Package::getById(11199);
+foreach ($package->payments as $value) {
+	print $value->name.'<br>';
+}
+print '<br><hr>';
+$people = People::getById(5582);
+print $people->fio.'<br>';
+print $people->mail.'<br><br>';
+if ($people->rekviz)
+foreach ($people->rekviz as $rekviz){
+	print $rekviz->id.' '.$rekviz->val.'<br>';
+}
 
 ?>

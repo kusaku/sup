@@ -19,17 +19,18 @@ class Package extends CActiveRecord {
 				self::BELONGS_TO, 'People', 'manager_id'
 			),
 			// Связка с клиентом
-			'client'=>array(
-				self::BELONGS_TO, 'People', 'client_id'
-			), 'services'=>array(
-				self::MANY_MANY,
-				// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
-				'Service', 'serv2pack(pack_id, serv_id)'
-			),
+
+			'client'=>array(self::BELONGS_TO, 'People', 'client_id'), 'services'=>array(self::MANY_MANY,
+			
+			// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
+			'Service', 'serv2pack(pack_id, serv_id)'),
+				
 			// Связка с сервисами. Возвращает все сервисы вместе с данными из serv2pack (blablabla->quant, blablabla->service->name)
-			'servPack'=>array(
-				self::HAS_MANY, 'Serv2pack', 'pack_id', 'with'=>'service'
-			),
+			'servPack'=>array(self::HAS_MANY, 'Serv2pack', 'pack_id', 'with'=>'service'),
+
+			// Оплыты по заказу
+			'payments'=>array(self::HAS_MANY, 'Payment', 'package_id'),
+
 			// Связка с сайтом
 			'site'=>array(
 				self::BELONGS_TO, 'Site', 'site_id'
@@ -113,7 +114,8 @@ class Package extends CActiveRecord {
 			
 ?>
 <div class="clientInfo">
-	<span class="clientName"><a onClick="addEditClient(<?=$client->id?>)"><?= $client->fio?></a>
+	<span class="clientName">
+		<a onClick="addEditClient(<?=$client->id?>)"><?= $client->fio?></a>
 		<div class="tips">
 			<div class="tipsTop"></div>
 			<div class="tipsBody">
@@ -131,7 +133,9 @@ class Package extends CActiveRecord {
 			<div class="tipsBottom"></div>
 		</div>
 	</span>
-	<a onClick="Package(0, <?=$client->id?>)" title="Создать новый заказ">Новый заказ</a>&nbsp;&nbsp;<a onClick='clientCard(<?=$client->id?>)'>Карточка клиента</a>&nbsp;&nbsp;<a style="float:right;" onClick="loggerForm(<?=$client->id?>)">Добавить запись</a>
+	<a onClick="Package(0, <?=$client->id?>)" title="Создать новый заказ" >Новый заказ</a>&nbsp;&nbsp;
+	<a onClick='clientCard(<?=$client->id?>)'>Карточка клиента</a>&nbsp;&nbsp;
+	<a onClick="loggerForm(<?=$client->id?>)">Журнал</a>
 </div>
 <?php 
 $packs = $client->packages;
@@ -166,7 +170,7 @@ if ($packs)
 		
 ?>
 <div class="projectType">
-	<a onClick="Package(<?=$package->id?>, 0)" class="type">Заказ #<?= $package->id?>:&nbsp;<?= $package->name?></a>
+	<a onClick="Package(<?=$package->id?>, 0)" class="type">Заказ №<?= $package->id?>:&nbsp;<?= $package->name?></a>
 	<a onClick="Package(<?=$package->id?>, 0)" class="more">
 		<?php 
 		if ($package->summa)
@@ -198,11 +202,32 @@ switch ($package->status_id):
 	case 17:
 		print '<div class="projectState">
 					<strong class="uppper">Не оплачен!</strong>
-					<a onClick="addPay('.$package->id.', '.$client_id.');" class="icon"><img src="images/icon04.png" title="Поставить оплату"/></a>
+					<a onClick="addPay('.$package->id.', '.$client_id.', '.$package->summa.');" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a>
 					<a onClick="SelectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 			</div>';
 		break;
+
+	case 20:
+		print '<div class="projectState">
+					<strong class="uppper">Част. опл.</strong>
+					<a onClick="addPay('.$package->id.', '.$client_id.', '.($package->summa - $package->paid).');" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.($package->summa - $package->paid).' руб.)"/></a>
+					<a onClick="SelectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+			</div>';
+		break;
+
+	case 30:
+		print '<div class="projectState">
+					<div class="progressBar">
+						<div class="progressStat" style="width:'.$percent.'%">'.$percent.'%</div>
+					</div>
+					<a onClick="alert(123123);" class="icon"><img src="images/towork.png" title="Отдать в работу все заказанные услуги"/></a>
+					<a href="mailto:'.$client->mail.'" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
+					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+				</div>';
+		break;
+
 	case 50:
 		print '<div class="projectState">
 					<div class="progressBar">

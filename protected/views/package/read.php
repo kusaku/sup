@@ -64,7 +64,6 @@ $zserv = array(); // Заказанные сервисы/услуги
 <?php
 
 $tabs = array();
-//$tabs[]['to_redmine'] = $pack->redmine_proj;
 $tabs[] = array('to_redmine'=>$pack->redmine_proj, 'name'=>'Заказ', 'serv_id'=>$pack->redmine_proj);
 
 foreach ($zserv as $value) {
