@@ -7,9 +7,9 @@
 */
 
 .tabs {margin-top: 7px; margin-bottom: -6px;}
-.tab {margin: 5px 4px 0 0; padding: 4px 5px; background-color: #d5dddf;background:url(../images/ubutton4.png) 0 0 repeat-x;}
+.tab {margin: 5px 4px 0 0; padding: 4px 5px; background-color: #d5dddf;background:url(../images/ubutton4.png) 0 0 repeat-x; cursor:pointer;}
 .selected {background-color: #ff701a; color: #FFF;background:url(../images/ubutton2.png) 0 0 repeat-x;}
-.tabContent {padding:0 5px 0 10px; min-height: 300px;}
+#sup_popup .tabContent {padding:0 5px 0 10px; min-height: 300px;}
 
 .progressBar {width: 100px;float: none;height: 9px;border: 1px solid #b0c3c9;margin: 5px 0 0 0;}
 .progressBar .progressStat {width: 100px;float: none;height: 9px;border: 0;background: url(../images/progress.png) 0 0 repeat-x #39a849;color: #005500;font-size: 9px;}

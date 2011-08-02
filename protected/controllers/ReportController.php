@@ -57,7 +57,7 @@ class ReportController extends Controller {
 	 *
 	 * @return
 	 */
-	public function actionGenerate($reportType, $manager_id) {
+	public function actionGenerate($reportType, $manager_id = 0) {
 	
 		$data = array(
 		);
