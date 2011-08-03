@@ -65,6 +65,9 @@ function bmRegister(client_id){
 			catch (e) {
 				// что-то пошло не так, json не вернулся
 			}
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#linkid-' + client_id).tipBox('Ошибка на стороне сервера!').tipBox('show');
 		}
 	});
 	
@@ -115,6 +118,9 @@ function bmOpen(client_id){
 			catch (e) {
 				// что-то пошло не так, json не вернулся
 			}
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#linkid-' + client_id).tipBox('Ошибка на стороне сервера!').tipBox('show');
 		}
 	});
 	return false;
@@ -151,6 +157,9 @@ function bmVHost(site_id, package_id, service_id){
 			catch (e) {
 				// что-то пошло не так, json не вернулся
 			}
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#linkid-' + package_id + '-' + service_id).tipBox('Ошибка на стороне сервера!').tipBox('show');
 		}
 	});
 	return false;
@@ -187,6 +196,46 @@ function bmDomainName(site_id, package_id, service_id){
 			catch (e) {
 				// что-то пошло не так, json не вернулся
 			}
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#linkid-' + package_id + '-' + service_id).tipBox('Ошибка на стороне сервера!').tipBox('show');
+		}
+	});
+	return false;
+}
+
+/*
+ * Заказ доменного имени
+ */
+function bmUpdateAttributes(client_id){
+	$.ajax({
+		type: 'GET',
+		url: '/bm/updateattributes',
+		data: {
+			'client_id': client_id,
+		},
+		//dataType: 'json',
+		success: function(data){
+			try {
+				data = jQuery.parseJSON(data)
+				if (data.success) {
+					$('#linkid-' + client_id).tipBox('Данные успешно подгружены.').tipBox('show');
+				}
+				else {
+					var msg = 'Ошибка';
+					(data.code) && (msg += ' #' + data.code + ' - ' + errors[data.code]);
+					(data.msg) && (msg += ' - ' + data.msg);
+					(data.val) && (msg += ' (' + data.val + ')');
+					$('#linkid-' + client_id).tipBox(msg).tipBox('show');
+				}
+				return false;
+			} 
+			catch (e) {
+				// что-то пошло не так, json не вернулся
+			}
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#linkid-' + client_id).tipBox('Ошибка на стороне сервера!').tipBox('show');
 		}
 	});
 	return false;

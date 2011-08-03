@@ -5,5 +5,5 @@
 	<?php endforeach; ?>
 </select>
 <?php else: ?>
-	<input type="text" disabled="disabled" name="pgroup_id" value="<?=$user->people_group->name;?>">
+	<input type="text" disabled="disabled" name="pgroup_id" value="<?=$user->people_group ? $user->people_group->name : 'Клиент';?>">
 <?php endif; ?>

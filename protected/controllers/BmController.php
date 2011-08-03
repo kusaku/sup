@@ -190,6 +190,7 @@ class BMController extends Controller {
 		
 		if ($result['success']) {
 			foreach ($result['cdata'] as $name=>$value) {
+				$name == 'ptypeval' and $name = 'ptype';
 				if (Attributes::getByType($name)) {
 					$id = Attributes::getByType($name)->primaryKey;
 					$values[$id]->value = $value;
@@ -218,7 +219,7 @@ class BMController extends Controller {
 			}
 		}
 		
-		// XXX получим данные контактов домена
+		// получим данные контактов домена
 		$result = $bmr->listItems('domaincontact');
 		$item = array_pop($result['cdata']);
 		$result = $bmr->viewItem(array(
@@ -237,6 +238,10 @@ class BMController extends Controller {
 				}
 			}
 		}
+		
+		print(json_encode(array(
+			'success'=>true
+		)));
 	}
 	
 	/**

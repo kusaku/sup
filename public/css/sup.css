@@ -45,7 +45,7 @@ a.grayButton	{padding: 4px 9px;background: #c8d2d5;background:url(../images/ubut
 .orderBlock .orderPart .subPart .column2 {width: auto;}
 .orderBlock .orderPart .subPart .column3 {width: auto;}
 
-.report {padding: 20px 0px; clear:both;}
+.report {padding: 10px 0px; clear:both;}
 .report h1 {color: #FF7B0B;font-size: 16px; margin:20px 0px 10px;}
 .report h2 {font-size: 14px;}
 .reportButtons {margin: 0px 0px 10px 0px;}
@@ -54,6 +54,6 @@ a.grayButton	{padding: 4px 9px;background: #c8d2d5;background:url(../images/ubut
 .reportItem th {font-weight: bold;}
 
 @media print {
-    .userBar {display:none;}
+    .hiddenprint {display:none;}
 }
 

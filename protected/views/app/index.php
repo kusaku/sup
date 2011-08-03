@@ -65,7 +65,7 @@
 	<div class="tabs" style="clear:both;">
 		<div cls="tabs">
 			<span class="tab selected" onclick="selectTab(1001)">Проекты</span>
-			<span class="tab" onclick="selectTab(1002)">Отчеты</span>
+			<!--span class="tab" onclick="selectTab(1002)">Отчеты</span-->
 			<span class="tab" onclick="selectTab(1003)">Пользователи</span>
 		</div>
 		<div id="tabContent1001" class="tabContent">
@@ -80,9 +80,9 @@
 				<?php $this->forward('/package', false); ?>
 			</div>
 		</div>
-		<div id="tabContent1002" class="tabContent hidden">
+		<!--div id="tabContent1002" class="tabContent hidden">
 			<?php $this->renderPartial('/app/users'); ?>			
-		</div>
+		</div-->
 		<div id="tabContent1003" class="tabContent hidden">
 			<?php $this->renderPartial('/app/users'); ?>
 		</div>

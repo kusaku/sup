@@ -213,9 +213,7 @@ if ($package_id) {
 			<div class="buttons">
 				<a onClick="document.forms['megaform'].submit();" class="buttonSave">Сохранить</a>
 				<!--a href="javascript:alert('Пока не работает');" class="buttonSaveExit">Сохранить и выйти</a--><a onClick="hidePopUp()" class="buttonCancel">Отмена</a>
-				<?php if ($package_id) 
-					print "<span>Передать заказ менеджеру: ".getManagers()."</span>";
-				?>
+				<span style="float:left;">Передать заказ менеджеру:</span><?= getManagers() ?>
 				<span id="summa"></span>
 			</div>
 		</form>

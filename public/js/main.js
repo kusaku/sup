@@ -48,7 +48,7 @@ $(document).keyup(function(e){
  */
 function prepareHtml(){
 	// замена стандартных элементов
-//	$('select').selectBox(); // Отключено, т.к. возникают сложности 
+	$('select').selectBox(); // Отключено, т.к. возникают сложности 
 	$('input[type="checkbox"], input[type="radio"]').radiocheckBox();
 	$('#sup_popup').draggable({
 		handle: '.clientHead',

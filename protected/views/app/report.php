@@ -3,38 +3,34 @@
 <div id="sup_preloader" class="popup"><img src="/images/preloader.gif" boreder="0"></div>
 
 <div class="wrapper">
-	<div class="logo">
-		<h1><a href="/" title="go home"><img src="/images/logo.png" alt="FS SUP"/></a></h1>
-	</div>
-	<div class="userBar">
-		<ul>
-			<li><a onClick="editCalendarEvent(0)" class="addOrder">Напоминание</a></li>
-			<li><a onClick="addEditClient(0)" class="addClient">Добавить клиента</a></li>
-			<li><a onClick="selectReportType()" class="lastDone">Создать отчет</a></li>
-			<li><a href="http://doc.fabricasaitov.ru/" target="_blanck" class="notWorked">Wiki-справка</a></li>
-		</ul>
-		<form method="post" action="#">
-			<input class="searchClient" id="searchClient" name="clientName" placeholder="Поиск клиента..." size="67"/><a onClick="searchClear()" class="buttonClear hidden" id="buttonClear"></a>
-		</form>
-		<a href="#" class="userName"><?= Yii::app()->user->fio?></a>
-		<a href="/app/logout" class="logout">выход</a>
-	</div>
+ 	<div class="logo">
+			<h1><a href="/" title="go home"><img src="/images/logo.png" alt="FS SUP"/></a></h1>
+ 	</div>
+	<div class="reportButtons">
+		<a style="float:right;" class="orangeButton hiddenprint" onclick="window.print()">Печать</a>
+	</div>		
 	<div class="report">
-		<div class="reportButtons">
-			<a style="float:right;" class="orangeButton" onclick="alert('Пока не работает =(')">Печать</a>
-		</div>		
+		<h1>Отчет за период c <?=$total['dt_beg']?> по <?=$total['dt_end']?></h1>
 		<?php foreach ($data as $managerItem): ?>
 		<?php if (!$managerItem['count']) continue; ?>
 		<h1><?= $managerItem['name']?></h1>
-		<?php foreach ($managerItem['packs'] as $packItem): ?>
-		<h2><?= $packItem['client']?>  &lt;<a href="mailto:<?= $packItem['clientmail']?>"><?= $packItem['clientmail']?></a>&gt;</h2>
-		<h2>					
-			<?php if(!empty($packItem['descr'])) : ?>
-			<?= $packItem['descr']?>
-			<?php else : ?>
+		<?php foreach ($managerItem['packs'] as $packItem): ?>		
+		<h2 style="float:left;">
+			Заказ
 			<?= $packItem['name']?>
-			<?php endif; ?> : <a href="<?= $packItem['site']?>"><?= $packItem['site']?></a>
+			<?php if(!empty($packItem['descr'])) : ?>
+			(<?= $packItem['descr']?>)
+			<?php endif; ?>			
+			<?php if(empty($packItem['site'])) : ?>
+			(без привязки к сайту)
+			<?php else : ?>
+			<a href="<?= $packItem['site']?>"><?= $packItem['site']?></a>
+			<?php endif; ?>
 		</h2>
+		<h2 style="float:right;">
+			Клиент:
+			<?= $packItem['client']?>  &lt;<a href="mailto:<?= $packItem['clientmail']?>"><?= $packItem['clientmail']?></a>&gt;
+		</h2>		
 		<table class="reportItem">
 			<tr>
 				<th>Статус</th>
@@ -43,8 +39,8 @@
 			<tr>
 				<th style="width: 25%" rowspan="<?= $packItem['count']+1 ?>">
 					<p><?= $packItem['status']?></p>
-					<p>Изменен: <?= $packItem['dt_change']?></p>
-					<p>Период: <?= $packItem['dt_beg']?> - <?= $packItem['dt_end']?></p>						
+					<p>Создан: <?= $packItem['dt_beg']?></p>
+					<p>Изменен: <?= $packItem['dt_change']?></p>											
 				</th>
 				<?php if ($packItem['count']): ?>
 				<th style="width: 15%">Услуга</th>
@@ -88,6 +84,17 @@
 					<?= number_format($packItem['summ'], 0, ',', ' ')?> руб.
 				</th>
 			</tr>
+			<?php if ($packItem['paid']): ?>
+			<tr>
+				<th>Оплачено</th>
+				<th colspan="6">
+					<?=number_format($packItem['paid'], 0, ',', ' ')?> руб. 
+					<?php if($packItem['summ']>0): ?>
+					(<?=number_format(100 * $packItem['paid']/$packItem['summ'], 0, ',', ' ')?>%)
+					<?php endif; ?>
+				</th>
+			</tr>
+			<?php endif; ?>
 		</table>
 		<?php endforeach; ?>
 		<h1>Подитог:</h1>
@@ -95,10 +102,17 @@
 			<tr>
 				<th>Заказов</th>
 				<th>Сумма</th>
+				<th>Оплачено</th>
 			</tr>
 			<tr>
-				<td><?= $managerItem['count']?></td>
+				<td><?= number_format($managerItem['count'], 0, ',', ' ')?></td>
 				<td><?= number_format($managerItem['summ'], 0, ',', ' ')?> руб.</td>
+				<td>
+					<?= number_format($managerItem['paid'], 0, ',', ' ')?> руб.
+					<?php if($managerItem['summ']>0): ?>
+					(<?= number_format(100 * $managerItem['paid']/$managerItem['summ'], 0, ',', ' ')?>%)
+					<?php endif; ?>
+				</td>
 			</tr>
 		</table>
 		<?php endforeach; ?>
@@ -107,11 +121,21 @@
 			<tr>
 				<th>Заказов</th>
 				<th>Сумма</th>
+				<th>Оплачено</th>
 			</tr>
 			<tr>
-				<td><?= $total['count']?></td>
+				<td><?= number_format($total['count'], 0, ',', ' ')?></td>
 				<td><?= number_format($total['summ'], 0, ',', ' ')?> руб.</td>
+				<td>
+					<?= number_format($total['paid'], 0, ',', ' ')?> руб.
+					<?php if($total['summ']>0): ?>
+					(<?= number_format(100 * $total['paid']/$total['summ'], 0, ',', ' ')?>%)
+					<?php endif; ?>
+				</td>
 			</tr>
 		</table>			
 	</div>
+	<div class="reportButtons">
+		<a style="float:right;" class="orangeButton hiddenprint" onclick="window.print()">Печать</a>
+	</div>		
 </div>

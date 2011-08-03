@@ -94,7 +94,7 @@ class Package extends CActiveRecord {
 				'condition'=>'dt_change > SUBDATE(NOW(), INTERVAL 1 MONTH)'
 			), 'lastyear'=>array(
 				'condition'=>'dt_change > SUBDATE(NOW(), INTERVAL 1 YEAR)'
-			),		
+			),
 		);
 	}
 	
