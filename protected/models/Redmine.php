@@ -22,7 +22,7 @@ class Redmine
 		'targetProjectId' => 'suptask', // Целевой проект - в него будут попадать задачи
 	);/**/
 
-	private static $config = array(
+/*	private static $config = array(
 		'allow_connect' => true,
 		'protocol' => 'http',
 		'port' => '80',
@@ -45,11 +45,13 @@ class Redmine
 
 	private static function runRequest($restUrl, $method = 'GET', $data = "")
 	{
+		$config = Yii::app()->params['RedmineConfig'];
+
 		// Если в настройках не разрешено использовать Редмайн, то возвращаем FASLE
-		if ( !Redmine::$config['allow_connect'] ) return FALSE;
+		if ( !(bool)$config['allow_connect'] ) return false;
 
 		// Формируем правильный урл
-		$url = Redmine::$config['protocol'].'://'.Redmine::$config['url'];
+		$url = $config['protocol'].'://'.$config['url'];
 
         $method = mb_strtolower($method);
         $curl = curl_init();
@@ -72,12 +74,12 @@ class Redmine
  
 		try {
 			curl_setopt($curl, CURLOPT_URL, $url.$restUrl);
-			curl_setopt($curl, CURLOPT_PORT, Redmine::$config['port']);
+			curl_setopt($curl, CURLOPT_PORT, $config['port']);
 			
 			if ( substr($restUrl, 1, 9) != 'users.xml' )
-				curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.":".base64_decode(Yii::app()->user->key) );
+				curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.":".Yii::app()->user->key );
 			else
-				curl_setopt($curl, CURLOPT_USERPWD, Redmine::$config['rootLogin'].":".Redmine::$config['rootPassword'] );
+				curl_setopt($curl, CURLOPT_USERPWD, $config['rootLogin'].":".$config['rootPassword'] );
 
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
@@ -87,7 +89,7 @@ class Redmine
 			curl_setopt($curl, CURLOPT_HEADER, false);
 			curl_setopt($curl, CURLOPT_AUTOREFERER, false);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-			curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "Charset=utf-8", "Redmine-API-Key: 8IK6FPceSHv9PKw2zIGM", "Content-length: ".strlen($data)));
+			curl_setopt($curl, CURLOPT_HTTPHEADER, array("Content-Type: text/xml", "Charset=utf-8", "Content-length: ".strlen($data)));
  
 			$response = curl_exec($curl); 
 			if(!curl_errno($curl)){ 
@@ -121,6 +123,7 @@ class Redmine
 
 	/**
 	 * Возвращаем массив вида Array( [alaksey.d] => 50 [elena.c] => 39 [igor.p] => 5 ) соответствие Login-ID
+	 * Нужно переделать с учётом, что пользователей может быть более 100
 	 * @return Array
 	 */
 	public static function getUsersArray() {
@@ -128,7 +131,6 @@ class Redmine
 		$usersArray = array();
 		foreach ($users as $user) {
 			$usersArray[ trim( mb_strToLower( (string)$user->login ) ) ] = (int)$user->id;
-			//$usersArray[ md5( (string)$user->login ) ] = (string)$user->login;
 		}
 		return $usersArray;
 	}
@@ -166,7 +168,7 @@ class Redmine
 	 */
 	public static function getIssues($projectId = null) {
 		// Если проект не передали, то используем проект по умолчанию
-		if ( $projectId === null ) $projectId = Redmine::$config['targetProjectId'];
+		if ( $projectId === null ) $projectId = Yii::app()->params['RedmineConfig']['targetProjectId'];
 		return Redmine::runRequest('/issues.xml?project_id='.$projectId, 'GET', '');
 	}
 
@@ -206,7 +208,7 @@ class Redmine
  
 		$xml = new SimpleXMLElement('<?xml version="1.0"?><issue></issue>');
 		$xml->addChild('subject', htmlspecialchars($subject));
-		$xml->addChild('project_id', Redmine::$config['targetProjectId']); // Берём проект из настроек
+		$xml->addChild('project_id', Yii::app()->params['RedmineConfig']['targetProjectId']); // Берём проект из настроек
 		$xml->addChild('priority_id', $priority_id);
 		$xml->addChild('description', htmlspecialchars($description));
 //		$xml->addChild('category_id', $category_id);

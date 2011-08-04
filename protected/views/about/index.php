@@ -19,9 +19,24 @@
 			<li>работа с партнёрской программой</li>
 		</ul>
 		В основе СУП лежит лежит система PR, явившаяся прототипом и донором БД. В данный момент это основной инструмент менеджеров в повседневной работе.<br>
-		
+		<hr>
+<div style="overflow-y: auto; max-height: 215px;">
 
+		<!-- ******************** -->
+		<b>1.08.02 Атлетичный Аист</b> - Август 2011г.<br>
+		Изменения:
+		<ul>
+			<li>ссылка на раскрытие/скрытие блока клиента</li>
+			<li>новые кнопки управления</li>
+			<li>оплата заказа (новый шаг, ведение учёта)</li>
+		</ul>
 
+		Новые возможности:
+		<ul>
+			<li>создание отчёта за месяц</li>
+			<li>настройка оповещений, цикличные оповещения</li>
+		</ul>
+</div>
 		<hr>
 		<a href="http://www.YiiFramework.com/" target="_blanc"><img src="/images/yii-powered.png" title="Yii PHP Framework"></a>
 		<a href="http://www.jQuery.com/" target="_blanc"><img src="/images/jquery-powered.png" title="jQuery JS Framework"></a>
