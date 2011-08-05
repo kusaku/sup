@@ -1,0 +1,27 @@
+-- phpMyAdmin SQL Dump
+-- version 3.3.7deb1
+-- http://www.phpmyadmin.net
+--
+-- Хост: localhost
+-- Время создания: Авг 05 2011 г., 16:56
+-- Версия сервера: 5.1.49
+-- Версия PHP: 5.3.3-1ubuntu9
+
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+--
+-- База данных: `sup`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Структура таблицы `persistent`
+--
+
+DROP TABLE IF EXISTS `persistent`;
+CREATE TABLE IF NOT EXISTS `persistent` (
+  `name` varchar(256) COLLATE utf8_bin NOT NULL,
+  `data` blob NOT NULL,
+  PRIMARY KEY (`name`)
+) ENGINE=MyISAM;

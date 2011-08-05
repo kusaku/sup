@@ -1,4 +1,7 @@
 <?php 
+Yii::import('application.extensions.phpmailer.JPhpMailer');
+YiiBase::autoload('Persistent');
+
 class MailController extends Controller {
 
 	/**
@@ -21,7 +24,7 @@ class MailController extends Controller {
 		return array(
 			array(
 				'allow', 'actions'=>array(
-					'index', 'list', 'send', 'saveTemplate'
+					'index', 'list', 'send', 'massMail', 'resetQueue', 'makeQueue', 'processQueue', 'saveTemplate'
 				), 'roles'=>array(
 					'admin', 'moder', 'topmanager', 'manager', 'master'
 				),
@@ -52,13 +55,12 @@ class MailController extends Controller {
 		$template = MailTemplates::getById((int) $template_id);
 		
 		if ($client and $template) {
-			Yii::import('application.extensions.phpmailer.JPhpMailer');
-			
+		
 			$mail = new JPhpMailer(true);
 			$mail->IsSMTP();
 			$mail->Host = 'mail.fabricasaitov.ru';
 			$mail->SMTPAuth = true;
-			$mail->Username = Yii::app()->user->login;
+			$mail->Username = Yii::app()->user->mail;
 			$mail->Password = base64_decode(Yii::app()->user->key);
 			$mail->SetFrom(Yii::app()->user->mail, Yii::app()->user->fio);
 			$mail->Subject = $template->getSubjectFor($client);
@@ -82,6 +84,95 @@ class MailController extends Controller {
 		$this->renderPartial('send', array(
 			'message'=>$message
 		));
+	}
+	
+	public function actionMassMail() {
+		$templates = MailTemplates::model()->findAll('people_id='.Yii::app()->user->id.' or people_id = 0');
+		$this->renderPartial('massmail', array(
+			'templates'=>$templates
+		));
+	}
+
+	
+	public function actionResetQueue() {
+		Registry::setValue('Queue.mail.offset');
+		Registry::setValue('Queue.mail.total');
+		MailQueue::clear();
+		FailedMailQueue::clear();
+		
+		print(json_encode(array(
+			'success'=>true
+		)));
+	}
+	
+	public function actionMakeQueue($filter, $template_id) {
+	
+		$template = MailTemplates::getById((int) $template_id);
+		if (!$template) {
+			print(json_encode(array(
+				'success'=>false
+			)));
+			Yii::app()->end();
+		}
+
+		
+		$quantity = Registry::getValue('Queue.mail.quantity') or $quantity = 50;
+		$offset = Registry::getValue('Queue.mail.offset') or $offset = 0;
+		
+		$recipients = People::getByFilter($filter);
+		
+		foreach (array_slice($recipients, $offset, $quantity) as $recipient) {
+			try {
+				$mail = new JPhpMailer(true);
+				$mail->IsSMTP();
+				$mail->Host = 'mail.fabricasaitov.ru';
+				$mail->SMTPAuth = true;
+				$mail->Username = Yii::app()->user->mail;
+				$mail->Password = base64_decode(Yii::app()->user->key);
+				$mail->SetFrom(Yii::app()->user->mail, Yii::app()->user->fio);
+				$mail->Subject = $template->getSubjectFor($recipient);
+				$mail->AltBody = 'To view the message, please use an HTML compatible email viewer!';
+				$mail->MsgHTML($template->getBodyFor($recipient));
+				$mail->AddAddress($recipient->mail, $recipient->fio);
+				$mail->CharSet = 'utf8';
+			}
+			catch(exception $e) {
+				continue;
+			}
+			
+			MailQueue::enQueue($mail);
+		}
+		
+		Registry::setValue('Queue.mail.offset', $quantity + $offset);
+		Registry::setValue('Queue.mail.total', MailQueue::length());
+		
+		print(json_encode(array(
+			'success'=>true, 'total'=>count($recipients), 'done'=>MailQueue::length(), 'left'=>max(array(
+				0, count($recipients) - $quantity - $offset
+			))
+		)));
+		Yii::app()->end();
+	}
+	
+	public function actionProcessQueue() {
+		$quantity = Registry::getValue('Queue.mail.quantity') or $quantity = 50;
+		
+		while ($quantity and $mail = MailQueue::deQueue()) {
+			try {
+				$quantity--;
+				$mail->Send();
+			}
+			catch(exception $e) {
+				FailedMailQueue::enQueue($mail);
+				continue;
+			}
+		}
+		
+		print(json_encode(array(
+			'success'=>true, 'total'=>Registry::getValue('Queue.mail.total'), 'left'=>MailQueue::length(), 'failed'=>FailedMailQueue::length()
+		)));
+		Yii::app()->end();
+		
 	}
 	
 	public function actionSaveTemplate() {

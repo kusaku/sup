@@ -5,7 +5,7 @@
 		<div style="float:left;width:275px;">
 			<label>Роль: </label>
 			<?php 
-			$this->renderPartial('/app/roles', array(
+			$this->renderPartial('/snippets/roles', array(
 				'select'=>Yii::app()->user->checkAccess('admin') or Yii::app()->user->checkAccess('moder'), 'user'=>$people,
 			));
 			?>

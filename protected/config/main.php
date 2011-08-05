@@ -20,8 +20,8 @@ return array(
 		'adminEmail'=>'webmaster@example.com',
 	),	
 		
-	// preloading 'authManager' component
-	'preload'=>array('authManager'),
+	// preloading
+	'preload'=>array('authManager', 'persistent'),
 		
 	// реализуем реестр - хранение и получение данных.
 	'onBeginRequest'=>array('Registry', 'registryLoad'),

@@ -195,7 +195,7 @@ class ReportController extends Controller {
 			'dt_beg'=>$dt_beg, 'dt_end'=>$dt_end, 'count'=>$totalCount, 'summ'=>$totalSumm, 'paid'=>$totalPaid,
 		);
 		
-		$this->render('/app/report', array(
+		$this->render('/report/report', array(
 			'data'=>$data, 'total'=>$total,
 		));
 	}

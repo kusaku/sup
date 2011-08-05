@@ -95,18 +95,18 @@ class Registry extends CActiveRecord {
 	// выгрузка - вызывается при завершении
 	public static function registrySave() {
 		foreach (self::$_changed as $record) {
-			$record->save();
+			$record->value == 'N;' ? $record->delete() : $record->save();
 		}
 	}
 	
-	// установка значения
+	// получение значения
 	public static function getValue($name) {
 		isset(self::$_registry[$name]) or self::$_registry[$name] = new Registry();
-		return unserialize(self::$_registry[$name]->value);
+		return @unserialize(self::$_registry[$name]->value);
 	}
 	
-	// получение значения
-	public static function setValue($name, $value) {
+	// установка значения
+	public static function setValue($name, $value = null) {
 		$value = serialize($value);
 		isset(self::$_registry[$name]) or self::$_registry[$name] = new Registry();
 		self::$_registry[$name]->name = $name;

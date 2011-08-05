@@ -26,7 +26,7 @@
 			<input type="text" name="dt_end" class="datepicker" value="<?= UserRegistry::model()->report_dt_end ? UserRegistry::model()->report_dt_end : date('Y-m-01', strtotime('+1 month')); ?>"></div>
 		<div>
 			<label>Статус: </label>
-			<?= $this->renderPartial('/app/statuses'); ?>
+			<?= $this->renderPartial('/snippets/statuses'); ?>
 			<label>Выводить пустые заказы: </label>
 			<input <?= UserRegistry::model()->report_show_empty ? 'checked="checked"' : ''?> type="checkbox" name="show_empty"></div>
 		<div class="buttons">
