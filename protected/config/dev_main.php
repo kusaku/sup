@@ -1,4 +1,4 @@
-<?php 
+<?php
 // uncomment the following to define a path alias
 // Yii::setPathOfAlias('local','path/to/local-folder');
 
@@ -11,32 +11,43 @@ return array(
 	'name'=>array('name'=>'СУП - Система Управления Проектами',
 	'shortName'=>'СУП',
 	'vendor'=>'ООО "Фабрика сайтов"',
-	'version'=>'alpha 2.0'),
+	'version'=>'1.08.02'),
 
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
-	),	
-		
+
+		// Конфиг Редмайна. На продуктиве, естественно, свой.
+		'RedmineConfig'=>array(
+			'allow_connect' => true,
+			'protocol' => 'http',
+			'port' => '80',
+			'url' => "redmine.sandbox.loc",
+			'targetProjectId' => '1',
+			'rootLogin' => 'dmitry.k',
+			'rootPassword' => 'Ij3Ohmee',
+		),
+	),
+
 	// preloading 'authManager' component
 	'preload'=>array('authManager'),
-		
+
 	// реализуем реестр - хранение и получение данных.
 	'onBeginRequest'=>array('Registry', 'registryLoad'),
 	'onEndRequest'=>array('Registry', 'registrySave'),
-		
-	
+
+
 	// autoloading model and component classes
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
 //		'application.extensions.yiiDebug.*',
 		),
-		
+
 	'modules'=>array(
-	
+
 		// uncomment the following to enable the Gii tool
 //		'gii'=>array(
 //			'class'=>'system.gii.GiiModule',
@@ -46,20 +57,20 @@ return array(
 //		),
 
 	),
-		
+
 	// application components
 	'components'=>array(
-	
+
 		'user'=>array(
 			'allowAutoLogin'=>true,
 			'loginUrl'=>array('/app/login'),
 		),
-		
+
 		'authManager'=>array(
 			'class'=>'AuthManager',
 			'defaultRoles'=>array('guest'),
 		),
-		
+
 		// uncomment the following to enable URLs in path-format
 		'urlManager'=>array('urlFormat'=>'path',
 			'rules'=>array(
@@ -67,24 +78,24 @@ return array(
 				'<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
-			'showScriptName'=>false,	
+			'showScriptName'=>false,
 		),
-		
+
 		// database settings
 		'db'=>array(
-			'connectionString'=>'mysql:host=localhost;dbname=sup',			
+			'connectionString'=>'mysql:host=localhost;dbname=sup',
 			'username'=>'root',
 			'password'=>'root',
 			'charset'=>'utf8',
 //			'emulatePrepare'=>true,
 //			'enableProfiling'=>true,
 		),
-		
+
 		'errorHandler'=>array(
 			// use 'site/error' action to display errors
 			'errorAction'=>'app/error',
 		),
-		
+
 		'log'=>array(
 			'class'=>'CLogRouter',
 			'routes'=>array(
@@ -94,5 +105,5 @@ return array(
 				),
 			),
 		),
-	),		
+	),
 );

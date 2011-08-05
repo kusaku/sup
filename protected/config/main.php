@@ -11,13 +11,24 @@ return array(
 	'name'=>array('name'=>'СУП - Система Управления Проектами',
 	'shortName'=>'СУП',
 	'vendor'=>'ООО "Фабрика сайтов"',
-	'version'=>'alpha 2.0'),
+	'version'=>'1.08.02'),
 
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']
 	'params'=>array(
 		// this is used in contact page
 		'adminEmail'=>'webmaster@example.com',
+
+		// Конфиг Редмайна. На продуктиве, естественно, свой.
+		'RedmineConfig'=>array(
+			'allow_connect' => true,
+			'protocol' => 'http',
+			'port' => '80',
+			'url' => "redmine.sandbox.loc",
+			'targetProjectId' => '1',
+			'rootLogin' => 'dmitry.k',
+			'rootPassword' => 'Ij3Ohmee',
+		),
 	),	
 		
 	// preloading
