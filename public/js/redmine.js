@@ -76,24 +76,48 @@ function newRedmineIssue(pack_id, serv_id){
 }
 
 /*
- * Создаём новую задачу в редмайне.
- *
-function createAllRedmineIssues(pack_id, serv_id){
+ * Создаём все задачи в редмайне.
+ */
+function createAllRedmineIssues(package_id, liid){
+$('#modal').fadeIn(0);
+	if (package_id != null) {
+		$.ajax({
+			url: '/package/createAllRedmineIssues/' + package_id,
+			dataType: 'html',
+			success: function(data){
+				$('#li' + liid).replaceWith(data);
+				flagsUpdate();
+				$('#modal').fadeOut(0);
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				$('#modal').fadeOut(0);
+				$('#li' + liid).replaceWith($('<span/>').text(textStatus));
+			}
+		});
+	}
+	$('#modal').fadeOut(0);
+}
+
+function redmineCloseIssue(issueId){
 	$('body').css('cursor','wait');
+	pack = $('#redmineMessageInput'+issueId).attr('pack');
+	serv = $('#redmineMessageInput'+issueId).attr('serv');
 	$.ajax({
-		url: '/package/newRedmineIssue',
+		url: '/package/closeRedmineIssue',
 		data: {
-			'pack_id':	pack_id,
-			'serv_id':	serv_id
+			'issue_id': issueId,
+			'pack_id': pack,
+			'serv_id': serv
 		},
 		dataType: 'html',
 		success: function(data){
-			$('body').css('cursor','default');
-			if (data == 1){
-				$('#tabContent'+serv_id).html('Создание новой задачи прошло <b>успено</b>! При следующем открытии вы увидите все сообщения из Redmine по задаче.');
-			} else {
-				$('#tabContent'+serv_id).html('Создание новой задачи возникла <b>ошибка</b>!');
+			if (data != 0){
+				$('#redmineMessageInput'+issueId).parent().html(data);
 			}
+			else{
+				alert('При закрытии задачи возникла ошибка!');
+			}
+			$('body').css('cursor','default');
 		}
 	});
-}*/
+}

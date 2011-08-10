@@ -48,7 +48,7 @@ $(document).keyup(function(e){
  */
 function prepareHtml(){
 	// замена стандартных элементов
-	$('select').selectBox(); // Отключено, т.к. возникают сложности 
+	//$('select').selectBox(); // Отключено, т.к. возникают сложности
 	$('input[type="checkbox"], input[type="radio"]').radiocheckBox();
 	$('#sup_popup').draggable({
 		handle: '.clientHead',
@@ -152,7 +152,7 @@ function showPopUp(){
  */
 function hidePopUp(){
 	// разрушение селектбоксов 
-	$('#sup_popup select').selectBox('destroy');
+	//$('#sup_popup select').selectBox('destroy');
 
 	$(window).unbind('scroll');
 	$('#sup_popup').fadeOut(0);
@@ -225,7 +225,7 @@ function loadSites(client_id, selected){
 		},
 		success: function(data){
 			// разрушение селектбоксов 
-			$('#site_selector select').selectBox('destroy');
+			//$('#site_selector select').selectBox('destroy');
 			$('#site_selector').html(data);
 			prepareHtml();
 		},
@@ -248,7 +248,7 @@ function loadNewSite(){
 		},
 		success: function(data){
 			// разрушение селектбоксов 
-			$('#site_selector select').selectBox('destroy');
+			//$('#site_selector select').selectBox('destroy');
 			$('#site_selector').html(data);
 			prepareHtml();
 		},

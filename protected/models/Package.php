@@ -143,31 +143,38 @@ class Package extends CActiveRecord {
 <?php 
 $packs = $client->packages;
 $forhide = '';
+$style = '';
 if ($packs)
 	foreach ($packs as $key=>$package)
 	//if ( ($package->status_id != 999)and($package->status_id != 15) ) // Не выводим законченные и отклонённые проекты
 	{
 		switch (@$package->status_id) {
-			case 0:
-				print '<div class="projectBox red'.$forhide.'">';
+			case 0: // Вообще не понятно что
+				print '<div class="projectBox orange'.$forhide.'" '.$style.'>';
 				break;
-			case 1:
-				print '<div class="projectBox red'.$forhide.'">';
+			case 1: // Новый заказ
+				print '<div class="projectBox red'.$forhide.'" '.$style.'>';
 				break;
-			case 15:
-				print '<div class="projectBox orange'.$forhide.'">';
+			case 10: // Новый присвоен менеджеру
+				print '<div class="projectBox grey'.$forhide.'" '.$style.'>';
 				break;
-			case 17:
-				print '<div class="projectBox grey'.$forhide.'">';
+			case 17: // Не оплачен
+				print '<div class="projectBox grey'.$forhide.'" '.$style.'>';
 				break;
-			case 50:
-				print '<div class="projectBox lightgreen'.$forhide.'">';
+			case 20: // Частично оплачен
+				print '<div class="projectBox lightgreen'.$forhide.'" '.$style.'>';
 				break;
-			case 70:
-				print '<div class="projectBox green'.$forhide.'">';
+			case 30: // Оплачен полностью
+				print '<div class="projectBox green'.$forhide.'" '.$style.'>';
+				break;
+			case 50: // Распределён
+				print '<div class="projectBox lightgreen'.$forhide.'" '.$style.'>';
+				break;
+			case 70: // Выполнен
+				print '<div class="projectBox green'.$forhide.'" '.$style.'>';
 				break;
 			default:
-				print '<div class="projectBox grey'.$forhide.'">';
+				print '<div class="projectBox grey'.$forhide.'" '.$style.'>';
 				break;
 		}
 		
@@ -200,7 +207,7 @@ switch ($package->status_id):
 		print '<div class="projectState new"><a onClick="takePack('.$package->id.', '.$client_id.');"><strong>Взять заказ</strong></a><br><a onClick="decline('.$package->id.', '.$client_id.')" class="icon">Отклонить</a></div>';
 		break;
 	case 15:
-		print '<div class="projectState"><br/>'.@$package->status->name.'</div>';
+		print '<div class="projectState"><br/><strong>Отклонён</strong></div>';
 		break;
 	case 17:
 		print '<div class="projectState">
@@ -224,7 +231,7 @@ switch ($package->status_id):
 					<div class="progressBar">
 						<div class="progressStat" style="width:'.$percent.'%">'.$percent.'%</div>
 					</div>
-					<a onClick="alert(123123);" class="icon"><img src="images/towork.png" title="Отдать в работу все заказанные услуги"/></a>
+					<a onClick="createAllRedmineIssues('.$package->id.', '.$client_id.');" class="icon"><img src="images/towork.png" title="Отдать в работу все заказанные услуги"/></a>
 					<a onClick="selectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 				</div>';
@@ -259,6 +266,7 @@ endswitch;
 </div>
 <?php 
 $forhide = ' forhide';
+$style = 'style="display: none;"';
 }
 print "</li>";
 } else

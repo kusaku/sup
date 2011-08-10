@@ -48,7 +48,7 @@ class Redmine
 		$config = Yii::app()->params['RedmineConfig'];
 
 		// Если в настройках не разрешено использовать Редмайн, то возвращаем FASLE
-		if ( !(bool)$config['allow_connect'] ) return false;
+		if ( !(bool)$config['allow_connect'] ) return 'error - Connect not allowed!';
 
 		// Формируем правильный урл
 		$url = $config['protocol'].'://'.$config['url'];
@@ -96,18 +96,18 @@ class Redmine
 		  		$info = curl_getinfo($curl);
 			} else {
 				curl_close($curl); 
-				return false;
+				return 'error - Curl error #'.curl_errno($curl);
 			}
 			curl_close($curl); 
 		} catch (Exception $e) {
-    		return false;
+    		return 'error - Trying false';
 		}
 
 		if($response) {
 			if(substr($response, 0, 5) == '<?xml') {
 				return new SimpleXMLElement($response);
 			} else {
-				return false;
+				return 'error - Returnet not XML data.'."\n<br>".$response."\n<br>".$url.$restUrl;
 			}
 		}
 		return true;
@@ -180,6 +180,15 @@ class Redmine
 	 */
 	public static function getIssue($IssueId) {
 		return Redmine::runRequest('/issues/'.$IssueId.'.xml?include=journals', 'GET', '');
+	}
+
+
+	public static function closeIssue($IssueId) {
+		$xml = new SimpleXMLElement('<?xml version="1.0"?><issue></issue>');
+		$xml->addChild('id', $IssueId);
+		$xml->addChild('status_id', 8);
+		$xml->addChild('done_ratio', 100);
+		return Redmine::runRequest('/issues/'.$IssueId.'.xml', 'PUT', $xml->asXML() );
 	}
 
 	/**

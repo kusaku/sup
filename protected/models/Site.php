@@ -23,8 +23,7 @@ class Site extends CActiveRecord
 			);
 	}
 
-	public static function getById($id)
-	{
+	public static function getById($id){
 		return self::model()->find(array('condition'=>"id=$id", 'limit'=>1));
 	}
 
@@ -65,6 +64,12 @@ class Site extends CActiveRecord
 		return self::model()->findAll();
 	}
 
+	/**
+	 *	Выбираем сайт по URL - точное сооветсвие.
+	 *
+	 * @param string $url
+	 * @return object
+	 */
 	public static function getByUrl($url)
 	{
 		return self::model()->find(array('condition'=>"url like '$url'", 'limit'=>1));

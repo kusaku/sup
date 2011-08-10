@@ -32,7 +32,11 @@ return array(
 	),	
 		
 	// preloading
-	'preload'=>array('authManager', 'persistent'),
+	'preload'=>array(
+		'authManager',
+		'persistent',
+//		'log', // Включить дебагер
+		),
 		
 	// реализуем реестр - хранение и получение данных.
 	'onBeginRequest'=>array('Registry', 'registryLoad'),

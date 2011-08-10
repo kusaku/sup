@@ -84,7 +84,7 @@ foreach ($zserv as $value) {
 						print '<div id="tabContent'.$tab['serv_id'].'" class="tabContent '.$hidden.'">';
 
 						if ( $tab['to_redmine'] ){
-							$this->renderPartial('issue', array('issue_id'=>$tab['to_redmine'], 'pack_id'=>$pack->id));
+							$this->renderPartial('issue', array('issue_id'=>$tab['to_redmine'], 'pack_id'=>$pack->id, 'serv_id'=>$tab['serv_id']));
 						} else {
 							print '<br><br>Данные не получены! Вероятно задача #'.$tab['to_redmine'].' - "'.$tab['name'].'" не создана. <a onClick="newRedmineIssue('.$pack->id.', '.$tab['serv_id'].')" class="orangeButton">Создать задачу</a><br><br><br>';
 							print 'Для привязки существующих задач к заказу воспользуйтесь следующей формой:<br>';
