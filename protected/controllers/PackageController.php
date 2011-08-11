@@ -194,9 +194,7 @@ class PackageController extends Controller
 		$pack_id = Yii::app()->request->getParam('pack_id');
 		$serv_id = Yii::app()->request->getParam('serv_id');
 
-		print $pack_id.' '.$serv_id.'<br>';
-
-		if ( $pack_id )	{
+		if ( $pack_id && $serv_id)	{
 			$package = Package::getById( $pack_id );
 			$usersArray = Redmine::getUsersArray();
 
@@ -210,7 +208,10 @@ class PackageController extends Controller
 
 			if ( $serv_id )	{
 				$service = Serv2pack::getByIds($serv_id, $pack_id);
-				$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
+				
+				//$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
+				$master = Yii::app()->request->getParam('master_id');
+
 				$issue = Redmine::addIssue(
 					'№'.$package->id.' '.$service->service->name,	// Название
 					'Задача по заказу №'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
@@ -230,7 +231,7 @@ class PackageController extends Controller
 				}
 			}
 
-			if ( $allIssuesExist ){ // Если всё распределено, то меняем статус проекта на 50 - тапа всё в работе.
+			if ( $allIssuesExist ){ // Если всё распределено, то меняем статус проекта на 50 - всё в работе.
 				$package->status_id = 50;
 				$package->save();
 			}
@@ -343,6 +344,8 @@ class PackageController extends Controller
 		$pack_id	= (int) Yii::app()->request->getParam('pack_id');
 		$serv_id	= (int) Yii::app()->request->getParam('serv_id');
 
+		// print "$issue_id - $pack_id - $serv_id";
+
 		if ( $issue_id && $pack_id && $serv_id ){
 			if ( Redmine::closeIssue($issue_id) == true ){
 			$serv2pack = Serv2pack::getByIds($serv_id, $pack_id);
@@ -353,7 +356,7 @@ class PackageController extends Controller
 			$pack->dt_change = date('Y-m-d H:i:s');
 			$pack->save();
 
-			print 1;
+			$this->renderPartial('issue', array('issue_id'=>$issue_id, 'pack_id'=>$pack_id));
 			} else {
 				print 0;
 			}

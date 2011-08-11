@@ -4,14 +4,14 @@
  * Тут мы читаем сообщения из редмайна.
  */
 
-
-/*
- * Возвращаем SELECT с выбором сайта. Ипользуются сайты, закреплённые за проектам клиентами
- *
- * НУЖНО ПЕРЕДЕЛАТЬ - AJAX
- */
-
 $zserv = array(); // Заказанные сервисы/услуги
+$usersArray = Redmine::getUsersArray();
+
+$RedmineUserSelect = '<select class="RedmineUserSelect">';
+foreach ($usersArray as $key => $user) {
+	$RedmineUserSelect .= '<option value="'.$user.'">'.$key.'</option>';
+}
+$RedmineUserSelect .= '</select>';
 
 
 	//$pack = Package::getById($package_id);
@@ -86,9 +86,14 @@ foreach ($zserv as $value) {
 						if ( $tab['to_redmine'] ){
 							$this->renderPartial('issue', array('issue_id'=>$tab['to_redmine'], 'pack_id'=>$pack->id, 'serv_id'=>$tab['serv_id']));
 						} else {
-							print '<br><br>Данные не получены! Вероятно задача #'.$tab['to_redmine'].' - "'.$tab['name'].'" не создана. <a onClick="newRedmineIssue('.$pack->id.', '.$tab['serv_id'].')" class="orangeButton">Создать задачу</a><br><br><br>';
-							print 'Для привязки существующих задач к заказу воспользуйтесь следующей формой:<br>';
-							print 'Введите номер задачи с которой производим связку #<input type="number" id="input'.$tab['serv_id'].'" max="999999" min="1" size="9"> <a onClick="bindRedmineIssue('.$pack->id.', '.$tab['serv_id'].')" class="orangeButton">Связать</a><br>';
+							print '<br><br>Требуется распределить задачу на мастера и отдать её в работу.<br>';
+							print 'Выберите мастера: '.$RedmineUserSelect;
+							print '<a onClick="newRedmineIssue('.$pack->id.', '.$tab['serv_id'].')" class="orangeButton">Отдать в работу</a><br>';
+
+
+							//print '<br><br>Данные не получены! Вероятно задача #'.$tab['to_redmine'].' - "'.$tab['name'].'" не создана. <a onClick="newRedmineIssue('.$pack->id.', '.$tab['serv_id'].')" class="orangeButton">Создать задачу</a><br><br><br>';
+							print '<br><br><br><br>Для привязки существующих задач к заказу воспользуйтесь следующей формой:<br>';
+							print 'Введите номер задачи с которой производим связку #<input type="number" id="input'.$tab['serv_id'].'" max="999999" min="1" size="9"> <a onClick="bindRedmineIssue('.$pack->id.', '.$tab['serv_id'].')" class="grayButton">Связать</a><br>';
 						}
 						print '</div>';
 

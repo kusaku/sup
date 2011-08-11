@@ -55,12 +55,17 @@ function bindRedmineIssue(pack_id, serv_id){
  * Создаём новую задачу в редмайне.
  */
 function newRedmineIssue(pack_id, serv_id){
+	
+//alert( $('#tabContent'+serv_id+' .RedmineUserSelect').val() );
+
 	$('body').css('cursor','wait');
+	master_id = $('#tabContent'+serv_id+' .RedmineUserSelect').val();
 	$.ajax({
 		url: '/package/newRedmineIssue',
 		data: {
 			'pack_id':	pack_id,
-			'serv_id':	serv_id
+			'serv_id':	serv_id,
+			'master_id': master_id
 		},
 		dataType: 'html',
 		success: function(data){
@@ -72,7 +77,7 @@ function newRedmineIssue(pack_id, serv_id){
 				$('#tabContent'+serv_id).html('Создание новой задачи возникла <b>ошибка</b>!');
 			}
 		}
-	});
+	});/**/
 }
 
 /*

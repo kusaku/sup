@@ -58,12 +58,12 @@ class Package extends CActiveRecord {
 			'condition'=>"id=$id", 'limit'=>1
 		));
 	}
-	
-	public static function getTop($count = 100) {
+
+	public static function getTop($count = 50) {
 		return self::model()->findAll(array(
 			'condition'=>'manager_id=0 OR manager_id='.Yii::app()->user->id,
-			'group'=>'client_id',
-			'order'=>'dt_change DESC, dt_beg DESC', 
+			//'group'=>'client_id', // С группировкой не работает.
+			'order'=>'dt_change DESC, dt_beg DESC',
 			'limit'=>$count
 		));
 	}
@@ -118,10 +118,12 @@ class Package extends CActiveRecord {
 ?>
 <div class="clientInfo">
 	<span class="clientName">
-		<a onClick="addEditClient(<?=$client->id?>)"><?= $client->fio?></a>
+		<a onClick="addEditClient(<?=$client->id?>)"><?= $client->mail?></a>
 		<div class="tips">
 			<div class="tipsTop"></div>
 			<div class="tipsBody">
+				<b>Имя</b>: <?= $client->fio?>
+				<br>
 				<b>E-mail</b>: <a href="mailto:<?=$client->mail?>">&lt;<?= $client->mail?>&gt;</a>
 				<br>
 				<b>Телефон</b>: <?= $client->phone?>
@@ -158,6 +160,7 @@ if ($packs)
 			case 10: // Новый присвоен менеджеру
 				print '<div class="projectBox grey'.$forhide.'" '.$style.'>';
 				break;
+			case 10: // Присвое менеджеру
 			case 17: // Не оплачен
 				print '<div class="projectBox grey'.$forhide.'" '.$style.'>';
 				break;
@@ -209,6 +212,8 @@ switch ($package->status_id):
 	case 15:
 		print '<div class="projectState"><br/><strong>Отклонён</strong></div>';
 		break;
+	
+	case 10:
 	case 17:
 		print '<div class="projectState">
 					<strong class="uppper">Не оплачен!</strong>
@@ -262,6 +267,7 @@ endswitch;
 </div>
 <div class="projectDate act">
 	<?= $package->dt_beg?>
+	<?= $package->dt_change?>
 </div>
 </div>
 <?php 

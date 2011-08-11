@@ -182,7 +182,11 @@ class Redmine
 		return Redmine::runRequest('/issues/'.$IssueId.'.xml?include=journals', 'GET', '');
 	}
 
-
+	/**
+	 *	Закрываем задачу, ставим готовность 100%
+	 * @param int $IssueId
+	 * @return object
+	 */
 	public static function closeIssue($IssueId) {
 		$xml = new SimpleXMLElement('<?xml version="1.0"?><issue></issue>');
 		$xml->addChild('id', $IssueId);
