@@ -481,7 +481,7 @@ function saveAndProceed(what, where){
 			try {
 				data = jQuery.parseJSON(data)
 				//alert(data.success);
-				where(data.success);
+				where(data);
 			} 
 			catch (e) {
 				// что-то пошло не так, json не вернулся

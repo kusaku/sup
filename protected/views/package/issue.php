@@ -1,6 +1,7 @@
 <?php
 $issue = Redmine::getIssue($issue_id);
 $issueNotClosed = $issue->status['id'] != 8 && $issue->status['id'] != 5;
+$issueNotClosed = true;
 
 print $issue->subject.' ('.$issue->done_ratio.'%)';
 if ( $issueNotClosed ) print '<a onClick="redmineCloseIssue('.$issue->id.');" class="grayButton" style="clear: both; float: right;">Закрыть задачу</a>';

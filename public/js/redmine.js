@@ -84,7 +84,9 @@ function newRedmineIssue(pack_id, serv_id){
  * Создаём все задачи в редмайне.
  */
 function createAllRedmineIssues(package_id, liid){
-$('#modal').fadeIn(0);
+
+alert ('В данный момент рекомендую не пользоваться этой функцией! /Дима');
+/*$('#modal').fadeIn(0);
 	if (package_id != null) {
 		$.ajax({
 			url: '/package/createAllRedmineIssues/' + package_id,
@@ -100,7 +102,7 @@ $('#modal').fadeIn(0);
 			}
 		});
 	}
-	$('#modal').fadeOut(0);
+	$('#modal').fadeOut(0);*/
 }
 
 function redmineCloseIssue(issueId){

@@ -119,7 +119,7 @@ class Package extends CActiveRecord {
 ?>
 <div class="clientInfo">
 	<span class="clientName">
-		<a onClick="addEditClient(<?=$client->id?>)"><?= $client->mail?></a>
+		<a onClick="addEditClient(<?=$client->id?>)"><?= mb_substr($client->mail, 0, 30)?></a>
 		<div class="tips">
 			<div class="tipsTop"></div>
 			<div class="tipsBody">
@@ -267,8 +267,9 @@ endswitch;
 	<a onClick='editDomain(<?=@$package->site->id?>)' title="<?=@$package->site->url?>"><?= @$package->site->url?></a>
 </div>
 <div class="projectDate act">
-	<?= $package->dt_beg?>
-	<?= $package->dt_change?>
+	<?= $package->descr?>
+	<?//= $package->dt_beg?>
+	<?//= $package->dt_change?>
 </div>
 </div>
 <?php 

@@ -136,7 +136,8 @@ class PeopleController extends Controller {
 			
 			if (@$data['isAJAX'])
 				print(json_encode(array(
-					'success'=>true
+					'success'=>true,
+					'people_id'=>$people->primaryKey
 				)));
 			else
 				// Возвращаемся к редактируемому (добавляемому) элементу

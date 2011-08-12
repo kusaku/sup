@@ -93,7 +93,7 @@
 		<li><a href="#" class="colOrder">Заказ</a></li>
 		<li><a href="#" class="colState">Состояние</a></li>
 		<li><a href="#" class="colDomain">Домен</a></li>
-		<li><a href="#" class="colDate active desc">Дата</a></li>
+		<li><a href="#" class="colDate active desc">Коммент</a></li>
 	</ul>		
 	<div id="sup_content">
 		<?php $this->forward('/package', false); ?>

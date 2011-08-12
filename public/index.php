@@ -1,5 +1,5 @@
 <?php
-if (  file_exists('closed.php') )
+if (  file_exists('closed.php')  )
 	include 'closed.php';
 else {
 	// change the following paths if necessary

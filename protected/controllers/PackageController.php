@@ -172,7 +172,7 @@ class PackageController extends Controller
 			$pay->rekvizit_id = 0;
 			$pay->save();
 
-			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name,$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
+			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name.' ('.$package->client->mail.')',$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
 
 			$package->paid += $summa;
 			$package->redmine_proj = $issue->id;
@@ -212,10 +212,18 @@ class PackageController extends Controller
 				
 				//$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
 				
+				$siteInfo = isset($package->site) ? 'Сайт: http://'.$package->site->url."\n".
+						"Доступы: \n".
+						'* HOST: '.$package->site->host."\n".
+						'* FTP: '.$package->site->ftp."\n".
+						'* DB: '.$package->site->db."\n"
+						: 'В заказе сайт не указан';
 
 				$issue = Redmine::addIssue(
-					'№'.$package->id.' '.$service->service->name,	// Название
-					'Задача по заказу №'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
+					'№'.$package->id.' '.$service->service->name.' ('.$package->client->mail.')',	// Название
+					'Задача по заказу №'.$package->id.".\n Предмет заказа: ".$service->service->name.". \n".
+						'Клиент: '.$package->client->mail." \n".
+						$siteInfo,	// Описание
 					$master_id,	// Кому назначена
 					$package->redmine_proj);	// Родительская задача
 
@@ -253,7 +261,7 @@ class PackageController extends Controller
 			$package->dt_change = date('Y-m-d H:i:s');
 
 			if ( !$package->redmine_proj ){
-				$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name,$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
+				$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name.' ('.$package->client->mail.')',$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
 				$package->redmine_proj = $issue->id;
 			}
 
