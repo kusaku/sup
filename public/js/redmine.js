@@ -74,7 +74,7 @@ function newRedmineIssue(pack_id, serv_id){
 				//$('#tabContent'+serv_id).html('Создание новой задачи прошло <b>успено</b>! При следующем открытии вы увидите все сообщения из Redmine по задаче.');
 				$('#tabContent'+serv_id).html(data);
 			} else {
-				$('#tabContent'+serv_id).html('Создание новой задачи возникла <b>ошибка</b>!');
+				$('#tabContent'+serv_id).html($('#tabContent'+serv_id).html()+'<br>При создании новой задачи возникла <b>ошибка</b>!');
 			}
 		}
 	});/**/

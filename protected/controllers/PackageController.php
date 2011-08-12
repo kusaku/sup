@@ -193,8 +193,9 @@ class PackageController extends Controller
 	public function actionNewRedmineIssue() {
 		$pack_id = Yii::app()->request->getParam('pack_id');
 		$serv_id = Yii::app()->request->getParam('serv_id');
+		$master_id = Yii::app()->request->getParam('master_id');
 
-		if ( $pack_id && $serv_id)	{
+		if ( $pack_id && $serv_id && $master_id)	{
 			$package = Package::getById( $pack_id );
 			$usersArray = Redmine::getUsersArray();
 
@@ -210,12 +211,12 @@ class PackageController extends Controller
 				$service = Serv2pack::getByIds($serv_id, $pack_id);
 				
 				//$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
-				$master = Yii::app()->request->getParam('master_id');
+				
 
 				$issue = Redmine::addIssue(
 					'№'.$package->id.' '.$service->service->name,	// Название
 					'Задача по заказу №'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
-					$master,	// Кому назначена
+					$master_id,	// Кому назначена
 					$package->redmine_proj);	// Родительская задача
 
 				$service->to_redmine = $issue->id;

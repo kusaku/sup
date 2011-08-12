@@ -76,7 +76,8 @@ class Package extends CActiveRecord {
 	public static function getProjects($manager_id = null) {
 		isset($manager_id) or $manager_id = Yii::app()->user->id;
 		return self::model()->findAll(array(
-			'condition'=>"manager_id=$manager_id", 'order'=>'dt_change DESC, dt_beg DESC'
+			'condition'=>"manager_id=$manager_id",
+			'order'=>'dt_change DESC, dt_beg DESC'
 		));
 	}
 	
