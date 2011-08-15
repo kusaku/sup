@@ -5,16 +5,16 @@
 			<label>Вид отчета: </label>
 			<select id="reportType" name="reportType">
 				<?php if ($roles['admin']): ?>
-				<option <?= UserRegistry::model()->report_reportType == 'allmanagers' ? 'selected="selected"' : ''?> value="allmanagers">Отчет по всем менеджерам</option>
-				<option <?= UserRegistry::model()->report_reportType == 'onemanager' ? 'selected="selected"' : ''?> value="onemanager">Отчет по выбранному менеджеру</option>
+				<option<?= UserRegistry::model()->report_reportType == 'allmanagers' ? ' selected="selected"' : ''?> value="allmanagers">Отчет по всем менеджерам</option>
+				<option<?= UserRegistry::model()->report_reportType == 'onemanager' ? ' selected="selected"' : ''?> value="onemanager">Отчет по выбранному менеджеру</option>
 				<?php endif; ?>
-				<option <?= UserRegistry::model()->report_reportType == 'myself' ? 'selected="selected"' : ''?> value="myself">Мой отчет</option>
+				<option<?= UserRegistry::model()->report_reportType == 'myself' ? ' selected="selected"' : ''?> value="myself">Мой отчет</option>
 			</select>
 			<?php if ($roles['admin']): ?>
 			<label>Менеджер: </label>
 			<select id="manager_id" name="manager_id">
 				<?php foreach ($managers as $manager): ?>
-				<option <?= UserRegistry::model()->report_manager_id == $manager->primaryKey ? 'selected="selected"' : ''?> value="<?=$manager->primaryKey ?>"><?= $manager->fio?></option>
+				<option<?= UserRegistry::model()->report_manager_id == $manager->primaryKey ? ' selected="selected"' : ''?> value="<?=$manager->primaryKey ?>"><?= $manager->fio?></option>
 				<?php endforeach; ?>
 			</select>
 			<?php endif; ?>
@@ -26,9 +26,15 @@
 			<input type="text" name="dt_end" class="datepicker" value="<?= UserRegistry::model()->report_dt_end ? UserRegistry::model()->report_dt_end : date('Y-m-01', strtotime('+1 month')); ?>"></div>
 		<div>
 			<label>Статус: </label>
-			<?= $this->renderPartial('/snippets/statuses'); ?>
-			<label>Выводить пустые заказы: </label>
-			<input <?= UserRegistry::model()->report_show_empty ? 'checked="checked"' : ''?> type="checkbox" name="show_empty"></div>
+			<select name="status_id">
+				<option<?= UserRegistry::model()->report_status_id == -1 ? ' selected="selected"' : ''?> value="-1">Любой статус</option>
+				<option<?= UserRegistry::model()->report_status_id == -2 ? ' selected="selected"' : ''?> value="-2">Любые оплаченные</option>
+				<?php foreach (Status::model()->findAll(array( 'order'=>'id ASC' )) as $status): ?>
+				<option<?= UserRegistry::model()->report_status_id == $status->primaryKey ? ' selected="selected"' : ''?> value="<?= $status->primaryKey;?>"><?= $status->name; ?></option>
+				<?php endforeach; ?>
+			</select>
+			<label style="width:180px;">Выводить пустые заказы</label>
+			<input<?= UserRegistry::model()->report_show_empty ? 'checked="checked"' : ''?> type="checkbox" name="show_empty"></div>
 		<div class="buttons">
 			<a class="grayButton" onclick="hidePopUp();">Отмена</a>
 			<a style="float:right;" class="orangeButton" onclick="$('#megaform').submit();">Генерировать</a>

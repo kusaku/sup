@@ -158,8 +158,6 @@ class PackageController extends Controller
 
 			$usersArray = Redmine::getUsersArray();
 			
-			print_r($usersArray);
-			
 			$package->status_id = $summa >= ($package->summa - $package->paid) ? 30 : 20;
 
 			$pay = new Payment();

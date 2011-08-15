@@ -3,13 +3,15 @@
 	<div class="clientHead">Информация о клиенте</div>
 	<form action="/people/save" method="POST" name="megaform">
 		<div style="float:left;width:275px;">
+			<input type="hidden" name="id" value="<?=$people->id?>"><input type="hidden" name="parent_id" value="<?=$people->parent_id?>">
+			<?php if (Yii::app()->user->checkAccess('admin') or Yii::app()->user->checkAccess('moder')): ?>
 			<label>Роль: </label>
 			<?php 
 			$this->renderPartial('/snippets/roles', array(
-				'select'=>Yii::app()->user->checkAccess('admin') or Yii::app()->user->checkAccess('moder'), 'user'=>$people,
+				'select'=>true, 'user'=>$people,
 			));
 			?>
-			<input type="hidden" name="id" value="<?=$people->id?>"><input type="hidden" name="parent_id" value="<?=$people->parent_id?>">
+			<?php endif; ?>
 			<label>
 				Имя<span class="orange">*</span>: 
 			</label>
@@ -30,15 +32,15 @@
 		<div style="float:right;width:295px;margin-top:10px;max-height:400px;overflow-y:auto;">
 			<?php if (! empty($people->attr['bm_id']->values[0]->value)): ?>
 			<div>
-				<span><a class="add_open" id="linkid-<?= $people->primaryKey; ?>" onclick="saveAndProceed('#sup_popup form', function(success){if (success) bmOpen(<?= $people->primaryKey; ?>); else $('#linkid-<?= $people->primaryKey; ?>').tipBox('Ошибка сохранения!').tipBox('show');});" href="#"></a>Открыть BILLManager</span>
+				<span><a class="add_open" id="linkid-<?= $people->primaryKey; ?>" onclick="saveAndProceed('#sup_popup form', function(data){if (data.success) bmOpen(<?= $people->primaryKey; ?>); else $('#linkid-<?= $people->primaryKey; ?>').tipBox('Ошибка сохранения!').tipBox('show');});" href="#"></a>Открыть BILLManager</span>
 			</div>
 			<div>
-				<span><a class="add_bm" id="linkid-<?= $people->primaryKey; ?>" onclick="saveAndProceed('#sup_popup form', function(success){if (success) bmUpdateAttributes(<?= $people->primaryKey; ?>); else $('#linkid-<?= $people->primaryKey; ?>').tipBox('Ошибка сохранения!').tipBox('show');});" href="#"></a>Подгрузить данные из BILLManager</span>
+				<span><a class="add_bm" id="linkid-<?= $people->primaryKey; ?>" onclick="saveAndProceed('#sup_popup form', function(data){if (data.success) bmUpdateAttributes(<?= $people->primaryKey; ?>); else $('#linkid-<?= $people->primaryKey; ?>').tipBox('Ошибка сохранения!').tipBox('show');});" href="#"></a>Подгрузить данные из BILLManager</span>
 			</div>
 			<?php else : ?>
 			<?php if ($people->primaryKey): ?>
 			<div>
-				<span><a class="add_bm" id="linkid-<?= $people->primaryKey; ?>" onclick="saveAndProceed('#sup_popup form', function(success){if (success) bmRegister(<?= $people->primaryKey; ?>); else $('#linkid-<?= $people->primaryKey; ?>').tipBox('Ошибка сохранения!').tipBox('show');});" href="#"></a>Регистрация в BILLManager</span>
+				<span><a class="add_bm" id="linkid-<?= $people->primaryKey; ?>" onclick="saveAndProceed('#sup_popup form', function(data){if (data.success) bmRegister(<?= $people->primaryKey; ?>); else $('#linkid-<?= $people->primaryKey; ?>').tipBox('Ошибка сохранения!').tipBox('show');});" href="#"></a>Регистрация в BILLManager</span>
 			</div>
 			<?php endif; ?>
 			<?php endif; ?>

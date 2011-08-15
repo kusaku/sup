@@ -50,7 +50,7 @@
 			</div>
 			<div class="buttons">
 				<a class="grayButton" onclick="hidePopUp();">Отмена</a>
-				<a style="float:right;" class="orangeButton" onclick="saveAndProceed('#megaform', function(){ hidePopUp(); });">Сохранить</a>
+				<a style="float:right;" id="linkid-<?= Yii::app()->user->id?>" class="orangeButton" onclick="saveAndProceed('#megaform', function(data){ if(data.success) hidePopUp();else $('#linkid-<?= Yii::app()->user->id?>').tipBox('Ошибка сохранения!').tipBox('show');});">Сохранить</a>
 			</div>
 		</form>
 	</div>

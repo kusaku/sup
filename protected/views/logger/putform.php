@@ -4,8 +4,7 @@
 		<div style="padding:10px 5px;">
 			<textarea style="width:550px;height:100px;" name="info"></textarea>
 			<input type="hidden" id="client_id" name="client_id" value="<?=$client_id?>" />
-		</div>
-		<a style="float:right;" class="orangeButton" onclick="saveAndProceed('#megaform', function(success){ if (success) {hidePopUp(); loggerForm(<?=$client_id?>); }});">Добавить запись</a>
+		</div><a style="float:right;" id="linkid-<?= $client_id; ?>" class="orangeButton" onclick="saveAndProceed('#megaform', function(data){ if (data.success){hidePopUp();loggerForm(<?=$client_id?>);}else $('#linkid-<?= $client_id; ?>').tipBox('Ошибка сохранения!').tipBox('show');});">Добавить запись</a>
 		<?php if (count($records = Logger::get($client_id))): ?>
 		<div style="clear:both;" class="orderBlock" id="orderBlock0">
 			<div class="header">
@@ -32,7 +31,7 @@
 		</div>
 		<?php endif; ?>
 		<div class="buttons">
-			<a class="grayButton" onclick="hidePopUp();">Отмена</a>			
+			<a class="grayButton" onclick="hidePopUp();">Отмена</a>
 		</div>
 	</form>
 </div>

@@ -76,6 +76,7 @@ class ReportController extends Controller {
 		);
 		
 		UserRegistry::model()->report_reportType = $reportType;
+		UserRegistry::model()->report_status_id = $status_id;
 		UserRegistry::model()->report_manager_id = $manager_id;
 		UserRegistry::model()->report_dt_beg = $dt_beg;
 		UserRegistry::model()->report_dt_end = $dt_end;
@@ -115,9 +116,24 @@ class ReportController extends Controller {
 		$criteria = new CDbCriteria();
 		
 		// если выбран статус делаем выборку по нему
-		$status_id and $criteria->addColumnCondition(array(
-			'status_id'=>$status_id
-		));
+		switch ($status_id) {
+			// любой статус
+			case '-1':
+			
+				break;
+			// любой оплаченный
+			case '-2':
+				$criteria->addColumnCondition(array(
+					'status_id'=>20, 'status_id'=>30,
+				), 'OR');
+				break;
+			// конкретный статус
+			default:
+				$criteria->addColumnCondition(array(
+					'status_id'=>$status_id
+				));
+				break;
+		}
 		
 		// выборка по периоду
 		$criteria->compare('dt_change', '>='.date('Y-m-d', strtotime($dt_beg)));
@@ -155,15 +171,18 @@ class ReportController extends Controller {
 				$pack['dt_end'] = $package->dt_end != '0000-00-00 00:00:00' ? date('Y.m.d', strtotime($package->dt_end)) : '(дата не указана)';
 				$pack['dt_change'] = $package->dt_change != '0000-00-00 00:00:00' ? date('Y.m.d', strtotime($package->dt_change)) : '(дата не указана)';
 				$pack['summ'] = 0;
-				$pack['paid'] = $package->paid;
+				// ХХХ используем таблицу payment
+				//$pack['paid'] = $package->paid;
 				
 				$servs = array(
 				);
 				
+				// заказанные услуги
 				foreach ($package->servPack as $service) {
-				
+					$serv = array(
+					);
 					$serv['name'] = $service->service->name;
-					$pack['descr'] = $service->descr;
+					$serv['descr'] = $service->descr;
 					$serv['dt_beg'] = $service->dt_beg != '0000-00-00 00:00:00' ? date('Y.m.d', strtotime($service->dt_beg)) : '(дата не указана)';
 					$serv['dt_end'] = $service->dt_end != '0000-00-00 00:00:00' ? date('Y.m.d', strtotime($service->dt_end)) : '(дата не указана)';
 					$serv['count'] = $service->quant;
@@ -177,6 +196,27 @@ class ReportController extends Controller {
 				
 				$pack['servs'] = $servs;
 				$pack['count'] = count($servs);
+				
+				$pack['paid'] = 0;
+				
+				$pays = array(
+				);
+				
+				//$p = Payment::model();
+				//print_r($p->pay());
+				
+				// оплаты заказа клиентом
+				foreach ($package->payments('payments:pay') as $payment) {
+					$pay = array(
+					);
+					$pay['dt'] = $payment->dt != '0000-00-00 00:00:00' ? date('Y.m.d', strtotime($payment->dt)) : '(дата не указана)';
+					$pack['paid'] += $pay['summ'] = $payment->amount * $payment->debit;
+					$pay['rekviz'] = empty($payment->rekviz) ? '(не указан)' : $payment->rekviz->val;
+					$pays[] = $pay;
+				}
+				
+				$pack['pays'] = $pays;
+				
 				$managerSumm += $pack['summ'];
 				$managerPaid += $pack['paid'];
 				$packs[] = $pack;
@@ -189,6 +229,7 @@ class ReportController extends Controller {
 			
 			$totalCount += count($packs);
 			$totalSumm += $managerSumm;
+			$totalPaid += $managerPaid;
 		}
 		
 		$total = array(

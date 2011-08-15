@@ -724,7 +724,7 @@ a:hover {
     margin: 6px 0;
     padding: 0 5px;
     text-align: right;
-	vertical-align: middle;
+	vertical-align: top;
 }
 
 .newClientWindow input[type = "text"], .newClientWindow input[type = "password"], .newClientWindow select {

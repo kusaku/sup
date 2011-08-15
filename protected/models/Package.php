@@ -59,7 +59,12 @@ class Package extends CActiveRecord {
 		));
 	}
 	
-	public static function getTop($count = 100) {
+	/**
+	 * последние $count заказов текущего пользователя
+	 * @param object $count [optional]
+	 * @return array
+	 */
+	public static function getMy($count = 100) {
 		return self::model()->findAll(array(
 			'condition'=>'manager_id=0 OR manager_id='.Yii::app()->user->id,
 			'group'=>'client_id',
@@ -67,6 +72,19 @@ class Package extends CActiveRecord {
 			'limit'=>$count
 		));
 	}
+	
+	/**
+	 * последние $count заказов
+	 * @param object $count [optional]
+	 * @return array
+	 */	
+	public static function getLast($count = 100) {
+		return self::model()->findAll(array(
+			'group'=>'client_id',
+			'order'=>'dt_change DESC, dt_beg DESC', 
+			'limit'=>$count
+		));
+	}	
 	
 	/**
 	 * Возвращает проекты менеджера

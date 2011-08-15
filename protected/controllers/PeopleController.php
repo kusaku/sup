@@ -134,7 +134,7 @@ class PeopleController extends Controller {
 				$attr->save();
 			}
 			
-			if (@$data['isAJAX'])
+			if (@$data['ajax'])
 				print(json_encode(array(
 					'success'=>true
 				)));

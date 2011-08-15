@@ -1,17 +1,18 @@
 <?php 
+
+define('LDAP_DOMAIN', 'fabrica.local');
+
 class AboutController extends Controller {
 
 	/**
 	 * Использовать фильтр прав доступа
 	 * @return
 	 */
-	public function filters() {
+	/*public function filters() {
 		return array(
 			'accessControl'
 		);
-<<<<<<< HEAD
-=======
-	}
+	}*/
 	
 	/**
 	 * Параметры фильтра прав доступа
@@ -36,45 +37,17 @@ class AboutController extends Controller {
 	}
 	
 	public function actionIndex() {
-		$this->renderPartial('index');
->>>>>>> refs/remotes/shared/master
-	}
-	
-<<<<<<< HEAD
-	/**
-	 * Параметры фильтра прав доступа
-	 * @return array
-	 */
-	/*public function accessRules() {
-		// доступные роли:
-		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
-		return array(
-			array(
-				'allow', 'actions'=>array(
-					'index', 'test'
-				), 'roles'=>array(
-					'admin'
-				),
-			), array(
-				'deny', 'users'=>array(
-					'*'
-				),
-			),
-		);
-	}*/
-	
-	public function actionIndex() {
-		$ldap_server = "ldap://ldap.fabricasaitov.ru";
+		$ldap_server = "ldap://192.168.0.1";
 		
-		$auth_user = "cn=readLDAP,dc=fabricasaitov,dc=ru";
-		$auth_pass = "eNgoo8na";
+		$auth_user = "kirill.a@fabrica.local";
+		$auth_pass = "eBr_iMQ9";
 		
 		//$auth_user = "uid=kirill.a,ou=***FS-Программисты,dc=fabricasaitov,dc=ru";
 		//$auth_pass = "eBr_iMQ9";
 		
 		// Set the base dn to search the entire directory.
 		
-		$base_dn = "dc=fabricasaitov,dc=ru";
+		$base_dn = '';//"dc=fabrica,dc=local";
 		//$base_dn = "";
 		// Show only user persons
 		//$filter = "(&(objectClass=user)(objectCategory=person)(cn=*))";
@@ -91,8 +64,9 @@ class AboutController extends Controller {
 		ldap_set_option($connect, LDAP_OPT_REFERRALS, 0);
 		
 		// bind to server
+		echo "kirill.a@".LDAP_DOMAIN;
 		
-		$bind = @ldap_bind($connect, $auth_user, $auth_pass) or print("Unable to bind to server: ".ldap_error($connect));
+		$bind = @ldap_bind($connect, "kirill.a@".LDAP_DOMAIN, $auth_pass) or print("Unable to bind to server: ".ldap_error($connect));
 		//$bind = @ldap_bind($connect) or print("Unable to bind to server: ".ldap_error($connect));
 		
 		//print_r($bind);
@@ -100,19 +74,24 @@ class AboutController extends Controller {
 		//exit();
 		
 		//$filter = "(&(objectClass=posixAccount)(uid=kirill.a))";
-		$filter = "(objectClass=organizationalUnit)";
-		//$attr = array("ou");
+		//$filter = "(objectClass=organizationalUnit)";
+		$filter = "(&(objectClass=user)(objectClass=user))";
+		//$attr = array('uid', 'mail');
 		
-		$search = @ldap_search($connect, $base_dn, $filter) or print("Unable to search ldap server");
+		$search = @ldap_search($connect, $base_dn, $filter/*, $attr*/) or print("Unable to search ldap server");
 
 		$info = @ldap_get_entries($connect, $search) or print("No entries found");
 		
+		
 		print_r($info);
+		
+		/*foreach ($info as $i) {
+			echo "'" . @$i['uid'][0] . "', ";
+			echo "'" . @$i['name'][0] . "', ";
+		}*/
 		
 	}
 	
-=======
->>>>>>> refs/remotes/shared/master
 	public function actionTest() {
 		$this->renderPartial('test');
 	}

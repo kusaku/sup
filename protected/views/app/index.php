@@ -26,7 +26,7 @@
 			<input class="searchClient" id="searchClient" name="clientName" placeholder="Поиск клиента..." size="67"/>
 			<a onClick="searchClear()" class="buttonClear hidden" id="buttonClear"></a>
 		</form>
-		<a href="#" class="userName"><?=Yii::app()->user->fio?></a>
+		<a onclick="addEditClient(<?=Yii::app()->user->id?>)" class="userName"><?=Yii::app()->user->fio?></a>
 		<a href="/app/logout" class="logout">выход</a>
 	</div>
 	<div class="today">
@@ -63,10 +63,9 @@
 
 	<?php if(Yii::app()->user->checkAccess('admin')): ?>
 	<div class="tabs" style="clear:both;">
-		<div cls="tabs">
-			<span class="tab selected" onclick="selectTab(1001)">Проекты</span>
-			<!--span class="tab" onclick="selectTab(1002)">Отчеты</span-->
-			<span class="tab" onclick="selectTab(1003)">Пользователи</span>
+		<div class="tabcontainer">
+			<span class="tab selected" onclick="selectTab(1001)">Все проекты</span>
+			<span class="tab" onclick="selectTab(1101)">Пользователи</span>
 		</div>
 		<div id="tabContent1001" class="tabContent">
 			<ul class="columnsHead">
@@ -80,10 +79,7 @@
 				<?php $this->forward('/package', false); ?>
 			</div>
 		</div>
-		<!--div id="tabContent1002" class="tabContent hidden">
-			<?php $this->renderPartial('/snippets/users'); ?>			
-		</div-->
-		<div id="tabContent1003" class="tabContent hidden">
+		<div id="tabContent1101" class="tabContent hidden">
 			<?php $this->renderPartial('/snippets/users'); ?>
 		</div>
 	</div>

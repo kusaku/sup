@@ -54,6 +54,7 @@ function prepareHtml(){
 		handle: '.clientHead',
 		containment: 'parent'
 	});
+	$('.forhide').hide(0);
 }
 
 /*	
@@ -108,8 +109,7 @@ function loadData(client_id){
 		success: function(data){
 			$('#sup_content').html(data);
 			$("#searchClient").focus();
-			// скрываем заказы клиента - все кроме первого
-			$('.forhide').hide(0);
+			// скрываем заказы клиента - все кроме первого			
 			flagsUpdate();
 		},
 		error: function(jqXHR, textStatus, errorThrown){
@@ -124,11 +124,13 @@ function loadData(client_id){
 function showPopUp(){
 	$('#sup_popup').attr('scrollPos', $(window).scrollTop());
 	$(window).bind('scroll', function(){
-		$('body').animate({scrollTop:$('#sup_popup').attr('scrollPos')}, 300, function(){
+		$('body').animate({
+			scrollTop: $('#sup_popup').attr('scrollPos')
+		}, 300, function(){
 			$('body').stop(true);
 		});
 	});
-
+	
 	$('#modal').fadeIn(0); // 200
 	$('#sup_preloader').hide(0); // Прячем preloader
 	$('#sup_popup').show(0);
@@ -136,9 +138,9 @@ function showPopUp(){
 	
 	var left = Math.round($(document).width() / 2) - Math.round($('#sup_popup').width() / 2);
 	var top = Math.round($(window).height() / 2) - Math.round($('#sup_popup').height() / 2);
-
-	if (top > 10) top = 10; // Так проще работать с маленьким экраном.
-
+	
+	if (top > 10) 
+		top = 10; // Так проще работать с маленьким экраном.
 	$('#sup_popup').css({
 		'left': left,
 		'top': top
@@ -153,7 +155,7 @@ function showPopUp(){
 function hidePopUp(){
 	// разрушение селектбоксов 
 	$('#sup_popup select').selectBox('destroy');
-
+	
 	$(window).unbind('scroll');
 	$('#sup_popup').fadeOut(0);
 	$('#sup_preloader').hide(0); // Прячем preloader
@@ -262,17 +264,17 @@ function loadNewSite(){
  * Отмечаем заказ как оплаченный.
  */
 function addPay(package_id, liid, summ){
-$('#modal').fadeIn(0);
+	$('#modal').fadeIn(0);
 	if (package_id != null) {
 		var msg = 'Подробности платежа';
 		var message = prompt("Провести оплату заказа #" + package_id + "?", msg);
-
-		if (message != null)
+		
+		if (message != null) 
 			var summa = prompt("Оплаченная сумма", summ);
-
-		if (message != null && summa != null){
+		
+		if (message != null && summa != null) {
 			$('#modal').fadeIn(0);
-			if (message == msg)
+			if (message == msg) 
 				message = ""; // Если ничего не ввели, то сообщение очищаем
 			$.ajax({
 				url: '/package/addpay/' + package_id,
@@ -471,7 +473,7 @@ function saveAndProceed(what, where){
 	}
 	
 	var data = form.serialize();
-	data += '&isAJAX=true';
+	data += '&ajax=1';
 	$.ajax({
 		type: 'POST',
 		url: form.attr('action'),
@@ -479,17 +481,19 @@ function saveAndProceed(what, where){
 		//dataType: 'json',
 		success: function(data){
 			try {
-				data = jQuery.parseJSON(data)
-				//alert(data.success);
-				where(data.success);
+				where(jQuery.parseJSON(data));
 			} 
 			catch (e) {
 				// что-то пошло не так, json не вернулся
-				where(false);
+				where({
+					'success': false
+				});
 			}
 		},
 		error: function(data){
-			where(false);
+			where({
+				'success': false
+			});
 		}
 	});
 	return false;

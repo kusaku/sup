@@ -18,9 +18,9 @@
 		<h2 style="float:left;">
 			Заказ
 			<?= $packItem['name']?>
-			<?php if(!empty($packItem['descr'])) : ?>
+			<?php /* if(!empty($packItem['descr'])) : ?>
 			(<?= $packItem['descr']?>)
-			<?php endif; ?>			
+			<?php endif; */ ?>			
 			<?php if(empty($packItem['site'])) : ?>
 			(без привязки к сайту)
 			<?php else : ?>
@@ -38,17 +38,17 @@
 			</tr>
 			<tr>
 				<th style="width: 25%" rowspan="<?= $packItem['count']+1 ?>">
-					<p><?= $packItem['status']?></p>
+					<p>Состояние: <?= $packItem['status']?></p>
 					<p>Создан: <?= $packItem['dt_beg']?></p>
 					<p>Изменен: <?= $packItem['dt_change']?></p>											
 				</th>
 				<?php if ($packItem['count']): ?>
 				<th style="width: 15%">Услуга</th>
-				<th style="width: 18%">Заказана</th>
-				<th style="width: 18%">Выполнена</th>
-				<th style="width: 8%">Стоимость</th>
+				<th style="width: 13%">Заказана</th>
+				<th style="width: 13%">Выполнена</th>
+				<th style="width: 13%">Стоимость</th>
 				<th style="width: 8%">Количество</th>
-				<th style="width: 8%">Сумма</th>
+				<th style="width: 13%">Сумма</th>
 				<?php else: ?>
 				<td colspan="6">В этом заказе никаких услуг не заказано</td>
 				<?php endif; ?>
@@ -67,31 +67,58 @@
 				<td>
 					<?= $servItem['dt_end']?>
 				</td>
-				<td>
+				<th>
 					<?= number_format($servItem['price'], 0, ',', ' ')?> руб.
-				</td>
+				</th>
 				<td>
 					<?= $servItem['count']?>
 				</td>
-				<td>
+				<th>
 					<?= number_format($servItem['summ'], 0, ',', ' ')?> руб.
-				</td>
+				</th>
 			</tr>
 			<?php endforeach; ?>
 			<tr>
 				<th>Сумма</th>
-				<th colspan="6">
+				<th style="text-align:right;" colspan="6">
 					<?= number_format($packItem['summ'], 0, ',', ' ')?> руб.
 				</th>
 			</tr>
 			<?php if ($packItem['paid']): ?>
 			<tr>
+				<?php if(!empty($packItem['pays'])): ?>
+				<th rowspan="<?= count($packItem['pays'])+1 ?>">Оплаты</th>
+				<th>
+					Дата 
+				</th>
+				<th colspan="4">
+					Реквизит 
+				</th>
+				<th>
+					Сумма
+				</th>
+			</tr>
+				<?php foreach($packItem['pays'] as $payItem): ?>
+			<tr>				
+				<td>
+					<?=$payItem['dt']?> 
+				</td>
+				<td colspan="4">
+					<?=$payItem['rekviz']?> 
+				</td>
+				<th>
+					<?=number_format($payItem['summ'], 0, ',', ' ')?> руб.
+				</th>
+			</tr>				
+				<?php endforeach; ?>
+				<?php endif; ?>
+			<tr>
 				<th>Оплачено</th>
-				<th colspan="6">
-					<?=number_format($packItem['paid'], 0, ',', ' ')?> руб. 
+				<th style="text-align:right;" colspan="6">
 					<?php if($packItem['summ']>0): ?>
-					(<?=number_format(100 * $packItem['paid']/$packItem['summ'], 0, ',', ' ')?>%)
+					<?=number_format(100 * $packItem['paid']/$packItem['summ'], 0, ',', ' ')?>% - 
 					<?php endif; ?>
+					<?=number_format($packItem['paid'], 0, ',', ' ')?> руб.
 				</th>
 			</tr>
 			<?php endif; ?>
@@ -100,38 +127,38 @@
 		<h1>Подитог:</h1>
 		<table class="reportItem">
 			<tr>
-				<th>Заказов</th>
-				<th>Сумма</th>
-				<th>Оплачено</th>
+				<th style="width: 25%">Заказов</th>
+				<th style="width: 15%">Сумма</th>
+				<th style="text-align:right;">Оплачено</th>
 			</tr>
 			<tr>
-				<td><?= number_format($managerItem['count'], 0, ',', ' ')?></td>
-				<td><?= number_format($managerItem['summ'], 0, ',', ' ')?> руб.</td>
-				<td>
-					<?= number_format($managerItem['paid'], 0, ',', ' ')?> руб.
+				<th><?= number_format($managerItem['count'], 0, ',', ' ')?></th>
+				<th><?= number_format($managerItem['summ'], 0, ',', ' ')?> руб.</th>
+				<th style="text-align:right;" >
 					<?php if($managerItem['summ']>0): ?>
 					(<?= number_format(100 * $managerItem['paid']/$managerItem['summ'], 0, ',', ' ')?>%)
 					<?php endif; ?>
-				</td>
+					<?= number_format($managerItem['paid'], 0, ',', ' ')?> руб.
+				</th>
 			</tr>
 		</table>
 		<?php endforeach; ?>
 		<h1>Итог:</h1>
 		<table class="reportItem">
 			<tr>
-				<th>Заказов</th>
-				<th>Сумма</th>
-				<th>Оплачено</th>
+				<th style="width: 25%">Заказов</th>
+				<th style="width: 15%">Сумма</th>
+				<th style="text-align:right;">Оплачено</th>
 			</tr>
 			<tr>
-				<td><?= number_format($total['count'], 0, ',', ' ')?></td>
-				<td><?= number_format($total['summ'], 0, ',', ' ')?> руб.</td>
-				<td>
-					<?= number_format($total['paid'], 0, ',', ' ')?> руб.
+				<th><?= number_format($total['count'], 0, ',', ' ')?></th>
+				<th><?= number_format($total['summ'], 0, ',', ' ')?> руб.</th>
+				<th style="text-align:right;">
 					<?php if($total['summ']>0): ?>
 					(<?= number_format(100 * $total['paid']/$total['summ'], 0, ',', ' ')?>%)
 					<?php endif; ?>
-				</td>
+					<?= number_format($total['paid'], 0, ',', ' ')?> руб.
+				</th>
 			</tr>
 		</table>			
 	</div>

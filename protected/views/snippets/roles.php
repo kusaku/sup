@@ -1,5 +1,5 @@
 <?php if($select): ?>
-<select name="pgroup_id" style="width:120px;">
+<select name="pgroup_id" style="width:130px;">
 	<?php foreach (PeopleGroup::model()->findAll() as $group): ?>
 	<option <?=$group->primaryKey==$user->pgroup_id? 'selected="selected"' : '';?> value="<?= $group->primaryKey;?>"><?= $group->name; ?></option>
 	<?php endforeach; ?>

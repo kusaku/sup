@@ -186,7 +186,7 @@ class Redmine
 	 * @return int
 	 */
 	public static function getIssuePercent($IssueId) {
-		return ( int ) Redmine::runRequest('/issues/'.$IssueId.'.xml', 'GET', '')->done_ratio;
+		return ( int ) @Redmine::runRequest('/issues/'.$IssueId.'.xml', 'GET', '')->done_ratio;
 	}
 
 

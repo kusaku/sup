@@ -2,10 +2,9 @@
 /**
  * Параметры нашего LDAP-сервера:
  */
-define('LDAP_SERVER', 'ldap://ldap.fabricasaitov.ru');
-define('LDAP_BASE_DN', 'dc=fabricasaitov,dc=ru');
-define('LDAP_READ_USER_CN', 'cn=readLDAP,'.LDAP_BASE_DN);
-define('LDAP_READ_USER_PWD', 'eNgoo8na');
+define('LDAP_SERVER', 'ldap://192.168.0.1');
+define('LDAP_DOMAIN', 'fabrica.local');
+define('LDAP_BASE_DN', 'dc=fabrica,dc=local');
 
 /**
  * UserIdentity represents the data needed to identity a user.
@@ -24,15 +23,13 @@ class UserIdentity extends CUserIdentity {
 		//
 		and @ldap_set_option($connect, LDAP_OPT_REFERRALS, 0)
 		//
-		and @ldap_bind($connect, LDAP_READ_USER_CN, LDAP_READ_USER_PWD)
-		// получаем dn пользователя
-		and $search = @ldap_search($connect, LDAP_BASE_DN, "(&(objectClass=posixAccount)(uid={$this->username}))")
+		and @ldap_bind($connect, "{$this->username}@".LDAP_DOMAIN, $this->password)
+		// получаем данные этого пользователя
+		and $search = @ldap_search($connect, LDAP_BASE_DN, "(&(objectClass=user)(samaccountname={$this->username}))")
 		//
 		and $info = @ldap_get_entries($connect, $search)
 		//
-		and isset($info[0]['dn'])
-		// пробуем авторизоваться под ним
-		and @ldap_bind($connect, $info[0]['dn'], $this->password)) ?
+		and isset($info[0])) ?
 		//
 		$info[0] : false;
 	}
@@ -68,7 +65,7 @@ class UserIdentity extends CUserIdentity {
 				 */
 				
 				// назначаем группу пользователю
-				switch ($ldap_user['ou'][0]) {
+				switch ($ldap_user['department'][0]) {
 				
 					case '***FS-Дирекция':
 						$user->pgroup_id = 1;
@@ -98,7 +95,41 @@ class UserIdentity extends CUserIdentity {
 						$user->pgroup_id = 7;
 						break;
 				}
-				$user->save();
+				// другое
+				$user->state = 'Россия';
+				$user->phone = '+7 (812) 495-65-54';
+				$user->firm = 'Фабрика Сайтов';
+				$user->descr = 'Пользователь создан из LDAP';
+				
+				// сохраняем
+				if ($user->save()) {
+					// добавляем атрибуты
+					foreach (array(
+						'email', 'person', 'name', 'phone', 'fax'
+					) as $name) {
+						$attr = new PeopleAttr();
+						$attr->people_id = $user->primaryKey;
+						$attr->attribute_id = Attributes::getByType($name)->primaryKey;
+						switch ($name) {
+							case 'email':
+								$attr->value = @$ldap_user['mail'][0];
+								break;
+							case 'person':
+								$attr->value = @$ldap_user['displayname'][0];
+								break;
+							case 'name':
+								$attr->value = 'Фабрика Сайтов';
+								break;
+							case 'phone':
+								$attr->value = '+7 (812) 495-65-54';
+								break;
+							case 'fax':
+								$attr->value = '+7 (812) 495-65-54';
+								break;
+						}
+						$attr->save();
+					}
+				}
 			}
 			
 			// сохраняем всякие полезные данные о пользователе

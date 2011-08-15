@@ -26,11 +26,11 @@ class People extends CActiveRecord {
 				self::BELONGS_TO, 'People', 'parent_id'
 			), 'packages'=>array(
 				self::HAS_MANY, 'Package', 'client_id', 'order'=>'dt_change DESC'
-			), 'calendar'=>array(
-				self::HAS_MANY, 'Calendar', 'people_id'
 			),
-			// Все события календаря для этого человека
-			'values'=>array(
+			// все события календаря для этого человека
+			'calendar'=>array(
+				self::HAS_MANY, 'Calendar', 'people_id'
+			), 'values'=>array(
 				self::HAS_MANY, 'PeopleAttr', 'people_id', 'index'=>'attribute_id'
 			), 's2p'=>array(
 				self::HAS_MANY, 'Serv2pack', 'master_id'
@@ -157,7 +157,7 @@ class People extends CActiveRecord {
 				break;
 			case 'managers':
 				return PeopleGroup::getById(4)->peoples;
-				break;				
+				break;
 			case 'clients':
 				return PeopleGroup::getById(7)->peoples;
 				break;
