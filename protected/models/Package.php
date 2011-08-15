@@ -19,18 +19,26 @@ class Package extends CActiveRecord {
 				self::BELONGS_TO, 'People', 'manager_id'
 			),
 			// Связка с клиентом
-
-			'client'=>array(self::BELONGS_TO, 'People', 'client_id'), 'services'=>array(self::MANY_MANY,
 			
-			// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
-			'Service', 'serv2pack(pack_id, serv_id)'),
+			'client'=>array(
+				self::BELONGS_TO, 'People', 'client_id'
+			), 'services'=>array(
+				self::MANY_MANY,
 				
+				// Связка с сервисами. Возврящает все сервися по этму пакету (заказу)
+				'Service', 'serv2pack(pack_id, serv_id)'
+			),
+			
 			// Связка с сервисами. Возвращает все сервисы вместе с данными из serv2pack (blablabla->quant, blablabla->service->name)
-			'servPack'=>array(self::HAS_MANY, 'Serv2pack', 'pack_id', 'with'=>'service'),
-
+			'servPack'=>array(
+				self::HAS_MANY, 'Serv2pack', 'pack_id', 'with'=>'service'
+			),
+			
 			// Оплыты по заказу
-			'payments'=>array(self::HAS_MANY, 'Payment', 'package_id'),
-
+			'payments'=>array(
+				self::HAS_MANY, 'Payment', 'package_id'
+			),
+			
 			// Связка с сайтом
 			'site'=>array(
 				self::BELONGS_TO, 'Site', 'site_id'
@@ -67,9 +75,10 @@ class Package extends CActiveRecord {
 	public static function getMy($count = 100) {
 		return self::model()->findAll(array(
 			'condition'=>'manager_id=0 OR manager_id='.Yii::app()->user->id,
-			'group'=>'client_id',
-			'order'=>'dt_change DESC, dt_beg DESC', 
-			'limit'=>$count
+			//
+			//'group'=>'client_id', // С группировкой не работает.
+			//
+			'order'=>'dt_change DESC, dt_beg DESC', 'limit'=>$count
 		));
 	}
 	
@@ -77,14 +86,14 @@ class Package extends CActiveRecord {
 	 * последние $count заказов
 	 * @param object $count [optional]
 	 * @return array
-	 */	
+	 */
 	public static function getLast($count = 100) {
 		return self::model()->findAll(array(
-			'group'=>'client_id',
-			'order'=>'dt_change DESC, dt_beg DESC', 
-			'limit'=>$count
+			//'group'=>'client_id', // С группировкой не работает.
+			//
+			'order'=>'dt_change DESC, dt_beg DESC', 'limit'=>$count
 		));
-	}	
+	}
 	
 	/**
 	 * Возвращает проекты менеджера
@@ -135,11 +144,12 @@ class Package extends CActiveRecord {
 			
 ?>
 <div class="clientInfo">
-	<span class="clientName">
-		<a onClick="addEditClient(<?=$client->id?>)"><?= $client->fio?></a>
+	<span class="clientName"><a onClick="addEditClient(<?=$client->id?>)"><?= mb_substr($client->mail, 0, 30)?></a>
 		<div class="tips">
 			<div class="tipsTop"></div>
 			<div class="tipsBody">
+				<b>Имя</b>: <?= $client->fio?>
+				<br>
 				<b>E-mail</b>: <a href="mailto:<?=$client->mail?>">&lt;<?= $client->mail?>&gt;</a>
 				<br>
 				<b>Телефон</b>: <?= $client->phone?>
@@ -154,38 +164,44 @@ class Package extends CActiveRecord {
 			<div class="tipsBottom"></div>
 		</div>
 	</span>
-	<a onClick="Package(0, <?=$client->id?>)" title="Создать новый заказ">Новый заказ</a>&nbsp;&nbsp;
-	<a onClick="clientCard(<?=$client->id?>)" title="Просмотреть заказы клиента">Карточка клиента</a>&nbsp;&nbsp;
-	<a onClick="loggerForm(<?=$client->id?>)" title="Просмотреть журнал">Журнал</a>
+	<a onClick="Package(0, <?=$client->id?>)" title="Создать новый заказ">Новый заказ</a>&nbsp;&nbsp;<a onClick="clientCard(<?=$client->id?>)" title="Просмотреть заказы клиента">Карточка клиента</a>&nbsp;&nbsp;<a onClick="loggerForm(<?=$client->id?>)" title="Просмотреть журнал">Журнал</a>
 </div>
 <?php 
 $packs = $client->packages;
 $forhide = '';
+$style = '';
 if ($packs)
 	foreach ($packs as $key=>$package)
 	//if ( ($package->status_id != 999)and($package->status_id != 15) ) // Не выводим законченные и отклонённые проекты
 	{
 		switch (@$package->status_id) {
-			case 0:
-				print '<div class="projectBox red'.$forhide.'">';
+			case 0: // Вообще не понятно что
+				print '<div class="projectBox orange'.$forhide.'" '.$style.'>';
 				break;
-			case 1:
-				print '<div class="projectBox red'.$forhide.'">';
+			case 1: // Новый заказ
+				print '<div class="projectBox red'.$forhide.'" '.$style.'>';
 				break;
-			case 15:
-				print '<div class="projectBox orange'.$forhide.'">';
+			case 10: // Новый присвоен менеджеру
+				print '<div class="projectBox grey'.$forhide.'" '.$style.'>';
 				break;
-			case 17:
-				print '<div class="projectBox grey'.$forhide.'">';
+			case 10: // Присвое менеджеру
+			case 17: // Не оплачен
+				print '<div class="projectBox grey'.$forhide.'" '.$style.'>';
 				break;
-			case 50:
-				print '<div class="projectBox lightgreen'.$forhide.'">';
+			case 20: // Частично оплачен
+				print '<div class="projectBox lightgreen'.$forhide.'" '.$style.'>';
 				break;
-			case 70:
-				print '<div class="projectBox green'.$forhide.'">';
+			case 30: // Оплачен полностью
+				print '<div class="projectBox green'.$forhide.'" '.$style.'>';
+				break;
+			case 50: // Распределён
+				print '<div class="projectBox lightgreen'.$forhide.'" '.$style.'>';
+				break;
+			case 70: // Выполнен
+				print '<div class="projectBox green'.$forhide.'" '.$style.'>';
 				break;
 			default:
-				print '<div class="projectBox grey'.$forhide.'">';
+				print '<div class="projectBox grey'.$forhide.'" '.$style.'>';
 				break;
 		}
 		
@@ -218,8 +234,10 @@ switch ($package->status_id):
 		print '<div class="projectState new"><a onClick="takePack('.$package->id.', '.$client_id.');"><strong>Взять заказ</strong></a><br><a onClick="decline('.$package->id.', '.$client_id.')" class="icon">Отклонить</a></div>';
 		break;
 	case 15:
-		print '<div class="projectState"><br/>'.@$package->status->name.'</div>';
+		print '<div class="projectState"><br/><strong>Отклонён</strong></div>';
 		break;
+		
+	case 10:
 	case 17:
 		print '<div class="projectState">
 					<strong class="uppper">Не оплачен!</strong>
@@ -236,13 +254,13 @@ switch ($package->status_id):
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 			</div>';
 		break;
-
+		
 	case 30:
 		print '<div class="projectState">
 					<div class="progressBar">
 						<div class="progressStat" style="width:'.$percent.'%">'.$percent.'%</div>
 					</div>
-					<a onClick="alert(123123);" class="icon"><img src="images/towork.png" title="Отдать в работу все заказанные услуги"/></a>
+					<a onClick="createAllRedmineIssues('.$package->id.', '.$client_id.');" class="icon"><img src="images/towork.png" title="Отдать в работу все заказанные услуги"/></a>
 					<a onClick="selectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 				</div>';
@@ -272,11 +290,14 @@ endswitch;
 	<a onClick='editDomain(<?=@$package->site->id?>)' title="<?=@$package->site->url?>"><?= @$package->site->url?></a>
 </div>
 <div class="projectDate act">
-	<?= $package->dt_beg?>
+	<?= $package->descr?>
+	<? //= $package->dt_beg ?>
+	<? //= $package->dt_change ?>
 </div>
 </div>
 <?php 
 $forhide = ' forhide';
+$style = 'style="display: none;"';
 }
 print "</li>";
 } else

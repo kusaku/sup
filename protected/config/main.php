@@ -24,8 +24,16 @@ return array(
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']
 	'params'=>array(
-		// this is used in contact page
-		'adminEmail'=>'webmaster@example.com',
+		// Конфиг Редмайна. На продуктиве, естественно, свой.
+		'RedmineConfig'=>array(
+			'allow_connect' => true,
+			'protocol' => 'http',
+			'port' => '80',
+			'url' => "redmine.sandbox.loc",
+			'targetProjectId' => '1',
+			'rootLogin' => 'dmitry.k',
+			'rootPassword' => 'Ij3Ohmee',
+		),
 	),
 	
 	// preloading
@@ -46,7 +54,6 @@ return array(
 	'onEndRequest'=>array(
 		'Registry', 'registrySave'
 	),
-
 	
 	// autoloading model and component classes
 	'import'=>array(
@@ -113,11 +120,11 @@ return array(
 			//
 			'charset'=>'utf8',
 			//
-//			'emulatePrepare'=>true,
+			//			'emulatePrepare'=>true,
 			//
-//			'enableProfiling'=>true,
+			//			'enableProfiling'=>true,
 			//
-//			'enableParamLogging'=>true,
+			//			'enableParamLogging'=>true,
 		),
 		//
 		'errorHandler'=>array(
@@ -127,14 +134,14 @@ return array(
 		// debug
 		'log'=>array(
 			'class'=>'CLogRouter', 'routes'=>array(
-//				array(
-//					//
-//					'class'=>'CProfileLogRoute',
-//					//
-//					'levels'=>'profile',
-//					//
-//					'enabled'=>true,
-//				), 
+				//				array(
+				//					//
+				//					'class'=>'CProfileLogRoute',
+				//					//
+				//					'levels'=>'profile',
+				//					//
+				//					'enabled'=>true,
+				//				),
 				//
 				array(
 					//

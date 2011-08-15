@@ -69,7 +69,7 @@
 	</form>
 	<div class="buttons">
 		<p><span class="orange">* - обязательные поля</span></p>
-		<a onclick="saveAndProceed('#sup_popup form', function(success){if (success) Package(0, <?= $people->primaryKey;?>); else alert('Ошибка сохранения!')});" class="plus" title="Сохранить клиента и добавить ему заказ"></a>
+		<a onclick="saveAndProceed('#sup_popup form', function(data){if (data.success) Package(0, data.people_id); else alert('Ошибка сохранения!')});" class="plus" title="Сохранить клиента и добавить ему заказ"></a>
 		<a onClick="document.forms['megaform'].submit();" class="buttonSave">Сохранить</a>
 		<a class="buttonCancel" onClick="hidePopUp()">Отмена</a>
 	</div>

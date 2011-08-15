@@ -85,7 +85,7 @@ function massMail(){
 			showPopUp();
 		}
 	});
-};
+}
 
 /**
  *
@@ -114,7 +114,7 @@ function resetQueue(){
 		}
 	});
 	return false;
-};
+}
 
 /**
  *
@@ -157,7 +157,7 @@ function makeQueue(){
 		}
 	});
 	return false;
-};
+}
 
 /**
  *
@@ -193,4 +193,4 @@ function processQueue(){
 		}
 	});
 	return false;
-};
+}

@@ -126,6 +126,7 @@ if ($package_id) {
 					<p><?= $client->descr?>&nbsp;</p>
 				</div>
 			</div>
+			<?php endif; ?>
 			<div class="domainInfo">
 				<table>
 					<tr>
@@ -209,7 +210,7 @@ if ($package_id) {
 					<?php endforeach; ?>
 				</div>
 			</div>
-			<?php endif; ?>
+<?////////////////////////php endif; ?>
 			<div class="buttons">
 				<a onClick="document.forms['megaform'].submit();" class="buttonSave">Сохранить</a>
 				<!--a href="javascript:alert('Пока не работает');" class="buttonSaveExit">Сохранить и выйти</a--><a onClick="hidePopUp()" class="buttonCancel">Отмена</a>

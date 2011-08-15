@@ -1,5 +1,4 @@
 <?php 
-
 define('LDAP_DOMAIN', 'fabrica.local');
 
 class AboutController extends Controller {
@@ -9,10 +8,10 @@ class AboutController extends Controller {
 	 * @return
 	 */
 	/*public function filters() {
-		return array(
-			'accessControl'
-		);
-	}*/
+	 return array(
+	 'accessControl'
+	 );
+	 }*/
 	
 	/**
 	 * Параметры фильтра прав доступа
@@ -26,7 +25,7 @@ class AboutController extends Controller {
 				'allow', 'actions'=>array(
 					'index', 'test'
 				), 'roles'=>array(
-					'admin', 'manager'
+					'admin', 'manager', 'guest'
 				),
 			), array(
 				'deny', 'users'=>array(
@@ -79,17 +78,18 @@ class AboutController extends Controller {
 		//$attr = array('uid', 'mail');
 		
 		$search = @ldap_search($connect, $base_dn, $filter/*, $attr*/) or print("Unable to search ldap server");
-
-		$info = @ldap_get_entries($connect, $search) or print("No entries found");
 		
+		$info = @ldap_get_entries($connect, $search) or print("No entries found");
+
 		
 		print_r($info);
 		
 		/*foreach ($info as $i) {
-			echo "'" . @$i['uid'][0] . "', ";
-			echo "'" . @$i['name'][0] . "', ";
-		}*/
+		 echo "'" . @$i['uid'][0] . "', ";
+		 echo "'" . @$i['name'][0] . "', ";
+		 }*/
 		
+		$this->renderPartial('index');
 	}
 	
 	public function actionTest() {

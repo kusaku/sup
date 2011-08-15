@@ -23,7 +23,7 @@ class PackageController extends Controller
 		return array(
 			array(
 				'allow', 'actions'=>array(
-					'index', 'view', 'save', 'addPay', 'takePack', 'addRedmineMessage', 'bindRedmineIssue', 'decline', 'createAllRedmineIssues', 'newRedmineIssue'
+					'index', 'view', 'save', 'addPay', 'takePack', 'addRedmineMessage', 'bindRedmineIssue', 'decline', 'createAllRedmineIssues', 'newRedmineIssue', 'closeRedmineIssue'
 				), 'roles'=>array(
 					'admin', 'moder', 'topmanager', 'manager', 'master'
 				),
@@ -87,9 +87,12 @@ class PackageController extends Controller
 		}
 
 		//	Был запрос на создание нового сайта
-		if ( @$_POST['site_add_new'] ){
+		if ( array_key_exists('site_add_new', $_POST) ){
 			if ( $_POST['site_url'] ){
-				$site = new Site();
+				$site = Site::getByUrl( $_POST['site_url'] );
+				if ( !$site ){
+					$site = new Site();
+				}
 				$site->url = $_POST['site_url'];
 				$site->host = $_POST['site_host'];
 				$site->ftp = $_POST['site_ftp'];
@@ -169,7 +172,7 @@ class PackageController extends Controller
 			$pay->rekvizit_id = 0;
 			$pay->save();
 
-			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name,$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
+			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name.' ('.$package->client->mail.')',$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
 
 			$package->paid += $summa;
 			$package->redmine_proj = $issue->id;
@@ -190,10 +193,9 @@ class PackageController extends Controller
 	public function actionNewRedmineIssue() {
 		$pack_id = Yii::app()->request->getParam('pack_id');
 		$serv_id = Yii::app()->request->getParam('serv_id');
+		$master_id = Yii::app()->request->getParam('master_id');
 
-		print $pack_id.' '.$serv_id.'<br>';
-
-		if ( $pack_id )	{
+		if ( $pack_id && $serv_id && $master_id)	{
 			$package = Package::getById( $pack_id );
 			$usersArray = Redmine::getUsersArray();
 
@@ -207,16 +209,42 @@ class PackageController extends Controller
 
 			if ( $serv_id )	{
 				$service = Serv2pack::getByIds($serv_id, $pack_id);
-				$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
+				
+				//$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
+				
+				$siteInfo = isset($package->site) ? 'Сайт: http://'.$package->site->url."\n".
+						"Доступы: \n".
+						'* HOST: '.$package->site->host."\n".
+						'* FTP: '.$package->site->ftp."\n".
+						'* DB: '.$package->site->db."\n"
+						: 'В заказе сайт не указан';
+
 				$issue = Redmine::addIssue(
-					'№'.$package->id.' '.$service->service->name,	// Название
-					'Задача по заказу №'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
-					$master,	// Кому назначена
+					'№'.$package->id.' '.$service->service->name.' ('.$package->client->mail.')',	// Название
+					'Задача по заказу №'.$package->id.".\n Предмет заказа: ".$service->service->name.". \n".
+						'Клиент: '.$package->client->mail." \n".
+						$siteInfo,	// Описание
+					$master_id,	// Кому назначена
 					$package->redmine_proj);	// Родительская задача
 
 				$service->to_redmine = $issue->id;
 				$service->save();
 			}
+
+			// Проверяем, не пора-ли помянять статус задачи на 50 - все заказанные услуги в работе.
+			$allIssuesExist = true; // Допустим, что все задачи уже созданы
+			$allIssuesExist = (bool)$package->redmine_proj; // И даже родительская задача по всему заказу.
+			foreach ($package->servPack as $service) {
+				if ( (int)$service->to_redmine == 0 ){
+					$allIssuesExist = false; // Если задача не создана
+				}
+			}
+
+			if ( $allIssuesExist ){ // Если всё распределено, то меняем статус проекта на 50 - всё в работе.
+				$package->status_id = 50;
+				$package->save();
+			}
+
 
 			$this->renderPartial('issue', array('issue_id'=>$issue->id, 'pack_id'=>$pack_id));
 		} else print 0;
@@ -233,7 +261,7 @@ class PackageController extends Controller
 			$package->dt_change = date('Y-m-d H:i:s');
 
 			if ( !$package->redmine_proj ){
-				$issue = Redmine::addIssue('Заказ #'.$package->id.' '.$package->name,$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
+				$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name.' ('.$package->client->mail.')',$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
 				$package->redmine_proj = $issue->id;
 			}
 
@@ -244,7 +272,7 @@ class PackageController extends Controller
 
 				if ( !$service->to_redmine ){
 					$issue = Redmine::addIssue(
-							'#'.$package->id.' '.$service->service->name,	// Название
+							'№'.$package->id.' '.$service->service->name,	// Название
 							'Задача по проекту #'.$package->id.'. Предмет заказа: '.$service->service->name.'.',	// Описание
 							$master,	// Кому назначена
 							$package->redmine_proj);	// Родительская задача
@@ -315,6 +343,32 @@ class PackageController extends Controller
 			$pack->redmine_proj = $issue_id;
 			$pack->save();
 			print 1;
+		} else {
+			print 0;
+		}
+	}
+
+	public function actionCloseRedmineIssue() {
+		$issue_id	= (int) Yii::app()->request->getParam('issue_id');
+		$pack_id	= (int) Yii::app()->request->getParam('pack_id');
+		$serv_id	= (int) Yii::app()->request->getParam('serv_id');
+
+		// print "$issue_id - $pack_id - $serv_id";
+
+		if ( $issue_id && $pack_id && $serv_id ){
+			if ( Redmine::closeIssue($issue_id) == true ){
+			$serv2pack = Serv2pack::getByIds($serv_id, $pack_id);
+			$serv2pack->dt_end = date('Y-m-d H:i:s');
+			$serv2pack->save();
+
+			$pack = Package::getById( $pack_id );
+			$pack->dt_change = date('Y-m-d H:i:s');
+			$pack->save();
+
+			$this->renderPartial('issue', array('issue_id'=>$issue_id, 'pack_id'=>$pack_id));
+			} else {
+				print 0;
+			}
 		} else {
 			print 0;
 		}
