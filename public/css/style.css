@@ -463,6 +463,12 @@ a:hover {
     margin: 0 0 5px 0;
 }
 
+.columnsBody li .clientInfo span.clientName a.nameText {
+	display: block;
+	width: 303px;
+	overflow: hidden;
+}
+
 .columnsBody li .clientInfo span.clientName:hover {
     color: #000000;
     text-decoration: none;

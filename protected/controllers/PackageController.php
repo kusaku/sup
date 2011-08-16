@@ -222,6 +222,7 @@ class PackageController extends Controller
 				$issue = Redmine::addIssue(
 					'№'.$package->id.' '.$service->service->name.' ('.$package->client->mail.')',	// Название
 					'Задача по заказу №'.$package->id.".\n Предмет заказа: ".$service->service->name.". \n".
+						'Стоимость: '.$service->price." \n".
 						'Клиент: '.$package->client->mail." \n".
 						$siteInfo,	// Описание
 					$master_id,	// Кому назначена
