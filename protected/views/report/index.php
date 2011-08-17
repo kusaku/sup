@@ -5,14 +5,19 @@
 			<label>Вид отчета: </label>
 			<select id="reportType" name="reportType">
 				<?php if ($roles['admin']): ?>
-				<option<?= UserRegistry::model()->report_reportType == 'allmanagers' ? ' selected="selected"' : ''?> value="allmanagers">Отчет по всем менеджерам</option>
-				<option<?= UserRegistry::model()->report_reportType == 'onemanager' ? ' selected="selected"' : ''?> value="onemanager">Отчет по выбранному менеджеру</option>
+				<option<?= UserRegistry::model()->report_reportType == 'pays' ? ' selected="selected"' : ''?> value="pays">Отчет по выплатам</option>
+				<option<?= UserRegistry::model()->report_reportType == 'projects' ? ' selected="selected"' : ''?> value="projects">Отчет по проектам</option>
+				<?php else : ?>
+				<option<?= UserRegistry::model()->report_reportType == 'mypays' ? ' selected="selected"' : ''?> value="mypays">Мой отчет по выплатам</option>
+				<option<?= UserRegistry::model()->report_reportType == 'myprojects' ? ' selected="selected"' : ''?> value="myprojects">Мой отчет по проектам</option>				
 				<?php endif; ?>
-				<option<?= UserRegistry::model()->report_reportType == 'myself' ? ' selected="selected"' : ''?> value="myself">Мой отчет</option>
 			</select>
 			<?php if ($roles['admin']): ?>
 			<label>Менеджер: </label>
 			<select id="manager_id" name="manager_id">
+				<?php if ($roles['admin']): ?>
+				<option<?= UserRegistry::model()->report_manager_id == 0 ? ' selected="selected"' : ''?> value="0">Все менеджеры</option>
+				<?php endif; ?>
 				<?php foreach ($managers as $manager): ?>
 				<option<?= UserRegistry::model()->report_manager_id == $manager->primaryKey ? ' selected="selected"' : ''?> value="<?=$manager->primaryKey ?>"><?= $manager->fio?></option>
 				<?php endforeach; ?>
@@ -34,7 +39,7 @@
 				<?php endforeach; ?>
 			</select>
 			<label style="width:180px;">Выводить пустые заказы</label>
-			<input<?= UserRegistry::model()->report_show_empty ? 'checked="checked"' : ''?> type="checkbox" name="show_empty"></div>
+			<input<?= UserRegistry::model()->report_show_empty ? ' checked="checked"' : ''?> type="checkbox" name="show_empty"></div>
 		<div class="buttons">
 			<a class="grayButton" onclick="hidePopUp();">Отмена</a>
 			<a style="float:right;" class="orangeButton" onclick="$('#megaform').submit();">Генерировать</a>
