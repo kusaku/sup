@@ -1,7 +1,3 @@
-<div id="modal"></div>
-<div id="sup_popup" class="popup"></div>
-<div id="sup_preloader" class="popup"><img src="/images/preloader.gif" boreder="0"></div>
-
 <div class="wrapper">
  	<div class="logo">
 			<h1><a href="/" title="go home"><img src="/images/logo.png" alt="FS SUP"/></a></h1>
@@ -29,7 +25,7 @@
 		</h2>
 		<h2 style="float:right;">
 			Клиент:
-			<?= $packItem['client']?>  &lt;<a href="mailto:<?= $packItem['clientmail']?>"><?= $packItem['clientmail']?></a>&gt;
+			<?= $packItem['client']?>  &lt;<a href="mailto:<?= $packItem['mail']?>"><?= $packItem['mail']?></a>&gt;
 		</h2>		
 		<table class="reportItem">
 			<tr>
@@ -48,7 +44,7 @@
 				<th style="width: 13%">Выполнена</th>
 				<th style="width: 13%">Стоимость</th>
 				<th style="width: 8%">Количество</th>
-				<th style="width: 13%">Сумма</th>
+				<th style="width: 13%;text-align:right;">Сумма</th>
 				<?php else: ?>
 				<td colspan="6">В этом заказе никаких услуг не заказано</td>
 				<?php endif; ?>
@@ -73,7 +69,7 @@
 				<td>
 					<?= $servItem['count']?>
 				</td>
-				<th>
+				<th style="text-align:right;">
 					<?= number_format($servItem['summ'], 0, ',', ' ')?> руб.
 				</th>
 			</tr>
