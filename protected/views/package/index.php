@@ -6,7 +6,7 @@
 	} else {
 		$a = array();
 		$packs = Yii::app()->user->checkAccess('admin') ? Package::getLast(30) : Package::getMy(30);
-		foreach (Package::getMy(30) as $pack) {
+		foreach ($packs as $pack) {
 			// выбираем свои заказы, которые ещё не вбрали, статус которых "не в архиве" и "не сдан клиенту"
 			if (!isset($a[$pack->client_id]) and $pack->status_id != 15 and $pack->status_id != 999) {
 				$a[$pack->client_id] = 1;

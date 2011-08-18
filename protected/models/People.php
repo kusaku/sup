@@ -107,7 +107,7 @@ class People extends CActiveRecord {
 			}
 		}
 		$peoples = self::model()->findAll(array(
-			'select'=>'id, fio, mail, descr, pgroup_id, regdate', 'condition'=>"mail like '$param%'", 'order'=>'regdate DESC',
+			'select'=>'id, fio, mail, descr, pgroup_id, regdate', 'condition'=>"mail like '%$param%'", 'order'=>'regdate DESC',
 		));
 		foreach ($peoples as $key=>$people) {
 			if (!isset($a[$people->id])) {

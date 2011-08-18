@@ -466,6 +466,7 @@ a:hover {
 .columnsBody li .clientInfo span.clientName a.nameText {
 	display: block;
 	width: 303px;
+	height: 19px;
 	overflow: hidden;
 }
 

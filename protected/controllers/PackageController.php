@@ -170,6 +170,7 @@ class PackageController extends Controller
 			$pay->amount = abs($summa);
 			$pay->debit = $summa > 0 ? 1 : -1;
 			$pay->rekvizit_id = 0;
+			$pay->ptype_id = 1;
 			$pay->save();
 
 			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name.' ('.$package->client->mail.')',$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);

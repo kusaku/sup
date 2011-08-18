@@ -158,7 +158,7 @@ class ReportController extends Controller {
 								//
 								'dt'=>date('Y.m.d', strtotime($payment->dt)),
 								//
-								'amount'=>$payment->amount
+								'amount'=>$payment->amount * $payment->debit
 							);
 						}
 					}
