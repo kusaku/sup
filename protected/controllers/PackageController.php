@@ -173,10 +173,12 @@ class PackageController extends Controller
 			$pay->ptype_id = 1;
 			$pay->save();
 
-			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name.' ('.$package->client->mail.')',$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
-
+			if ( $package->redmine_proj == 0 ){
+				$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name.' ('.$package->client->mail.')',$package->descr,$usersArray[ trim( (string)Yii::app()->user->login ) ],0);
+				$package->redmine_proj = $issue->id;
+			}
+			
 			$package->paid += $summa;
-			$package->redmine_proj = $issue->id;
 			$package->dt_change = date('Y-m-d H:i:s');
 
 			$package->save();
@@ -211,27 +213,28 @@ class PackageController extends Controller
 			if ( $serv_id )	{
 				$service = Serv2pack::getByIds($serv_id, $pack_id);
 				
-				//$master = @$service->master->login ? $usersArray[ trim( mb_strToLower($service->master->login) ) ] : 0;
-				
-				$siteInfo = isset($package->site) ? 'Сайт: http://'.$package->site->url."\n".
-						"Доступы: \n".
-						'* HOST: '.$package->site->host."\n".
-						'* FTP: '.$package->site->ftp."\n".
-						'* DB: '.$package->site->db."\n"
-						: 'В заказе сайт не указан';
+				// Если задача уже существует, то ничего не создаём
+				if ($service->to_redmine == 0){
+					$siteInfo = isset($package->site) ? 'Сайт: http://'.$package->site->url."\n".
+							"Доступы: \n".
+							'* HOST: '.$package->site->host."\n".
+							'* FTP: '.$package->site->ftp."\n".
+							'* DB: '.$package->site->db."\n"
+							: 'В заказе сайт не указан';
 
-				$issue = Redmine::addIssue(
-					'№'.$package->id.' '.$service->service->name.' ('.$package->client->mail.')',	// Название
-					'Задача по заказу №'.$package->id.".\n Предмет заказа: ".$service->service->name.". \n".
-						'Примечание: '.$service->descr." \n".
-						'Стоимость: '.$service->price." \n".
-						'Клиент: '.$package->client->mail." \n".
-						$siteInfo,	// Описание
-					$master_id,	// Кому назначена
-					$package->redmine_proj);	// Родительская задача
+					$issue = Redmine::addIssue(
+						'№'.$package->id.' '.$service->service->name.' ('.$package->client->mail.')',	// Название
+						'Задача по заказу №'.$package->id.".\n Предмет заказа: ".$service->service->name.". \n".
+							'Примечание: '.$service->descr." \n".
+							'Стоимость: '.$service->price." \n".
+							'Клиент: '.$package->client->mail." \n".
+							$siteInfo,	// Описание
+						$master_id,	// Кому назначена
+						$package->redmine_proj);	// Родительская задача
 
-				$service->to_redmine = $issue->id;
-				$service->save();
+					$service->to_redmine = $issue->id;
+					$service->save();
+				}
 			}
 
 			// Проверяем, не пора-ли помянять статус задачи на 50 - все заказанные услуги в работе.

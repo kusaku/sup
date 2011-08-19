@@ -115,10 +115,10 @@ class PeopleController extends Controller {
 				$people->pgroup_id = 7; // Просто клиент
 			}
 			
-			$people->state = $data['state'];
-			$people->phone = $data['phone'];
-			$people->firm = $data['firm'];
-			$people->descr = $data['descr'];
+			$people->state = htmlspecialchars($data['state']);
+			$people->phone = htmlspecialchars($data['phone']);
+			$people->firm = htmlspecialchars($data['firm']);
+			$people->descr = htmlspecialchars($data['descr']);
 			$people->save();
 			
 			// сохраняем атрибуты
