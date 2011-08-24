@@ -26,6 +26,7 @@
 		<script language="JavaScript" src="/js/jwysiwyg/jquery.wysiwyg.js?<?= Yii::app()->name['version']?>"></script>
 		<script language="JavaScript" src="/js/logger.js?<?= Yii::app()->name['version']?>"></script>
 		<script language="JavaScript" src="/js/report.js?<?= Yii::app()->name['version']?>"></script>
+		<script language="JavaScript" src="/js/package.js?<?= Yii::app()->name['version']?>"></script>
 	</head>
 	<body>
 		<?= $content?>

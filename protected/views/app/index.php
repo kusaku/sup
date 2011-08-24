@@ -92,7 +92,7 @@
 		<li><a href="#" class="colDate active desc">Коммент</a></li>
 	</ul>		
 	<div id="sup_content">
-		<?php $this->forward('/package', false); ?>
+		<?php //$this->forward('/package', false); ?>
 	</div>	
 	<?php endif; ?>
 

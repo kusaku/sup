@@ -31,6 +31,37 @@ function GetMasters($sel = 0, $usersArray = null) {
 	return $res;
 }
 
+//  Возвращаем SELECT с выбором сайта. Ипользуются сайты, закреплённые за проектам клиентами
+function sites($client_id, $sel) {
+	$sites = Site::getAllByClient($client_id);
+	$res = "<select name=\"pack_site_id\"><option value=\"0\">--нет--</option>";
+	if (isset($sites))
+		foreach ($sites as $site) {
+			$res = $res."<option value='".$site->id."'";
+
+			if ($sel == $site->id)
+				$res = $res." selected";
+			$res .= ">";
+
+			$res = $res."$site->url</option>";
+		}
+	$res = $res."</select>";
+	return $res;
+}
+
+/*
+ * Возвращаем
+ */
+function GetManagers(){
+	$res = "<select id='newManager' name='newManager'>\n<option value=\"0\">Не передавать</option>";
+	$peoples = PeopleGroup::getById(4)->peoples;
+	foreach ($peoples as $people) {
+		//if ( $people->id != Yii::app()->user->id )
+			$res = $res."<option value=\"$people->id\">$people->fio</option>\n";
+	}
+	$res = $res."</select>\n";
+	return $res;
+}
 
 $RedmineUserSelect = '<select class="RedmineUserSelect">';
 foreach ($usersArray as $key => $user) {
@@ -50,11 +81,11 @@ $RedmineUserSelect .= '</select>';
 	}
 
 ?>
-
+<form name="megaform" action="/package/edit" method="POST">
 <div class="wrapper">
 <div class="editClientWindow" id="sm_content">
 
-	<form name="megaform" action="/package/save" method="POST">
+	
 
 		<input type="hidden" name="pack_id" value="<?=$pack->id?>">
 		<input type="hidden" name="pack_client_id" value="<?=$client->id?>">
@@ -82,7 +113,10 @@ $RedmineUserSelect .= '</select>';
 		</div>
 	</div>
 	<div class="domainInfo">
-			<strong>Название:</strong> <?=$pack->name?><br>
+			<strong>Название:</strong> <?=$pack->name?>
+			<div id="site_selector">
+				<strong>Сайт:</strong> <?=$pack->site_id ? $pack->site->url : sites($client->id, $pack->site_id).'<a href="javascript:loadNewSite();" class="plus">+</a>';?><br>
+			</div>
 			<strong>Описание:</strong> <?=$pack->descr?>
 <div class="tabs">
 	<span id="tab<?=$pack->redmine_proj?>" class="tab selected" onClick="selectTab(<?=$pack->redmine_proj?>)">Заказ</span>
@@ -136,11 +170,14 @@ foreach ($zserv as $value) {
 	</div>
 
 
-</form>
+
 
 <div class="buttons">
+	<a onClick="packUpdate();" class="buttonSave">Сохранить</a>
 	<a onClick="hidePopUp()" class="buttonCancel">Отмена</a>
+	<span style="float:left;">Передать заказ менеджеру:</span>&nbsp;<?= getManagers() ?>
 	<span id="summa"></span>
 </div>
 </div>
 </div>
+</form>

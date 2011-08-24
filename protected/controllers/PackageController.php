@@ -23,7 +23,7 @@ class PackageController extends Controller
 		return array(
 			array(
 				'allow', 'actions'=>array(
-					'index', 'view', 'save', 'addPay', 'takePack', 'addRedmineMessage', 'bindRedmineIssue', 'decline', 'createAllRedmineIssues', 'newRedmineIssue', 'closeRedmineIssue'
+					'index', 'view', 'save', 'edit', 'addPay', 'takePack', 'addRedmineMessage', 'bindRedmineIssue', 'decline', 'createAllRedmineIssues', 'newRedmineIssue', 'closeRedmineIssue'
 				), 'roles'=>array(
 					'admin', 'moder', 'topmanager', 'manager', 'master'
 				),
@@ -189,6 +189,58 @@ class PackageController extends Controller
 		}
 	}
 
+	/*
+	 * обновляем заказ (оплаченный). Можем поменять мастера или привязать сайт.
+	 */
+	public function actionEdit() {
+
+		if ( $_POST['pack_id'] ){
+			$pack = Package::getById ($_POST['pack_id']);
+
+			//if ($pack->site_id == 0 && $_POST['pack_site_id'])
+			//$pack->site_id = $_POST['pack_site_id'];
+
+			//	Был запрос на создание нового сайта и к заказу сайт пока не привязан
+			if ( $pack->site_id == 0 ){
+				if ( array_key_exists('site_add_new', $_POST) ){
+					if ( $_POST['site_url'] ){
+						$site = Site::getByUrl( $_POST['site_url'] );
+						if ( !$site ){
+							$site = new Site();
+							$site->url = $_POST['site_url'];
+							$site->host = $_POST['site_host'];
+							$site->ftp = $_POST['site_ftp'];
+							$site->db = $_POST['site_db'];
+							$site->client_id = $_POST['pack_client_id'];
+							$site->save();
+						}
+						$pack->site_id = $site->id;
+					}
+				} elseif ($_POST['pack_site_id']) {
+					$pack->site_id = $_POST['pack_site_id'];
+				}
+			}
+
+
+
+
+			$newManager = @$_POST['newManager'];
+			if ( $newManager && $newManager != $pack->manager_id) { // отдаём другому менеджеру
+				// Log write
+				$info = date('d-m-Y')." Передача заказа: ".
+					People::getById($pack->manager_id)->fio.' -> '.People::getById($newManager)->fio."<br>";
+				Logger::put(array('client_id'=>$pack->client_id, 'manager_id'=>Yii::app()->user->id,'info'=>$info));
+				// Action
+				$pack->manager_id = $newManager;
+			}
+			$pack->dt_change = date('Y-m-d H:i:s');
+			$pack->save();
+
+		}
+
+		$this->redirect('/');
+
+	}
 
 	/*
 	 * Создаём задачу по запросу. Если нет родительской, то и её создаём.
