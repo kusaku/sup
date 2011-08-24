@@ -13,8 +13,9 @@
 		<table class="reportItem">
 			<tr>
 				<th style="width: 13%">Дата</th>
-				<th style="width: 37%;">Клиент</th>
-				<th style="width: 37%;">Проект</th>
+				<th style="width: 27%;">Клиент</th>
+				<th style="width: 30%;">Плательщик</th>
+				<th style="width: 17%;">Проект</th>
 				<th style="width: 13%;text-align:right;">Сумма</th>
 			</tr>
 			<?php foreach ($managerItem['pays'] as $payItem): ?>
@@ -26,6 +27,9 @@
 					<?= $payItem['client']?><?= empty($payItem['mail']) ? '' : " ({$payItem['mail']})"?>
 				</td>
 				<td>
+					<?= $payItem['description']?>
+				</td>
+				<td>
 					<?= $payItem['name']?><?= empty($payItem['site']) ? '' : " ({$payItem['site']})"?>
 				</td>
 				<td style="text-align:right;">
@@ -34,7 +38,7 @@
 			</tr>
 			<?php endforeach; ?>
 			<tr>
-				<th colspan="3">Итог:</th>
+				<th colspan="4">Итог:</th>
 				<th style="text-align:right;">
 					<?= number_format($managerItem['summ'], 0, ',', ' ')?>  руб.
 				</th>

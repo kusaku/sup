@@ -18,7 +18,7 @@ return array(
 		//
 		'vendor'=>'ООО "Фабрика сайтов"',
 		//
-		'version'=>'alpha 2.0'
+		'version'=>'1.08.24'
 	),
 	
 	// application-level parameters that can be accessed

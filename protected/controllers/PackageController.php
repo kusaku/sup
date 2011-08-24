@@ -23,7 +23,7 @@ class PackageController extends Controller
 		return array(
 			array(
 				'allow', 'actions'=>array(
-					'index', 'view', 'save', 'edit', 'addPay', 'takePack', 'addRedmineMessage', 'bindRedmineIssue', 'decline', 'createAllRedmineIssues', 'newRedmineIssue', 'closeRedmineIssue'
+					'index', 'view', 'save', 'edit', 'addPay', 'takePack', 'addRedmineMessage', 'bindRedmineIssue', 'decline', 'createAllRedmineIssues', 'newRedmineIssue', 'closeRedmineIssue', 'getPayForm'
 				), 'roles'=>array(
 					'admin', 'moder', 'topmanager', 'manager', 'master'
 				),
@@ -170,7 +170,8 @@ class PackageController extends Controller
 			$pay->amount = abs($summa);
 			$pay->debit = $summa > 0 ? 1 : -1;
 			$pay->rekvizit_id = 0;
-			$pay->ptype_id = 1;
+			$pay->ptype_id = Yii::app()->request->getParam('noReporting') ? 1 : 0;
+			$pay->description = Yii::app()->request->getParam('message');
 			$pay->save();
 
 			if ( $package->redmine_proj == 0 ){
@@ -447,4 +448,11 @@ class PackageController extends Controller
 
 	}
 
+	public function actionGetPayForm(){
+		return $this->renderPartial('payform', array(
+			'summ'=>Yii::app()->request->getParam('summ'),
+			'liid'=>Yii::app()->request->getParam('liid'),
+			'package_id'=>Yii::app()->request->getParam('package_id')
+		));
+	}
 }

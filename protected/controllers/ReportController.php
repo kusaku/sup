@@ -154,9 +154,11 @@ class ReportController extends Controller {
 								//
 								'client'=> empty($package->client->fio) ? "#{$package->client_id}" : $package->client->fio,
 								//
+								'description'=> htmlspecialchars($payment->description),
+								//
 								'mail'=> empty($package->client->mail) ? '' : $package->client->mail,
 								//
-								'dt'=>date('Y.m.d', strtotime($payment->dt)),
+								'dt'=>date('d.m.Y', strtotime($payment->dt)),
 								//
 								'amount'=>$payment->amount * $payment->debit
 							);

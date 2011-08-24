@@ -242,7 +242,7 @@ switch ($package->status_id):
 	case 17:
 		print '<div class="projectState">
 					<strong class="uppper">Не оплачен!</strong>
-					<a onClick="addPay('.$package->id.', '.$client_id.', '.$package->summa.');" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a>
+					<a onClick="payForm('.$package->id.', '.$client_id.', '.$package->summa.');" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a>
 					<a onClick="selectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 			</div>';
@@ -250,7 +250,7 @@ switch ($package->status_id):
 	case 20:
 		print '<div class="projectState">
 					<strong class="uppper">Част. опл.</strong>
-					<a onClick="addPay('.$package->id.', '.$client_id.', '.($package->summa - $package->paid).');" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.($package->summa - $package->paid).' руб.)"/></a>
+					<a onClick="payForm('.$package->id.', '.$client_id.', '.($package->summa - $package->paid).');" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.($package->summa - $package->paid).' руб.)"/></a>
 					<a onClick="selectMailTemplate('.$client->id.')" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a>
 					<a onClick="decline('.$package->id.', '.$client_id.')" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 			</div>';

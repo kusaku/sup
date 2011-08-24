@@ -94,7 +94,7 @@ function Package(package_id, client_id){
 			$('#sup_popup').text(textStatus);
 		}
 	});
-};
+}
 
 /* 
  * Загружаем данные для главной страницы.
@@ -117,7 +117,7 @@ function loadData(client_id){
 			$('#sup_content').text(textStatus);
 		}
 	});
-};
+}
 
 /* 
  * Показываем всплвающее окно.
@@ -148,7 +148,7 @@ function showPopUp(){
 	});
 	
 	prepareHtml();
-};
+}
 
 /* 
  * Прячем всплвающее окно.
@@ -160,7 +160,7 @@ function hidePopUp(){
 	$('#sup_popup').fadeOut(0);
 	$('#sup_preloader').hide(0); // Прячем preloader
 	$('#modal').fadeOut(0); // 200
-};
+}
 
 /* 
  * Показываем всплвающее окно.
@@ -178,7 +178,7 @@ function showPopUpLoader(){
 	
 	$('#sup_preloader').css('left', left + 'px');
 	$('#sup_preloader').css('top', top + 'px');
-};
+}
 
 /*	
  * Сворачиваем/разворачиваем заказы клиетна на главной странице.
@@ -212,7 +212,7 @@ function sumka(){
 	});
 	$("#pack_summa").val(sum);
 	$("#summa").html(sum + ' руб.');
-};
+}
 
 /*	
  * Подгружаем список сайтов этого клиента.
@@ -236,7 +236,7 @@ function loadSites(client_id, selected){
 		}
 		
 	});
-};
+}
 
 /*	
  * Создаём новый хост.
@@ -258,45 +258,41 @@ function loadNewSite(){
 			$('#site_selector').text(textStatus);
 		}
 	});
-};
+}
 
-/*	
+/*
  * Отмечаем заказ как оплаченный.
  */
-function addPay(package_id, liid, summ){
-	$('#modal').fadeIn(0);
-	if (package_id != null) {
-		var msg = 'Подробности платежа';
-		var message = prompt("Провести оплату заказа #" + package_id + "?", msg);
-		
-		if (message != null) 
-			var summa = prompt("Оплаченная сумма", summ);
-		
-		if (message != null && summa != null) {
-			$('#modal').fadeIn(0);
-			if (message == msg) 
-				message = ""; // Если ничего не ввели, то сообщение очищаем
-			$.ajax({
-				url: '/package/addpay/' + package_id,
-				dataType: 'html',
-				data: {
-					'message': message,
-					'summa': summa
-				},
-				success: function(data){
-					$('#li' + liid).replaceWith(data);
-					flagsUpdate();
-					$('#modal').fadeOut(0);
-				},
-				error: function(jqXHR, textStatus, errorThrown){
-					$('#modal').fadeOut(0);
-					$('#li' + liid).replaceWith($('<span/>').text(textStatus));
-				}
-			});
+function addPayment(package_id, liid, summa, message, noReporting){
+
+	if (message == undefined) message = "";
+	if (noReporting != 'checked')
+		noReporting = 1;
+	else
+		noReporting = 0;
+
+	$.ajax({
+		url: '/package/addpay/' + package_id,
+		dataType: 'html',
+		data: {
+			'message': message,
+			'summa': summa,
+			'noReporting': noReporting
+		},
+		success: function(data){
+			$('#li' + liid).replaceWith(data);
+			flagsUpdate();
+			$('#modal').fadeOut(0);
+			hidePopUp();
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#modal').fadeOut(0);
+			$('#li' + liid).replaceWith($('<span/>').text(textStatus));
+			hidePopUp();
 		}
-	}
-	$('#modal').fadeOut(0);
+	});
 }
+
 
 /*	
  * Берём новый заказ себе.
@@ -497,4 +493,72 @@ function saveAndProceed(what, where){
 		}
 	});
 	return false;
+}
+
+/*
+ * Показываем форму заказа.
+ * Может быть новый заказ для клиента, а может и существующий на редактирование
+ */
+function payForm(package_id, liid, summ){
+	$('body').css('cursor', 'wait');
+	showPopUpLoader();
+	$("#searchClient").val('');
+	$.ajax({
+		url: '/package/getpayform',
+		dataType: 'html',
+		data: {
+			'package_id': package_id,
+			'liid': liid,
+			'summ': summ
+		},
+		success: function(data){
+			$('#clients').val("");
+			$("#buttonClear").addClass('hidden');
+			$('#sup_popup').html(data);
+			showPopUp();
+			$('body').css('cursor', 'default');
+			$('#pay_description').focus();
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#sup_popup').text(textStatus);
+		}
+	});
+}
+
+/*
+ * Отмечаем заказ как оплаченный. Устаревшая функция.
+ */
+function addPay(package_id, liid, summ){
+	$('#modal').fadeIn(0);
+	if (package_id != null) {
+		var msg = 'Подробности платежа';
+		var message = prompt("Провести оплату заказа #" + package_id + "?", msg);
+
+		if (message != null)
+			var summa = prompt("Оплаченная сумма", summ);
+
+		if (message != null && summa != null) {
+			$('#modal').fadeIn(0);
+			if (message == msg)
+				message = ""; // Если ничего не ввели, то сообщение очищаем
+			$.ajax({
+				url: '/package/addpay/' + package_id,
+				dataType: 'html',
+				data: {
+					'message': message,
+					'summa': summa
+				},
+				success: function(data){
+					$('#li' + liid).replaceWith(data);
+					flagsUpdate();
+					$('#modal').fadeOut(0);
+				},
+				error: function(jqXHR, textStatus, errorThrown){
+					$('#modal').fadeOut(0);
+					$('#li' + liid).replaceWith($('<span/>').text(textStatus));
+				}
+			});
+		}
+	}
+	$('#modal').fadeOut(0);
 }
