@@ -258,17 +258,24 @@ class ReportController extends Controller {
 						);
 						
 						foreach ($package->servPack as $service) {
-							$serv = array(
+							$servs[] = array(
+								//
+								'name'=>$service->service->name,
+								//
+								'descr'=>$service->descr,
+								//
+								'dt_beg'=>$service->dt_beg != '0000-00-00 00:00:00' ? date('Y.m.d', strtotime($service->dt_beg)) : '(дата не указана)',
+								//
+								'dt_end'=>$service->dt_end != '0000-00-00 00:00:00' ? date('Y.m.d', strtotime($service->dt_end)) : '(дата не указана)',
+								//
+								'count'=>$service->quant,
+								//
+								'price'=>$service->price,
+								//
+								'summ'=>$service->price * $service->quant,
 							);
-							$serv['name'] = $service->service->name;
-							$serv['descr'] = $service->descr;
-							$serv['dt_beg'] = $service->dt_beg != '0000-00-00 00:00:00' ? date('Y.m.d', strtotime($service->dt_beg)) : '(дата не указана)';
-							$serv['dt_end'] = $service->dt_end != '0000-00-00 00:00:00' ? date('Y.m.d', strtotime($service->dt_end)) : '(дата не указана)';
-							$serv['count'] = $service->quant;
-							$serv['price'] = $service->price;
-							$serv['summ'] = $service->price * $service->quant;
-							$pack['summ'] += $serv['summ'];
-							$servs[] = $serv;
+							
+							$pack['summ'] += $service->price * $service->quant;
 						}
 						
 						$pack['servs'] = $servs;
@@ -280,38 +287,40 @@ class ReportController extends Controller {
 						);
 						
 						foreach ($package->payments('payments:pay') as $payment) {
-							$pay = array(
+							$pays[] = array(
+								//
+								'dt'=>$payment->dt != '0000-00-00 00:00:00' ? date('Y.m.d', strtotime($payment->dt)) : '(дата не указана)',
+								//
+								'summ'=>$payment->amount * $payment->debit,
+								//
+								'rekviz'=> empty($payment->rekviz) ? '(не указан)' : $payment->rekviz->val,
 							);
-							$pay['dt'] = $payment->dt != '0000-00-00 00:00:00' ? date('Y.m.d', strtotime($payment->dt)) : '(дата не указана)';
-							$pack['paid'] += $pay['summ'] = $payment->amount * $payment->debit;
-							$pay['rekviz'] = empty($payment->rekviz) ? '(не указан)' : $payment->rekviz->val;
-							$pays[] = $pay;
+							
+							$pack['paid'] += $payment->amount * $payment->debit;
 						}
 						
 						$pack['pays'] = $pays;
 						
+						$packs[] = $pack;
+						
 						$managerSumm += $pack['summ'];
 						$managerPaid += $pack['paid'];
-						
-						$packs[] = $pack;
 					}
 					
 					$data[$manager->primaryKey] = array(
 						'name'=>$manager->fio, 'packs'=>$packs, 'count'=>count($packs), 'summ'=>$managerSumm, 'paid'=>$managerPaid,
 					);
+					
 					$totalCount += count($packs);
 					$totalSumm += $managerSumm;
 					$totalPaid += $managerPaid;
 				}
-				
 				$total = array(
 					'dt_beg'=>$dt_beg, 'dt_end'=>$dt_end, 'count'=>$totalCount, 'summ'=>$totalSumm, 'paid'=>$totalPaid,
 				);
-				
 				$this->render('/report/projects', array(
 					'data'=>$data, 'total'=>$total,
 				));
-				
 				break;
 		}
 	}
