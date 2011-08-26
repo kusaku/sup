@@ -70,6 +70,7 @@ a:hover { color: #ff7b0b; text-decoration: none; }
 .columnsBody li .clientInfo { margin: 0 0 0 10px; height: auto; padding: 10px; width: 303px; float: left; }
 .columnsBody li .clientInfo span.clientName { display: block; position: relative; font-size: 14px; font-style: italic; font-weight: bold; margin: 0 0 5px 0; }
 .columnsBody li .clientInfo span.clientName:hover { color: #000000; text-decoration: none; }
+.columnsBody li .clientInfo span.clientName a.nameText {display: block;width: 303px;height: 19px;overflow: hidden;}
 .columnsBody li .clientInfo span.clientName:hover .tips { display: block; width: 192px; height: auto; overflow: hidden; position: absolute; left: 20; bottom: 15px; z-index: 2; }
 .columnsBody li .clientInfo span.clientName:hover .tips .tipsTop { display: block; width: 192px; height: 14px; background: url(../images/tips2top2.png) 0 0 no-repeat; }
 .columnsBody li .clientInfo span.clientName:hover .tips .tipsBody { display: block; width: 178px; height: auto; padding: 3px 9px 3px 7px; background: url(../images/tipsbg2.png) 0 0 repeat-y; }

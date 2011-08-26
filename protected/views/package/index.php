@@ -6,7 +6,7 @@
 		<li>
 		<?php endif; ?>
 		<div class="clientInfo">
-			<span class="clientName"><a onClick="addEditClient(<?=$client->id?>)"><?= substr($client->mail, 0, 30)?></a>
+			<span class="clientName"><a onClick="addEditClient(<?=$client->id?>)" class="nameText"><?=$client->mail?></a>
 				<div class="tips">
 					<div class="tipsTop"></div>
 					<div class="tipsBody">
@@ -71,8 +71,10 @@
 			<div class="projectType">
 				<a onClick="Package(<?=$package->primaryKey?>, 0)" class="type">Заказ №<?= $package->primaryKey?>: <?= $package->name?><?= $package->summa ? " <strong>{$package->summa} руб.</strong>" : ''?></a>
 				<a onClick="Package(<?=$package->primaryKey?>, 0)" class="more">Подробно...</a>
+				<?php if($package->manager_id != Yii::app()->user->id): ?>
 				<br/>
-				<span style="color:#999999"><?= ($package->manager) ? "({$package->manager->fio})" : '(не присвоен менеджеру)'?></span>
+				<span style="color:#999999"><?=($package->manager) ? "({$package->manager->fio})" : '(не присвоен менеджеру)'?></span>
+				<?php endif; ?>
 			</div>
 			
 			<?php $package->redmine_proj and $percent = Redmine::getIssuePercent($package->redmine_proj) or $percent = 0; ?>
@@ -105,7 +107,7 @@
 				
 				<?php case 20: ?>
 				<div class="projectState">
-					<strong class="uppper">ЧАСТИЧНО ОПЛАЧЕН</strong>
+					<strong class="uppper">ЧАСТ. ОПЛ.</strong>
 					<a onClick="payForm(<?= $package->primaryKey?>, <?= $client->primaryKey?>, <?= $package->summa?>);" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a><a onClick="selectMailTemplate(<?= $client->primaryKey?>)" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a><a onClick="decline(<?= $package->primaryKey?>, <?= $client->primaryKey?>)" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 				</div>
 				<?php break; ?>

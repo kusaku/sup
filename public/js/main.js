@@ -159,6 +159,7 @@ function hidePopUp(){
 	$('#sup_popup').fadeOut(0);
 	$('#sup_preloader').hide(0); // Прячем preloader
 	$('#modal').fadeOut(0); // 200
+	$('body').css('cursor', 'default');
 }
 
 /* 
@@ -261,11 +262,11 @@ function loadNewSite(){
 /*
  * Отмечаем заказ как оплаченный.
  */
-function addPayment(package_id, ulid, summa, message, noReporting){
-
-	if (message == undefined) 
+function addPayment(package_id, liid, summa, message, noReporting){
+	$('body').css('cursor', 'wait');
+	if (message == undefined)
 		message = "";
-	if (noReporting != 'checked') 
+	if (noReporting != 'checked')
 		noReporting = 1;
 	else 
 		noReporting = 0;
@@ -273,6 +274,7 @@ function addPayment(package_id, ulid, summa, message, noReporting){
 	$.ajax({
 		url: '/package/addpay',
 		dataType: 'html',
+		method: 'POST',
 		data: {
 			'package_id': package_id,
 			'summa': summa,
@@ -284,11 +286,13 @@ function addPayment(package_id, ulid, summa, message, noReporting){
 			flagsUpdate();
 			$('#modal').fadeOut(0);
 			hidePopUp();
+			$('body').css('cursor', 'default');
 		},
 		error: function(jqXHR, textStatus, errorThrown){
 			$('#modal').fadeOut(0);
 			$('#ul' + ulid).replaceWith($('<span/>').text(textStatus));
 			hidePopUp();
+			$('body').css('cursor', 'default');
 		}
 	});
 }

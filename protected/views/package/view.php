@@ -232,7 +232,7 @@ $client->parent_id and $client_id = $client->parent_id;
 	sumka();
 	// Загржаем список сайтов (доменов) этого клиента
 
-	var client_id = '<?= $client_id ?>';
-	var site_id = '<?= $package->site_id ?>';
+	//var client_id = '<?= $client_id ?>';
+	//var site_id = '<?= $package->site_id ?>';
 	//loadSites(client_id, site_id);
 </script>
