@@ -99,14 +99,14 @@
 				<?php case 17: ?>
 				<div class="projectState">
 					<strong class="uppper">НЕ ОПЛАЧЕН</strong>
-					<a onClick="addPay(<?= $package->primaryKey?>, <?= $client->primaryKey?>, <?= $package->summa?>);" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a><a onClick="selectMailTemplate(<?= $client->primaryKey?>)" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a><a onClick="decline(<?= $package->primaryKey?>, <?= $client->primaryKey?>)" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+					<a onClick="payForm(<?= $package->primaryKey?>, <?= $client->primaryKey?>, <?= $package->summa?>);" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a><a onClick="selectMailTemplate(<?= $client->primaryKey?>)" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a><a onClick="decline(<?= $package->primaryKey?>, <?= $client->primaryKey?>)" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 				</div>
 				<?php break; ?>
 				
 				<?php case 20: ?>
 				<div class="projectState">
 					<strong class="uppper">ЧАСТИЧНО ОПЛАЧЕН</strong>
-					<a onClick="addPay(<?= $package->primaryKey?>, <?= $client->primaryKey?>, <?= $package->summa?>);" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a><a onClick="selectMailTemplate(<?= $client->primaryKey?>)" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a><a onClick="decline(<?= $package->primaryKey?>, <?= $client->primaryKey?>)" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+					<a onClick="payForm(<?= $package->primaryKey?>, <?= $client->primaryKey?>, <?= $package->summa?>);" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a><a onClick="selectMailTemplate(<?= $client->primaryKey?>)" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a><a onClick="decline(<?= $package->primaryKey?>, <?= $client->primaryKey?>)" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 				</div>
 				<?php break; ?>
 				
@@ -148,16 +148,14 @@
 			<?php endswitch; ?>
 			
 			<div class="projectDomain">
-			<?php if(isset($package->site)): ?>
-				<a onClick='editDomain(<?=$package->site->id?>)' title="<?=$package->site->url?>"><?= $package->site->url?></a>
-			<?php endif; ?>
+				<?php if(isset($package->site)): ?>
+					<a onClick='editDomain(<?=$package->site->id?>)' title="<?=$package->site->url?>"><?= $package->site->url?></a>				
+				<?php endif; ?>
+				<br/>
+				<?= date('d.m.Y', strtotime($package->dt_change)) ?>
 			</div>
 			<div class="projectDate act">
 				<?= $package->descr?>
-				<!-- 
-				<?= $package->dt_beg ?> 
-				<?= $package->dt_change ?> 
-				-->
 			</div>
 		</div>
 		<?php $class = 'forhide'; ?>

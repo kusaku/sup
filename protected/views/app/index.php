@@ -1,5 +1,5 @@
 <?php
-	$weekdays = array('Понед.','Вторн.','Среда','Четв.','Пятн.','Субб.','Воскр.');
+	$weekdays = array('Пн.','Вт.','Ср.','Чт.','Пт.','Сб.','Вс.');
 	$day= $weekdays[date('N')-1];
 	$months = array('января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря');
 	$month = $months[date('n')-1];
@@ -88,14 +88,12 @@
 		<li><a href="#" class="colClient">Клиент</a></li>
 		<li><a href="#" class="colOrder">Заказ</a></li>
 		<li><a href="#" class="colState">Состояние</a></li>
-		<li><a href="#" class="colDomain">Домен</a></li>
+		<li><a href="#" class="colDomain">Домен / Дата</a></li>
 		<li><a href="#" class="colDate active desc">Коммент</a></li>
 	</ul>		
 	<div id="sup_content">
 		<!-- прелодер загружает сюда данные -->
 	</div>	
 	<?php endif; ?>
-
 </div>
-
 <div style="position: fixed; top: 0; left: 0; height: 10px; width: 10px;" onClick="about()"></div>

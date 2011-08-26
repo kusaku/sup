@@ -43,16 +43,17 @@ function GetManagers(){
 
 
 //  Возвращаем SELECT с выбором сайта. Ипользуются сайты, закреплённые за проектам клиентами
-function sites($client_id, $sel = 0) {
+function sites($client_id, $sel) {
 	$sites = Site::getAllByClient($client_id);
 	$res = "<select name=\"pack_site_id\"><option value=\"0\">--нет--</option>";
 	if (isset($sites))
 		foreach ($sites as $site) {
-			$res = $res."<option value=\"$site->id\">";
+			$res = $res."<option value='".$site->id."'";
 			
 			if ($sel == $site->id)
 				$res = $res." selected";
-				
+			$res .= ">";
+
 			$res = $res."$site->url</option>";
 		}
 	$res = $res."</select>";
@@ -137,7 +138,10 @@ if ($package_id) {
 							<textarea name="pack_descr" cols="30" rows="5"><?= $package->descr?></textarea>
 						</td>
 						<td style="vertical-align: top;">
-							<div id="site_selector"></div>
+							<div id="site_selector">
+								<?=sites($client->id, $package->site_id)?>
+								<a href="javascript:loadNewSite();" class="plus">+</a>
+							</div>
 						</td>
 					</tr>
 				</table>
@@ -148,7 +152,6 @@ if ($package_id) {
 					<div class="projectBlock">
 						<div class="header">
 							<a onClick="$('#projectPart<?= $group->id?>').removeClass('hidden').children().removeClass('hidden'); $(this).attr('onClick', '$(\'#projectPart<?= $group->id?>\').toggleClass(\'hidden\');')"><?= $group->name?>:</a>
-							<!--a href="#" class="showHidden">показать неактивные</a-->
 						</div>
 						<?php
 							// Предварительная проверка, есть-ли в блоке заказанные услуги. Если есть, что блок будем выводить раскрытым.
@@ -212,9 +215,9 @@ if ($package_id) {
 			</div>
 <?////////////////////////php endif; ?>
 			<div class="buttons">
-				<a onClick="document.forms['megaform'].submit();" class="buttonSave">Сохранить</a>
-				<!--a href="javascript:alert('Пока не работает');" class="buttonSaveExit">Сохранить и выйти</a--><a onClick="hidePopUp()" class="buttonCancel">Отмена</a>
-				<span style="float:left;">Передать заказ менеджеру:</span><?= getManagers() ?>
+				<a onClick="packSave()" class="buttonSave">Сохранить</a>
+				<a onClick="hidePopUp()" class="buttonCancel">Отмена</a>
+				<span style="float:left;">Передать заказ менеджеру:</span>&nbsp;<?= getManagers() ?>
 				<span id="summa"></span>
 			</div>
 		</form>
@@ -228,7 +231,8 @@ $client->parent_id and $client_id = $client->parent_id;
 	// Подсчёт суммы для открытого заказа
 	sumka();
 	// Загржаем список сайтов (доменов) этого клиента
+
 	var client_id = '<?= $client_id ?>';
 	var site_id = '<?= $package->site_id ?>';
-	loadSites(client_id, site_id);
+	//loadSites(client_id, site_id);
 </script>

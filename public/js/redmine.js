@@ -8,6 +8,7 @@ function redmineSendMessage(issueId){
 	message = $('#redmineMessageInput'+issueId).val();
 	pack = $('#redmineMessageInput'+issueId).attr('pack');
 	$.ajax({
+		type: 'POST',
 		url: '/package/addRedmineMessage',
 		data: {
 			'id': issueId,

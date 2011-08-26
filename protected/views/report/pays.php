@@ -33,15 +33,16 @@
 		<a style="float:right;" class="orangeButton hiddenprint expandall">Развернуть всё</a>
 	</div>
 	<div class="report">
-		<h1>Отчет за период c <?= $total['dt_beg']?> по <?= $total['dt_end']?></h1>
+		<h1>Отчет за период c <?= $total['dt_beg']?>по <?= $total['dt_end']?></h1>
 		<?php foreach ($data as $managerItem): ?>
 		<?php if (!$managerItem['count']) continue; ?>
 		<h1 class="expandnext" style="cursor:pointer;"><?= $managerItem['name']?></h1>
 		<table class="reportItem">
 			<tr style="display:none;" class="collapsible">
 				<th style="width: 13%">Дата</th>
-				<th style="width: 37%;">Клиент</th>
-				<th style="width: 37%;">Проект</th>
+				<th style="width: 27%;">Клиент</th>
+				<th style="width: 30%;">Плательщик</th>
+				<th style="width: 17%;">Проект</th>
 				<th style="width: 13%;text-align:right;">Сумма</th>
 			</tr>
 			<?php foreach ($managerItem['pays'] as $payItem): ?>
@@ -53,6 +54,9 @@
 					<?= $payItem['client']?><?= empty($payItem['mail']) ? '' : " ({$payItem['mail']})"?>
 				</td>
 				<td>
+					<?= $payItem['description']?>
+				</td>
+				<td>
 					<?= $payItem['name']?><?= empty($payItem['site']) ? '' : " ({$payItem['site']})"?>
 				</td>
 				<td style="text-align:right;">
@@ -61,12 +65,13 @@
 			</tr>
 			<?php endforeach; ?>
 			<tr>
-				<th style="width:13%">Количество:</th>
+				<th>Количество:</th>
 				<th style="width:37%;">
 					<?= $managerItem['count']?>
 				</th>
-				<th style="width:37%">Сумма:</th>
-				<th style="width:13%;text-align:right;">
+				<th></th>
+				<th>Сумма:</th>
+				<th style="text-align:right;">
 					<?= number_format($managerItem['summ'], 0, ',', ' ')?>  руб.
 				</th>
 			</tr>
