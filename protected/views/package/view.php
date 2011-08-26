@@ -64,7 +64,7 @@ $ordered = array();
 
 // Нам передали ИД заказа для редактирования или это будет новый заказ?
 if ($package_id) {
-	$package = Package::getById($package_id);
+	$package = Package::model()->findByPk($package_id);
 	
 	$client = $package->client;
 	$order_size = sizeof($package->servPack);

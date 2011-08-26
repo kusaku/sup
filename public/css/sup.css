@@ -46,7 +46,7 @@ a.grayButton	{padding: 4px 9px;background: #c8d2d5;background:url(../images/ubut
 .orderBlock .orderPart .subPart .column3 {width: auto;}
 
 .report {padding: 10px 0px; clear:both;}
-.report h1 {color: #FF7B0B;font-size: 16px; margin:20px 0px 10px;}
+.report h1 {color: #FF7B0B;font-size: 16px; margin:10px 0px;}
 .report h2 {font-size: 14px;}
 .reportButtons {margin: 0px 0px 10px 0px;}
 .reportItem {margin: 5px 0px 10px; width:100%;}

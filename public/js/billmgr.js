@@ -64,6 +64,7 @@ function bmRegister(client_id){
 			} 
 			catch (e) {
 				// что-то пошло не так, json не вернулся
+				$('#linkid-' + client_id).tipBox('Ошибка на стороне сервера!').tipBox('show');
 			}
 		},
 		error: function(jqXHR, textStatus, errorThrown){
@@ -117,6 +118,7 @@ function bmOpen(client_id){
 			} 
 			catch (e) {
 				// что-то пошло не так, json не вернулся
+				$('#linkid-' + client_id).tipBox('Ошибка на стороне сервера!').tipBox('show');
 			}
 		},
 		error: function(jqXHR, textStatus, errorThrown){
@@ -129,12 +131,11 @@ function bmOpen(client_id){
 /*
  * Заказ виртуального хостинга
  */
-function bmVHost(site_id, package_id, service_id){
+function bmVHost(package_id, service_id){
 	$.ajax({
 		type: 'GET',
 		url: '/bm/ordervhost',
 		data: {
-			'site_id': site_id,
 			'package_id': package_id,
 			'service_id': service_id
 		},
@@ -156,6 +157,7 @@ function bmVHost(site_id, package_id, service_id){
 			} 
 			catch (e) {
 				// что-то пошло не так, json не вернулся
+				$('#linkid-' + package_id + '-' + service_id).tipBox('Ошибка на стороне сервера!').tipBox('show');
 			}
 		},
 		error: function(jqXHR, textStatus, errorThrown){
@@ -168,12 +170,11 @@ function bmVHost(site_id, package_id, service_id){
 /*
  * Заказ доменного имени
  */
-function bmDomainName(site_id, package_id, service_id){
+function bmDomainName(package_id, service_id){
 	$.ajax({
 		type: 'GET',
 		url: '/bm/orderdomain',
 		data: {
-			'site_id': site_id,
 			'package_id': package_id,
 			'service_id': service_id
 		},
@@ -195,6 +196,7 @@ function bmDomainName(site_id, package_id, service_id){
 			} 
 			catch (e) {
 				// что-то пошло не так, json не вернулся
+				$('#linkid-' + package_id + '-' + service_id).tipBox('Ошибка на стороне сервера!').tipBox('show');
 			}
 		},
 		error: function(jqXHR, textStatus, errorThrown){
@@ -232,6 +234,7 @@ function bmUpdateAttributes(client_id){
 			} 
 			catch (e) {
 				// что-то пошло не так, json не вернулся
+				$('#linkid-' + client_id).tipBox('Ошибка на стороне сервера!').tipBox('show');
 			}
 		},
 		error: function(jqXHR, textStatus, errorThrown){

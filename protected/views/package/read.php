@@ -39,7 +39,7 @@ foreach ($usersArray as $key => $user) {
 $RedmineUserSelect .= '</select>';
 
 
-	//$pack = Package::getById($package_id);
+	//$pack = Package::model()->findByPk($package_id);
 	$client = $pack->client;
 	$zakaz_size =  sizeof( $pack->servPack );
 	$client_id = $pack->client_id;
@@ -107,7 +107,19 @@ foreach ($zserv as $value) {
 					foreach ($tabs as $tab)
 					{
 						print '<div id="tabContent'.$tab['serv_id'].'" class="tabContent '.$hidden.'">';
-
+						
+						// если дата окончания услуги прошла
+						if (! empty($client->attr['bm_id']->values[0]->value) and strtotime($usluga->dt_end) < strtotime('now')) {
+							// XXX если заказан хостинг (исправить номер!):
+							if ($zserv->service->parent_id == 67 and strtotime($zserv->dt_end) < strtotime('now')) {
+								print '<a class="plus" title="Добавить заказ в BILLManager" id="linkid-'.$pack->primaryKey.'-'.$zserv->service->primaryKey.'" onClick="bmVHost('.$pack->site_id.','.$pack->primaryKey.','.$zserv->service->primaryKey.')" class="edit"></a>';
+							}
+							// XXX если заказана регистрация доменного имени (исправить номер!):
+							if ($zserv->service->parent_id == 68 and strtotime($zserv->dt_end) < strtotime('now')) {
+								print '<a class="plus" title="Добавить заказ в BILLManager" id="linkid-'.$pack->primaryKey.'-'.$zserv->service->primaryKey.'" onClick="bmDomainName('.$pack->site_id.','.$pack->primaryKey.','.$zserv->service->primaryKey.')" class="edit"></a>';
+							}
+						}
+						
 						if ( $tab['to_redmine'] ){
 							$this->renderPartial('issue', array('issue_id'=>$tab['to_redmine'], 'pack_id'=>$pack->id, 'serv_id'=>$tab['serv_id']));
 						} else {

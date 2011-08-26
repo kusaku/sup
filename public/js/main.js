@@ -24,6 +24,7 @@ $(function(){
 	$('input.cbox').live('change', function(){
 		sumka();
 	});
+	loadData();
 	loadCalendar();
 	$.datepicker.setDefaults($.datepicker.regional["ru"]); // Устанавливаем локаль для календаря
 	// реализация аккордеона
@@ -54,7 +55,6 @@ function prepareHtml(){
 		handle: '.clientHead',
 		containment: 'parent'
 	});
-	$('.forhide').hide(0);
 }
 
 /*	
@@ -184,8 +184,7 @@ function showPopUpLoader(){
  * Фактически прячем/показываем все заказы кроме первого.
  */
 function ShowHide(id){
-	$('#' + id).toggleClass('less');
-	$('#' + id).children('.forhide').toggle(0); // 150
+	$('#' + id).find('li').toggleClass('less').children('.forhide').slideToggle(300);
 }
 
 /*	
@@ -262,7 +261,7 @@ function loadNewSite(){
 /*	
  * Отмечаем заказ как оплаченный.
  */
-function addPay(package_id, liid, summ){
+function addPay(package_id, ulid, summ){
 	$('#modal').fadeIn(0);
 	if (package_id != null) {
 		var msg = 'Подробности платежа';
@@ -283,13 +282,13 @@ function addPay(package_id, liid, summ){
 					'summa': summa
 				},
 				success: function(data){
-					$('#li' + liid).replaceWith(data);
+					$('#ul' + ulid).replaceWith(data);
 					flagsUpdate();
 					$('#modal').fadeOut(0);
 				},
 				error: function(jqXHR, textStatus, errorThrown){
 					$('#modal').fadeOut(0);
-					$('#li' + liid).replaceWith($('<span/>').text(textStatus));
+					$('#ul' + ulid).replaceWith($('<span/>').text(textStatus));
 				}
 			});
 		}
@@ -300,17 +299,17 @@ function addPay(package_id, liid, summ){
 /*	
  * Берём новый заказ себе.
  */
-function takePack(package_id, liid){
+function takePack(package_id, ulid){
 	if (package_id != null) {
 		$.ajax({
 			url: '/package/takepack/' + package_id,
 			dataType: 'html',
 			success: function(data){
-				$('#li' + liid).replaceWith(data);
+				$('#ul' + ulid).replaceWith(data);
 				flagsUpdate();
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				$('#li' + liid).replaceWith($('<span/>').text(textStatus));
+				$('#ul' + ulid).replaceWith($('<span/>').text(textStatus));
 			}
 		});
 	}
@@ -389,17 +388,17 @@ function checkDomain(){
 /*	
  * Отказывамся от заказа
  */
-function decline(package_id, liid){
+function decline(package_id, ulid){
 	if (package_id != null) {
 		$.ajax({
 			url: '/package/decline/' + package_id,
 			dataType: 'html',
 			success: function(data){
-				$('#li' + liid).replaceWith(data);
+				$('#ul' + ulid).replaceWith(data);
 				flagsUpdate();
 			},
 			error: function(jqXHR, textStatus, errorThrown){
-				$('#li' + liid).replaceWith($('<span/>').text(textStatus));
+				$('#ul' + ulid).replaceWith($('<span/>').text(textStatus));
 			}
 		});
 	}

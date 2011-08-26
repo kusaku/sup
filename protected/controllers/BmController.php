@@ -248,13 +248,13 @@ class BMController extends Controller {
 	 * Заказывает витруальный хостинг
 	 * @return
 	 */
-	public function actionOrderVhost($site_id, $package_id, $service_id) {
-		// сайт
-		$site = Site::getById($site_id);
+	public function actionOrderVhost($package_id, $service_id) {
+		$package = Package::model()->findByPk($package_id);
 		
-		// клиент и его учетка
-		$client = $site->client;
+		// клиент и сайт
+		$client = $package->client;
 		$username = isset($client->attr['username']) ? $client->attr['username']->values[0]->value : '';
+		$site = $package->site;
 		
 		// от имени менеджера
 		$bmr = new BMRequest(true);
@@ -358,19 +358,13 @@ class BMController extends Controller {
 	 * Заказывает доменное имя
 	 * @return
 	 */
-	public function actionOrderDomain($site_id, $package_id, $service_id) {
-		// сайт
-		$site_id = (int) Yii::app()->request->getParam('site_id');
-		$site = Site::getById($site_id);
+	public function actionOrderDomain($package_id, $service_id) {
+		$package = Package::model()->findByPk($package_id);
 		
-		// ID пакета
-		$package_id = (int) Yii::app()->request->getParam('package_id');
-		// ID услуги
-		$service_id = (int) Yii::app()->request->getParam('service_id');
-		
-		// клиент и его учетка
-		$client = $site->client;
+		// клиент и сайт
+		$client = $package->client;
 		$username = isset($client->attr['username']) ? $client->attr['username']->values[0]->value : '';
+		$site = $package->site;
 		
 		// от имени менеджера
 		$bmr = new BMRequest(true);

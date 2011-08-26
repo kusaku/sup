@@ -87,21 +87,7 @@ $summa = 0;
 							
 							print '<div class="column1">';
 							print '<p class="label">Описание:</p>';
-							print '<p>'.$usluga->service->name;
-							
-							// если дата окончания услуги прошла
-							if (! empty($client->attr['bm_id']->values[0]->value) and strtotime($usluga->dt_end) < strtotime('now')) {
-								// XXX если заказан хостинг (исправить номер!):
-								if ($usluga->service->parent_id == 67 and strtotime($usluga->dt_end) < strtotime('now')) {
-									print '<a class="plus" title="Добавить заказ в BILLManager" id="linkid-'.$package->primaryKey.'-'.$usluga->service->primaryKey.'" onClick="bmVHost('.$site->id.','.$package->primaryKey.','.$usluga->service->primaryKey.')" class="edit"></a>';
-								}
-								// XXX если заказана регистрация доменного имени (исправить номер!):
-								if ($usluga->service->parent_id == 68 and strtotime($usluga->dt_end) < strtotime('now')) {
-									print '<a class="plus" title="Добавить заказ в BILLManager" id="linkid-'.$package->primaryKey.'-'.$usluga->service->primaryKey.'" onClick="bmDomainName('.$site->id.','.$package->primaryKey.','.$usluga->service->primaryKey.')" class="edit"></a>';
-								}
-							}
-							
-							print '</p>';
+							print '<p>'.$usluga->service->name.'</p>';
 							
 							print '</div>';
 							

@@ -25,7 +25,7 @@ class People extends CActiveRecord {
 			), 'parent'=>array(
 				self::BELONGS_TO, 'People', 'parent_id'
 			), 'packages'=>array(
-				self::HAS_MANY, 'Package', 'client_id', 'order'=>'dt_change DESC'
+				self::HAS_MANY, 'Package', 'client_id'
 			),
 			// все события календаря для этого человека
 			'calendar'=>array(
@@ -43,6 +43,10 @@ class People extends CActiveRecord {
 			)
 		);
 	}
+	/**
+	 * 
+	 * @return 
+	 */
 	public function attributeLabels() {
 		return array(
 			'mail'=>'label'

@@ -134,7 +134,7 @@ class PeopleController extends Controller {
 				$attr->save();
 			}
 			
-			if (@$data['ajax'])
+			if (Yii::app()->request->isAjaxRequest)
 				print(json_encode(array(
 					'success'=>true,
 					'people_id'=>$people->primaryKey
