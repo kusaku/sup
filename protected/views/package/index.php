@@ -101,14 +101,14 @@
 				<?php case 17: ?>
 				<div class="projectState">
 					<strong class="uppper">НЕ ОПЛАЧЕН</strong>
-					<a onClick="payForm(<?= $package->primaryKey?>, <?= $client->primaryKey?>, <?= $package->summa?>);" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a><a onClick="selectMailTemplate(<?= $client->primaryKey?>)" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a><a onClick="decline(<?= $package->primaryKey?>, <?= $client->primaryKey?>)" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+					<a onClick="payForm(<?= $package->primaryKey?>, <?= $client->primaryKey?>, <?= $package->summa?>);" class="icon"><img src="images/icon04.png" title="Поставить оплату (<?=$package->summa?>руб.)"/></a><a onClick="selectMailTemplate(<?= $client->primaryKey?>)" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a><a onClick="decline(<?= $package->primaryKey?>, <?= $client->primaryKey?>)" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 				</div>
 				<?php break; ?>
 				
 				<?php case 20: ?>
 				<div class="projectState">
 					<strong class="uppper">ЧАСТ. ОПЛ.</strong>
-					<a onClick="payForm(<?= $package->primaryKey?>, <?= $client->primaryKey?>, <?= $package->summa?>);" class="icon"><img src="images/icon04.png" title="Поставить оплату ('.$package->summa.' руб.)"/></a><a onClick="selectMailTemplate(<?= $client->primaryKey?>)" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a><a onClick="decline(<?= $package->primaryKey?>, <?= $client->primaryKey?>)" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
+					<a onClick="payForm(<?= $package->primaryKey?>, <?= $client->primaryKey?>, <?= $package->summa?>);" class="icon"><img src="images/icon04.png" title="Поставить оплату (<?=$package->summa?>руб.)"/></a><a onClick="selectMailTemplate(<?= $client->primaryKey?>)" class="icon"><img src="images/icon02.png" title="Отправить письмо клиенту"/></a><a onClick="decline(<?= $package->primaryKey?>, <?= $client->primaryKey?>)" class="icon"><img src="images/icon03.png" title="Отклонить"/></a>
 				</div>
 				<?php break; ?>
 				

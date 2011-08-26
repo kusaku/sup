@@ -35,20 +35,20 @@ function packUpdate(){
 /*
  *	По заказу выполнены все работы. Закрываем все задачи.
  */
-function packageIsReady(package_id, liid){
+function packageIsReady(package_id, ulid){
 	$('#modal').fadeIn(0);
 	if (package_id != null) {
 		$.ajax({
 			url: '/package/packageIsReady/' + package_id,
 			dataType: 'html',
 			success: function(data){
-				$('#li' + liid).replaceWith(data);
+				$('#ul' + ulid).replaceWith(data);
 				flagsUpdate();
 				$('#modal').fadeOut(0);
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				$('#modal').fadeOut(0);
-				$('#li' + liid).replaceWith($('<span/>').text(textStatus));
+				$('#ul' + ulid).replaceWith($('<span/>').text(textStatus));
 			}
 		});
 	}
