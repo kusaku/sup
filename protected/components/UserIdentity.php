@@ -17,20 +17,22 @@ class UserIdentity extends CUserIdentity {
 	 * @return array
 	 */
 	public function ldap_authenticate() {
-		return ($connect = @ldap_connect(LDAP_SERVER)
-		//
-		and @ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3)
-		//
-		and @ldap_set_option($connect, LDAP_OPT_REFERRALS, 0)
-		//
-		and @ldap_bind($connect, "{$this->username}@".LDAP_DOMAIN, $this->password)
+		return (
+		// создаем подключение
+		$connect = ldap_connect(LDAP_SERVER)
+		// ставим опции
+		and ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3)
+		// ставим опции
+		and ldap_set_option($connect, LDAP_OPT_REFERRALS, 0)
+		// используем подключение и логинимся
+		and ldap_bind($connect, "{$this->username}@".LDAP_DOMAIN, $this->password)
 		// получаем данные этого пользователя
-		and $search = @ldap_search($connect, LDAP_BASE_DN, "(&(objectClass=user)(samaccountname={$this->username}))")
-		//
-		and $info = @ldap_get_entries($connect, $search)
-		//
+		and $search = ldap_search($connect, LDAP_BASE_DN, "(&(objectClass=user)(samaccountname={$this->username}))")
+		// возвращаем результаты поиска
+		and $info = ldap_get_entries($connect, $search)
+		// смотрим, есть ли какие-нибудь результаты
 		and isset($info[0])) ?
-		//
+		// и возвращаем, либо результат, либо - ложь
 		$info[0] : false;
 	}
 	

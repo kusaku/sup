@@ -84,7 +84,7 @@ function newRedmineIssue(pack_id, serv_id){
 /*
  * Создаём все задачи в редмайне.
  */
-function createAllRedmineIssues(package_id, liid){
+function createAllRedmineIssues(package_id, ulid){
 
 alert ('В данный момент рекомендую не пользоваться этой функцией! /Дима');
 /*$('#modal').fadeIn(0);
@@ -93,13 +93,13 @@ alert ('В данный момент рекомендую не пользова�
 			url: '/package/createAllRedmineIssues/' + package_id,
 			dataType: 'html',
 			success: function(data){
-				$('#li' + liid).replaceWith(data);
+				$('#ul' + ulid).replaceWith(data);
 				flagsUpdate();
 				$('#modal').fadeOut(0);
 			},
 			error: function(jqXHR, textStatus, errorThrown){
 				$('#modal').fadeOut(0);
-				$('#li' + liid).replaceWith($('<span/>').text(textStatus));
+				$('#ul' + ulid).replaceWith($('<span/>').text(textStatus));
 			}
 		});
 	}

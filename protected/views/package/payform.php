@@ -1,5 +1,5 @@
 <div class="newClientWindow" style="margin-bottom: 5px;">
-	<form name="payment" id="payment" onSubmit="addPayment(<?=$package_id?>, <?=$liid?>, $('#pay_summ').val(), $('#pay_description').val(), $('#pay_noReporting').attr('checked')); return false;">
+	<form name="payment" id="payment" onSubmit="addPayment(<?=$package_id?>, <?=$ulid?>, $('#pay_summ').val(), $('#pay_description').val(), $('#pay_noReporting').attr('checked')); return false;">
 		<div class="clientHead">
 			<input type="submit" style="height: 0; width: 0;">Информация о платеже
 		</div>

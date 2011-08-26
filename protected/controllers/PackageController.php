@@ -230,7 +230,7 @@ class PackageController extends Controller {
 			'client_id'=>$package->client_id
 		));
 	}
-
+	
 	/*
 	 * Отмечаем заказ как не нужный - в архив
 	 */
@@ -257,11 +257,20 @@ class PackageController extends Controller {
 	/*
 	 * Отмечаем заказ как оплаченный. Создём задачу по самому заказу (родительскую задачу).
 	 */
-	public function actionAddPay($package_id, $summa, $message, $noReporting = false) {
+	public function actionAddPay($package_id, $summa, $message = null, $noReporting = false) {
 		$package = Package::model()->findByPk($package_id);
 		
 		$package->descr = $package->descr."\nПодробности оплаты: ".$message;
 		
+		if ($message)
+			$package->descr = $package->descr."\nПодробности оплаты: ".Yii::app()->request->getParam('message');
+			
+		Logger::put(array(
+			'client_id'=>$package->client_id, 'manager_id'=>Yii::app()->user->id, 'info'=>'Оплачен заказ №'.$package->id."<br> Подробности: ".Yii::app()->request->getParam('message')
+		));
+		
+		$usersArray = Redmine::getUsersArray();
+
 		$package->status_id = $summa >= ($package->summa - $package->paid) ? 30 : 20;
 		
 		$pay = new Payment();
