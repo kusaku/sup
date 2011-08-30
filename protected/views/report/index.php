@@ -1,5 +1,5 @@
 <div style="margin-bottom: 5px;" class="newClientWindow">
-	<form id="megaform" action="/report/generate" method="GET">
+	<form id="megaform" action="/report/generate" method="POST">
 		<div class="clientHead">Выбор вида отчета</div>
 		<div style="padding:10px 0px;">
 			<label>Вид отчета: </label>
@@ -26,9 +26,9 @@
 		</div>
 		<div>
 			<label>От: </label>
-			<input type="text" name="dt_beg" class="datepicker" value="<?= UserRegistry::model()->report_dt_beg ? UserRegistry::model()->report_dt_beg : date('Y-m-01'); ?>">
+			<input type="text" name="dt_beg" class="datepicker" value="<?= UserRegistry::model()->report_dt_beg ? UserRegistry::model()->report_dt_beg : date('01.m.Y'); ?>">
 			<label>До: </label>
-			<input type="text" name="dt_end" class="datepicker" value="<?= UserRegistry::model()->report_dt_end ? UserRegistry::model()->report_dt_end : date('Y-m-01', strtotime('+1 month')); ?>"></div>
+			<input type="text" name="dt_end" class="datepicker" value="<?= UserRegistry::model()->report_dt_end ? UserRegistry::model()->report_dt_end : date('01.m.Y', strtotime('+1 month')); ?>"></div>
 		<div>
 			<label>Статус: </label>
 			<select name="status_id">
@@ -42,7 +42,7 @@
 			<input<?= UserRegistry::model()->report_show_empty ? ' checked="checked"' : ''?> type="checkbox" name="show_empty"></div>
 		<div class="buttons">
 			<a class="grayButton" onclick="hidePopUp();">Отмена</a>
-			<a style="float:right;" class="orangeButton" onclick="$('#megaform').submit();">Генерировать</a>
+			<a style="float:right;" class="orangeButton" onclick="$('#megaform').attr('action',$('#megaform').attr('action') + '/' + $('#megaform #reportType').val()).submit();">Генерировать</a>
 		</div>
 	</form>
 </div>

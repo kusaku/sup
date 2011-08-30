@@ -1,13 +1,12 @@
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /*
  *	Сохранение заказа. Это новый или не оплаченный заказ.
  */
 function packSave(){
-	document.forms['megaform'].submit();
+	saveAndProceed('#sup_popup form', function(data){
+		hidePopUp();
+		loadData(0);
+	})
 }
 
 /*
@@ -16,20 +15,20 @@ function packSave(){
 function packUpdate(){
 	var error = false;
 	$('.redmineMessage').each(function(){
-		if ($(this).val() != ''){
+		if ($(this).val() != '') {
 			error = true;
 		}
 	});
-
-	if (error)
+	
+	if (error) 
 		if (!confirm("Есть не сохранённые сообщения! \nOK - Вернуться к редактированию заказа? \nОтмена - сохранить изменения проекта, но потерять сообщения!")) {
 			error = false;
 		}
-
-	if (!error){
-		document.forms['megaform'].submit();
-	}
-
+	
+	saveAndProceed('#sup_popup form', function(data){
+		hidePopUp();
+		loadData(0);
+	})
 }
 
 /*

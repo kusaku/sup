@@ -2,7 +2,7 @@
 /**
  * Параметры нашего LDAP-сервера:
  */
-define('LDAP_SERVER', 'ldap://ldap2.fabricasaitov.ru');
+define('LDAP_SERVER', 'ldap://192.168.0.1');
 define('LDAP_DOMAIN', 'fabrica.local');
 define('LDAP_BASE_DN', 'dc=fabrica,dc=local');
 

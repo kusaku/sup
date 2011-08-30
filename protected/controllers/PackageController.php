@@ -21,7 +21,7 @@ class PackageController extends Controller {
 		return array(
 			array(
 				'allow', 'actions'=>array(
-					'index', 'view', 'save', 'addPay', 'takePack', 'addRedmineMessage', 'bindRedmineIssue', 'decline',
+					'index', 'view', 'save', 'edit', 'addPay', 'takePack', 'addRedmineMessage', 'bindRedmineIssue', 'decline',
 					//
 					'createAllRedmineIssues', 'newRedmineIssue', 'closeRedmineIssue', 'getPayForm',
 				), 'roles'=>array(
@@ -81,7 +81,7 @@ class PackageController extends Controller {
 							// этим убираем несуществующие прокты и клиентов
 							'joinType'=>'INNER JOIN',
 							// но нужно выбрать которые не в архиве и не сданы, и принадлежат менеджеру
-							'condition'=>"packages.status_id NOT IN (15, 999) AND (packages.manager_id = 0 OR packages.manager_id = $myid)",
+							//'condition'=>"packages.status_id NOT IN (15, 999) AND (packages.manager_id = 0 OR packages.manager_id = $myid)",
 							// по дате проекта, как нормально подставить LIMIT - не нашел =(
 							'order'=>'packages.dt_change DESC LIMIT 30',
 						)
@@ -102,7 +102,6 @@ class PackageController extends Controller {
 	 *
 	 */
 	public function actionView($client_id, $package_id) {
-	
 		$status = 0;
 		
 		if ($package_id) {
@@ -121,6 +120,59 @@ class PackageController extends Controller {
 			));
 		else
 			return false;
+	}
+	
+	/*
+	 * обновляем заказ (оплаченный). Можем поменять мастера или привязать сайт.
+	 */
+	public function actionEdit() {
+	
+		if ($_POST['pack_id']) {
+			$pack = Package::model()->findByPk($_POST['pack_id']);
+			
+			//if ($pack->site_id == 0 && $_POST['pack_site_id'])
+			//$pack->site_id = $_POST['pack_site_id'];
+			
+			//	Был запрос на создание нового сайта и к заказу сайт пока не привязан
+			if ($pack->site_id == 0) {
+				if (array_key_exists('site_add_new', $_POST)) {
+					if ($_POST['site_url']) {
+						$site = Site::getByUrl($_POST['site_url']);
+						if (!$site) {
+							$site = new Site();
+							$site->url = $_POST['site_url'];
+							$site->host = $_POST['site_host'];
+							$site->ftp = $_POST['site_ftp'];
+							$site->db = $_POST['site_db'];
+							$site->client_id = $_POST['pack_client_id'];
+							$site->save();
+						}
+						$pack->site_id = $site->id;
+					}
+				} elseif ($_POST['pack_site_id']) {
+					$pack->site_id = $_POST['pack_site_id'];
+				}
+			}
+			
+			$newManager = @$_POST['newManager'];
+			if ($newManager && $newManager != $pack->manager_id) { // отдаём другому менеджеру
+				// Log write
+				$info = date('d-m-Y')." Передача заказа: ".People::getById($pack->manager_id)->fio.' -> '.People::getById($newManager)->fio."<br>";
+				Logger::put(array(
+					'client_id'=>$pack->client_id, 'manager_id'=>Yii::app()->user->id, 'info'=>$info
+				));
+				// Action
+				$pack->manager_id = $newManager;
+			}
+			$pack->dt_change = date('Y-m-d H:i:s');
+			$pack->save();
+			
+		}
+		
+		// Возвращаем данные для замены аяксом
+		$this->renderPartial('index', array(
+			'client_id'=>$pack->client_id
+		));
 	}
 	
 	/*
@@ -209,7 +261,10 @@ class PackageController extends Controller {
 				$s2p->save();
 			}
 			
-		$this->redirect('/');
+		// Возвращаем данные для замены аяксом
+		$this->renderPartial('index', array(
+			'client_id'=>$pack->client_id
+		));
 	}
 	
 	/*
@@ -217,7 +272,7 @@ class PackageController extends Controller {
 	 */
 	public function actionTakePack($id) {
 		$package = Package::model()->findByPk($id);
-		// Не перехватил-ли заказ другой менеджер
+		// Не перехватил-ли заказ другой менеджер?
 		if ($package->manager_id == 0 or $package->manager_id == Yii::app()->user->id) {
 			$package->manager_id = Yii::app()->user->id;
 			$package->status_id = 17;
@@ -232,12 +287,16 @@ class PackageController extends Controller {
 	}
 	
 	/*
-	 * Отмечаем заказ как не нужный - в архив
+	 * Отмечаем заказ как отклоненный
 	 */
 	public function actionDecline($id) {
 		$package = Package::model()->findByPk($id);
-		$package->status_id = 15; // Отказ
-		$package->save();
+		// нельзя отклонить заказ, который в работе
+		if ($package->status_id < 20) {
+			$package->manager_id = 0;
+			$package->status_id = 15;
+			$package->save();
+		}
 		
 		// Возвращаем данные для замены аяксом
 		$this->renderPartial('index', array(
@@ -260,7 +319,8 @@ class PackageController extends Controller {
 	public function actionAddPay($package_id, $summa, $message = null, $noReporting = false) {
 		$package = Package::model()->findByPk($package_id);
 		
-		$package->descr = $package->descr."\nПодробности оплаты: ".$message;
+		// это нехорошо!
+		//$package->descr = $package->descr."\nПодробности оплаты: ".$message;
 		
 		if ($message)
 			$package->descr = $package->descr."\nПодробности оплаты: ".Yii::app()->request->getParam('message');
@@ -270,7 +330,7 @@ class PackageController extends Controller {
 		));
 		
 		$usersArray = Redmine::getUsersArray();
-
+		
 		$package->status_id = $summa >= ($package->summa - $package->paid) ? 30 : 20;
 		
 		$pay = new Payment();
@@ -286,7 +346,7 @@ class PackageController extends Controller {
 		
 		if ($package->redmine_proj == 0) {
 			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name.' ('.$package->client->mail.')', $package->descr, $usersArray[trim((string) Yii::app()->user->login)], 0);
-			$package->redmine_proj = $issue->id;
+			$package->redmine_proj = $issue['id'];
 		}
 		
 		$package->paid += $summa;
@@ -301,56 +361,6 @@ class PackageController extends Controller {
 	}
 	
 	/*
-	 * обновляем заказ (оплаченный). Можем поменять мастера или привязать сайт.
-	 */
-	public function actionEdit() {
-	
-		if ($_POST['pack_id']) {
-			$pack = Package::model()->findByPk($_POST['pack_id']);
-			
-			//if ($pack->site_id == 0 && $_POST['pack_site_id'])
-			//$pack->site_id = $_POST['pack_site_id'];
-			
-			//	Был запрос на создание нового сайта и к заказу сайт пока не привязан
-			if ($pack->site_id == 0) {
-				if (array_key_exists('site_add_new', $_POST)) {
-					if ($_POST['site_url']) {
-						$site = Site::getByUrl($_POST['site_url']);
-						if (!$site) {
-							$site = new Site();
-							$site->url = $_POST['site_url'];
-							$site->host = $_POST['site_host'];
-							$site->ftp = $_POST['site_ftp'];
-							$site->db = $_POST['site_db'];
-							$site->client_id = $_POST['pack_client_id'];
-							$site->save();
-						}
-						$pack->site_id = $site->id;
-					}
-				} elseif ($_POST['pack_site_id']) {
-					$pack->site_id = $_POST['pack_site_id'];
-				}
-			}
-			
-			$newManager = @$_POST['newManager'];
-			if ($newManager && $newManager != $pack->manager_id) { // отдаём другому менеджеру
-				// Log write
-				$info = date('d-m-Y')." Передача заказа: ".People::getById($pack->manager_id)->fio.' -> '.People::getById($newManager)->fio."<br>";
-				Logger::put(array(
-					'client_id'=>$pack->client_id, 'manager_id'=>Yii::app()->user->id, 'info'=>$info
-				));
-				// Action
-				$pack->manager_id = $newManager;
-			}
-			$pack->dt_change = date('Y-m-d H:i:s');
-			$pack->save();
-			
-		}
-		
-		$this->redirect('/');
-	}
-	
-	/*
 	 * Создаём задачу по запросу. Если нет родительской, то и её создаём.
 	 */
 	public function actionNewRedmineIssue($pack_id, $serv_id = 0, $master_id) {
@@ -360,7 +370,7 @@ class PackageController extends Controller {
 		
 		if (!$package->redmine_proj) {
 			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name, $package->descr, $usersArray[trim((string) Yii::app()->user->login)], 0);
-			$package->redmine_proj = $issue->id;
+			$package->redmine_proj = $issue['id'];
 		}
 		
 		$package->dt_change = date('Y-m-d H:i:s');
@@ -383,7 +393,7 @@ class PackageController extends Controller {
 				// Родительская задача
 				$package->redmine_proj);
 				
-				$service->to_redmine = $issue->id;
+				$service->to_redmine = $issue['id'];
 				$service->save();
 			}
 		}
@@ -409,7 +419,7 @@ class PackageController extends Controller {
 		}
 		
 		$this->renderPartial('issue', array(
-			'issue_id'=>$issue->id, 'pack_id'=>$pack_id
+			'issue_id'=>$issue['id'], 'pack_id'=>$pack_id, 'serv_id'=>$serv_id
 		));
 	}
 	
@@ -426,7 +436,7 @@ class PackageController extends Controller {
 		
 		if (!$package->redmine_proj) {
 			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name.' ('.$package->client->mail.')', $package->descr, $usersArray[trim((string) Yii::app()->user->login)], 0);
-			$package->redmine_proj = $issue->id;
+			$package->redmine_proj = $issue['id'];
 		}
 		
 		$package->save();
@@ -444,7 +454,7 @@ class PackageController extends Controller {
 				// Родительская задача
 				$package->redmine_proj);
 				
-				$service->to_redmine = $issue->id;
+				$service->to_redmine = $issue['id'];
 				$service->save();
 			}
 		}
@@ -459,15 +469,20 @@ class PackageController extends Controller {
 	/*
 	 * Добавляем в Redmine новое сообщение
 	 */
-	public function actionAddRedmineMessage($id, $message, $pack) {
-		Redmine::addNoteToIssue($id, $message);
-		$pack = Package::model()->findByPk($pack);
-		$pack->dt_change = date('Y-m-d H:i:s');
-		$pack->save();
+	public function actionAddRedmineMessage() {
+	
+		$issue_id = (int) @$_POST['id'];
+		$message = (string) @$_POST['message'];
+		$package_id = (int) @$_POST['pack'];
+		
+		Redmine::addNoteToIssue($issue_id, $message);
+		$package = Package::model()->findByPk($package_id);
+		$package->dt_change = date('Y-m-d H:i:s');
+		$package->save();
 		
 		// Возвращаем данные для замены аяксом
-		$this->renderPartial('index', array(
-			'client_id'=>$package->client_id
+		$this->renderPartial('issue', array(
+			'issue_id'=>$issue_id, 'pack_id'=>$package_id, 'serv_id'=>$serv_id
 		));
 	}
 	

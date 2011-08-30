@@ -40,7 +40,10 @@ class AboutController extends Controller {
 	}
 	
 	public function actionTest() {
-		$this->renderPartial('test');
+		$array = Redmine::getIssueRelations(3134);
+		echo count($array);
+		print_r($array);
+		//$this->renderPartial('test');
 	}
 	
 }

@@ -264,9 +264,9 @@ function loadNewSite(){
  */
 function addPayment(package_id, ulid, summa, message, noReporting){
 	$('body').css('cursor', 'wait');
-	if (message == undefined)
+	if (message == undefined) 
 		message = "";
-	if (noReporting != 'checked')
+	if (noReporting != 'checked') 
 		noReporting = 1;
 	else 
 		noReporting = 0;
@@ -467,15 +467,14 @@ function selectTab(id){
 function saveAndProceed(what, where){
 	var form = $(what);
 	
-	if (!form.length) {
-		where(false);
+	if (!form.length) {		
 		return false;
 	}
 	
 	var data = form.serialize();
 	data += '&ajax=1';
 	$.ajax({
-		type: 'POST',
+		type: form.attr('method'),
 		url: form.attr('action'),
 		data: data,
 		//dataType: 'json',

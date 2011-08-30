@@ -32,41 +32,22 @@
 		<?php foreach ($client->packages(array(
 			//'condition'=>'packages.status_id NOT IN (15, 999)', 
 			'order'=>'status_id ASC, dt_change DESC'
-			)) as $package): ?>			
-			<?php switch ($package->status_id): 
-				case 0: ?>
-				<div class="projectBox orange <?=$class?>" <?=$style?>>
-				<?php break; ?>
-				
-				<?php case 1: ?>
-				<div class="projectBox red <?=$class?>" <?=$style?>>
-				<?php break; ?>
-				
-				<?php case 10: ?>
-				<?php case 17: ?>
-				<div class="projectBox grey <?=$class?>" <?=$style?>>
-				<?php break; ?>
-				
-				<?php case 20: ?>
-				<div class="projectBox lightgreen <?=$class?>" <?=$style?>>
-				<?php break; ?>
-				
-				<?php case 30: ?>
-				<div class="projectBox green <?=$class?>" <?=$style?>>
-				<?php break; ?>
-				
-				<?php case 50: ?>
-				<div class="projectBox lightgreen <?=$class?>" <?=$style?>>
-				<?php break; ?>
-				
-				<?php case 70: ?>
-				<div class="projectBox green <?=$class?>" <?=$style?>>
-				<?php break; ?>
-				
-				<?php default: ?>
-				<div class="projectBox grey <?=$class?>" <?=$style?>>
-				<?php break; ?>
-			<?php endswitch; ?>
+			)) as $package): ?>
+			<?php 
+				switch ($package->status_id) {
+					case 0: $color = 'orange'; break;
+					case 1: $color = 'red'; break;
+					case 10: $color = 'grey'; break;
+					case 15: $color = 'red'; break;					
+					case 17: $color = 'grey'; break;
+					case 20: $color = 'lightgreen'; break;
+					case 30: $color = 'green'; break;
+					case 50: $color = 'lightgreen'; break;
+					case 70: $color = 'green'; break;
+					default: $color = 'grey'; break;
+				}
+			?>
+			<div class="projectBox <?=$class?> <?=$class?>" <?=$style?>>
 		
 			<div class="projectType">
 				<a onClick="Package(<?=$package->primaryKey?>, 0)" class="type">Заказ №<?= $package->primaryKey?>: <?= $package->name?><?= $package->summa ? " <strong>{$package->summa} руб.</strong>" : ''?></a>
@@ -90,7 +71,7 @@
 				<?php break; ?>
 				
 				<?php case 15: ?>
-				<div class="projectState">					
+				<div class="projectState new">					
 					<strong>ОТКЛОНЁН</strong>
 					<br/>
 					<a onClick="takePack(<?= $package->primaryKey?>, <?= $client->primaryKey?>);"><strong>ВЗЯТЬ ЗАКАЗ</strong></a>

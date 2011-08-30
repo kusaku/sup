@@ -66,26 +66,33 @@ class ReportController extends Controller {
 	 * @param object $dt_end [optional] выбрать, заканчивая этой датой
 	 * @return
 	 */
-	public function actionGenerate($reportType, $status_id = 0, $manager_id = 0, $dt_beg = null, $dt_end = null, $show_empty = false) {
+	public function actionGenerate($id) {
 	
+		
+		$manager_id = (int) @$_POST['manager_id'];
+		$dt_beg = (string) @$_POST['dt_beg'];
+		$dt_end = (string) @$_POST['dt_end'];
+		$status_id = (int) @$_POST['status_id'];
+		$show_empty = (bool)@$_POST['show_empty'];
+		
 		// по-умолчанию период - весь текущий месяц
-		$dt_beg or $dt_beg = date('Y-m-01');
-		$dt_end or $dt_end = date('Y-m-01', strtotime('+1 month'));
+		$dt_beg or $dt_beg = date('01.m.Y');
+		$dt_end or $dt_end = date('01.m.Y', strtotime('+1 month'));
 		
 		$total = array(
 			'dt_beg'=>$dt_beg, 'dt_end'=>$dt_end,
 		);
 		
-		UserRegistry::model()->report_reportType = $reportType;
-		UserRegistry::model()->report_status_id = $status_id;
+		UserRegistry::model()->report_reportType = $id;		
 		UserRegistry::model()->report_manager_id = $manager_id;
 		UserRegistry::model()->report_dt_beg = $dt_beg;
 		UserRegistry::model()->report_dt_end = $dt_end;
+		UserRegistry::model()->report_status_id = $status_id;
 		UserRegistry::model()->report_show_empty = $show_empty;
 
 		
 		// по типу отчета
-		switch ($reportType) {
+		switch ($id) {
 		
 			case 'pays':
 			case 'projects':
@@ -113,7 +120,7 @@ class ReportController extends Controller {
 				break;
 		}
 		
-		switch ($reportType) {
+		switch ($id) {
 			case 'pays':
 			case 'mypays':
 				$criteria = new CDbCriteria();
@@ -154,7 +161,7 @@ class ReportController extends Controller {
 								//
 								'client'=> empty($package->client->fio) ? "#{$package->client_id}" : $package->client->fio,
 								//
-								'description'=> htmlspecialchars($payment->description),
+								'description'=>htmlspecialchars($payment->description),
 								//
 								'mail'=> empty($package->client->mail) ? '' : $package->client->mail,
 								//

@@ -88,9 +88,9 @@ class ISPRequest {
 				curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
 			}
 			
-			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-			curl_setopt($ch, CURLOPT_POST, 1);
-			curl_setopt($ch, CURLOPT_HEADER, 0);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_HEADER, false);
 			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 			curl_setopt($ch, CURLOPT_BUFFERSIZE, 1024 * 1024 * 10); // max 10 mb!
 			

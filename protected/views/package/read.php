@@ -24,7 +24,7 @@ function GetMasters($sel = 0, $usersArray = null) {
 		else
 			$disabled = '';
 
-		$res = $res.'<option value="'.$usersArray[$people->login].'" '.$disabled.' '.$selected.'>'.$people->fio.'</option>';
+		$res = $res.'<option value="'.@$usersArray[$people->login].'" '.$disabled.' '.$selected.'>'.$people->fio.'</option>';
 	}
 
 	$res = $res."</select>\n";
@@ -146,11 +146,11 @@ foreach ($zserv as $value) {
 						if (! empty($client->attr['bm_id']->values[0]->value) and strtotime($usluga->dt_end) < strtotime('now')) {
 							// XXX если заказан хостинг (исправить номер!):
 							if ($zserv->service->parent_id == 67 and strtotime($zserv->dt_end) < strtotime('now')) {
-								print '<a class="plus" title="Добавить заказ в BILLManager" id="linkid-'.$pack->primaryKey.'-'.$zserv->service->primaryKey.'" onClick="bmVHost('.$pack->site_id.','.$pack->primaryKey.','.$zserv->service->primaryKey.')" class="edit"></a>';
+								print '<a class="plus" title="Добавить заказ в BILLManager" id="linkid-'.$pack->primaryKey.'-'.$tab['serv_id'].'" onClick="bmVHost('.$pack->primaryKey.','.$tab['serv_id'].')" class="edit"></a>';
 							}
 							// XXX если заказана регистрация доменного имени (исправить номер!):
 							if ($zserv->service->parent_id == 68 and strtotime($zserv->dt_end) < strtotime('now')) {
-								print '<a class="plus" title="Добавить заказ в BILLManager" id="linkid-'.$pack->primaryKey.'-'.$zserv->service->primaryKey.'" onClick="bmDomainName('.$pack->site_id.','.$pack->primaryKey.','.$zserv->service->primaryKey.')" class="edit"></a>';
+								print '<a class="plus" title="Добавить заказ в BILLManager" id="linkid-'.$pack->primaryKey.'-'.$tab['serv_id'].'" onClick="bmDomainName('.$pack->primaryKey.','.$tab['serv_id'].')" class="edit"></a>';
 							}
 						}
 						
