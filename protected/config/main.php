@@ -24,15 +24,15 @@ return array(
 	// application-level parameters that can be accessed
 	// using Yii::app()->params['paramName']
 	'params'=>array(
-		// Конфиг Редмайна. На продуктиве, естественно, свой.
-		'RedmineConfig'=>array(
-			'allow_connect' => true,
-			'protocol' => 'http',
-			'port' => '80',
-			'url' => "redmine.sandbox.loc",
-			'targetProjectId' => '1',
-			'rootLogin' => 'dmitry.k',
-			'rootPassword' => 'Ij3Ohmee',
+		// конфиг редмайна. на продуктиве, естественно, свой.
+		'redmineConfig'=>array(
+			'enabled' => true,
+			'proxy' => '192.168.0.254:3128',
+			'protocol' => 'https',
+			'port' => '443',
+			'url' => 'redmine.fabricasaitov.ru',
+			'rootLogin' => 'sup',
+			'rootPassword' => 'zVRaDio(5mWEdFW'
 		),
 	),
 	

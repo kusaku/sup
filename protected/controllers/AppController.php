@@ -100,16 +100,4 @@ class AppController extends Controller {
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
 	}
-	
-	/**
-	 * Обновление задач при изменениях в редмайне
-	 */
-	public function actionRedmineUpdate() {
-		$issues = Redmine::getIssues();
-		foreach ($issues as $issue) {
-			print_r($issue);
-		}
-		return true;
-	}
-	
 }

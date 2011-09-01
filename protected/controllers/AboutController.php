@@ -22,16 +22,23 @@ class AboutController extends Controller {
 		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
 		return array(
 			array(
-				'allow', 'actions'=>array(
-					'index', 'test'
-				), 'roles'=>array(
-					'admin', 'manager', 'guest'
+				'allow',
+					'actions'=>array(
+					'index',
+					'test'
 				),
-			), array(
-				'deny', 'users'=>array(
-					'*'
-				),
+					'roles'=>array(
+					'admin',
+					'manager',
+					'guest'
+				)
 			),
+					array(
+				'deny',
+					'users'=>array(
+					'*'
+				)
+			)
 		);
 	}
 	
@@ -40,10 +47,12 @@ class AboutController extends Controller {
 	}
 	
 	public function actionTest() {
-		$array = Redmine::getIssueRelations(3134);
+		echo '<pre>';
+		
+		$array = Redmine::readIssue(5522);
+		
 		echo count($array);
 		print_r($array);
 		//$this->renderPartial('test');
 	}
-	
 }

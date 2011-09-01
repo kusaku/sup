@@ -1,3 +1,71 @@
+/*	
+ * Показываем форму заказа.
+ * Может быть новый заказ для клиента, а может и существующий на редактирование
+ */
+function Package(package_id, client_id){
+	$('body').css('cursor', 'wait');
+	$('.ui-widget-content').hide();
+	showPopUpLoader();
+	$("#searchClient").val('');
+	$.ajax({
+		url: '/package/' + package_id,
+		dataType: 'html',
+		data: {
+			'package_id': package_id,
+			'client_id': client_id
+		},
+		success: function(data){
+			$('#clients').val("");
+			$("#buttonClear").addClass('hidden');
+			$('#sup_popup').html(data);			
+			showPopUp();
+			//$('#sup_popup textarea').wysiwyg();
+			$('body').css('cursor', 'default');
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#sup_popup').text(textStatus);
+		}
+	});
+}
+
+/*	
+ * Считаем сумму заказа.
+ */
+function sumka(){
+	var sum = 0;
+	$(".cbox").each(function(){
+		if ($(this).attr('checked') == 'checked' | $(this).attr('checked') == true) {
+			var price = $('#price' + $(this).val()).val();
+			var count = $('#count' + $(this).val()).val();
+			var res = price * count;
+			sum = sum + res;
+		}
+	});
+	$("#pack_summa").val(sum);
+	$("#summa").html(sum + ' руб.');
+}
+
+/*	
+ * Создаём новый хост.
+ */
+function loadNewSite(){
+	$.ajax({
+		url: '/site/0',
+		dataType: 'html',
+		data: {
+			'no_button': true
+		},
+		success: function(data){
+			// разрушение селектбоксов 
+			//$('#site_selector select').selectBox('destroy');
+			$('#site_selector').html(data);
+			prepareHtml();
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#site_selector').text(textStatus);
+		}
+	});
+}
 
 /*
  *	Сохранение заказа. Это новый или не оплаченный заказ.

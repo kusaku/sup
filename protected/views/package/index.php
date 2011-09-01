@@ -29,9 +29,11 @@
 		</div>							
 		<?php $class = ''; ?>
 		<?php $style = ''; ?>
+		<?php $condition = Yii::app()->user->checkAccess('admin') ? null : 'packages.manager_id = '.Yii::app()->user->id; ?>
 		<?php foreach ($client->packages(array(
-			//'condition'=>'packages.status_id NOT IN (15, 999)', 
-			'order'=>'status_id ASC, dt_change DESC'
+			//'condition'=>'packages.status_id NOT IN (15, 999)',
+			'condition'=>$condition, 
+			'order'=>'status_id ASC, dt_change DESC',			
 			)) as $package): ?>
 			<?php 
 				switch ($package->status_id) {
@@ -156,6 +158,6 @@
 	</ul>		
 <?php else: ?>
 <ul class="columnsBody">
-	<li><strong>Клиент №<?= $client_id?> не существует, и данных по нему нет.</strong></li>
+	<li><strong>Клиент #<?= $client_id?> не существует, и данных по нему нет.</strong></li>
 </ul>
 <?php endif; ?>

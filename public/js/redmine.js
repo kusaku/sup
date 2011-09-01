@@ -17,8 +17,8 @@ function redmineSendMessage(issueId){
 		},
 		dataType: 'html',
 		success: function(data){
-			if (data != 0){
-				$('#redmineMessageInput'+issueId).parent().html(data);
+			if (data){
+				$('#redmineIssue' + issueId).replaceWith(data);
 			}
 			else{
 				alert('При добавлении комментария возникла ошибка!');
@@ -56,9 +56,6 @@ function bindRedmineIssue(pack_id, serv_id){
  * Создаём новую задачу в редмайне.
  */
 function newRedmineIssue(pack_id, serv_id){
-	
-//alert( $('#tabContent'+serv_id+' .RedmineUserSelect').val() );
-
 	$('body').css('cursor','wait');
 	master_id = $('#tabContent'+serv_id+' .RedmineUserSelect').val();
 	$.ajax({
@@ -78,17 +75,15 @@ function newRedmineIssue(pack_id, serv_id){
 				$('#tabContent'+serv_id).html($('#tabContent'+serv_id).html()+'<br>При создании новой задачи возникла <b>ошибка</b>!');
 			}
 		}
-	});/**/
+	});
 }
 
 /*
  * Создаём все задачи в редмайне.
  */
 function createAllRedmineIssues(package_id, ulid){
-
-alert ('В данный момент рекомендую не пользоваться этой функцией! /Дима');
-/*$('#modal').fadeIn(0);
-	if (package_id != null) {
+	if (package_id) {
+		$('#modal').fadeIn(0);
 		$.ajax({
 			url: '/package/createAllRedmineIssues/' + package_id,
 			dataType: 'html',
@@ -97,13 +92,12 @@ alert ('В данный момент рекомендую не пользова�
 				flagsUpdate();
 				$('#modal').fadeOut(0);
 			},
-			error: function(jqXHR, textStatus, errorThrown){
-				$('#modal').fadeOut(0);
+			error: function(jqXHR, textStatus, errorThrown){				
 				$('#ul' + ulid).replaceWith($('<span/>').text(textStatus));
+				$('#modal').fadeOut(0);
 			}
 		});
 	}
-	$('#modal').fadeOut(0);*/
 }
 
 function redmineCloseIssue(issueId){
@@ -120,7 +114,7 @@ function redmineCloseIssue(issueId){
 		dataType: 'html',
 		success: function(data){
 			if (data != 0){
-				$('#redmineMessageInput'+issueId).parent().html(data);
+				$('#redmineIssue' + issueId).replaceWith(data);
 			}
 			else{
 				alert('При закрытии задачи возникла ошибка!');

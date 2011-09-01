@@ -20,25 +20,46 @@ class PackageController extends Controller {
 		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
 		return array(
 			array(
-				'allow', 'actions'=>array(
-					'index', 'view', 'save', 'edit', 'addPay', 'takePack', 'addRedmineMessage', 'bindRedmineIssue', 'decline',
-					//
-					'createAllRedmineIssues', 'newRedmineIssue', 'closeRedmineIssue', 'getPayForm',
-				), 'roles'=>array(
-					'admin', 'moder', 'topmanager', 'manager', 'master'
+				'allow',
+					'actions'=>array(
+					'index',
+					'view',
+					'save',
+					'edit',
+					'addPay',
+					'takePack',
+					'addRedmineMessage',
+					'bindRedmineIssue',
+					'decline',
+					'createAllRedmineIssues',
+					'newRedmineIssue',
+					'closeRedmineIssue',
+					'getPayForm'
 				),
-			), array(
-				'deny', 'users'=>array(
-					'*'
+					'roles'=>array(
+					'admin',
+					'moder',
+					'topmanager',
+					'manager',
+					'master'
 				),
+					
 			),
+					array(
+				'deny',
+					'users'=>array(
+					'*'
+				)
+			)
 		);
 	}
 	
-	/*
+	/**
 	 *
+	 * @param object $id [optional]
+	 * @return
 	 */
-	public function actionIndex($id = 0) {
+	public function actionIndex($id = false) {
 	
 		if ($id) {
 			$this->renderPartial('index', array(
@@ -81,7 +102,7 @@ class PackageController extends Controller {
 							// этим убираем несуществующие прокты и клиентов
 							'joinType'=>'INNER JOIN',
 							// но нужно выбрать которые не в архиве и не сданы, и принадлежат менеджеру
-							//'condition'=>"packages.status_id NOT IN (15, 999) AND (packages.manager_id = 0 OR packages.manager_id = $myid)",
+							'condition'=>"packages.status_id NOT IN (15, 999) AND (packages.manager_id = 0 OR packages.manager_id = $myid)",
 							// по дате проекта, как нормально подставить LIMIT - не нашел =(
 							'order'=>'packages.dt_change DESC LIMIT 30',
 						)
@@ -98,8 +119,11 @@ class PackageController extends Controller {
 		}
 	}
 	
-	/*
+	/**
 	 *
+	 * @param object $client_id
+	 * @param object $package_id
+	 * @return
 	 */
 	public function actionView($client_id, $package_id) {
 		$status = 0;
@@ -112,18 +136,19 @@ class PackageController extends Controller {
 		// Больше его нельзя редактировать - только читать.
 		if ($status > 17)
 			$this->renderPartial('read', array(
-				'package_id'=>$package_id, 'pack'=>$pack
+				'package_id'=>$package_id,'pack'=>$pack
 			));
 		else if ($client_id || $package_id)
 			$this->renderPartial('view', array(
-				'package_id'=>$package_id, 'client_id'=>$client_id
+				'package_id'=>$package_id,'client_id'=>$client_id
 			));
 		else
 			return false;
 	}
 	
-	/*
-	 * обновляем заказ (оплаченный). Можем поменять мастера или привязать сайт.
+	/**
+	 *
+	 * @return
 	 */
 	public function actionEdit() {
 	
@@ -159,7 +184,7 @@ class PackageController extends Controller {
 				// Log write
 				$info = date('d-m-Y')." Передача заказа: ".People::getById($pack->manager_id)->fio.' -> '.People::getById($newManager)->fio."<br>";
 				Logger::put(array(
-					'client_id'=>$pack->client_id, 'manager_id'=>Yii::app()->user->id, 'info'=>$info
+					'client_id'=>$pack->client_id,'manager_id'=>Yii::app()->user->id,'info'=>$info
 				));
 				// Action
 				$pack->manager_id = $newManager;
@@ -169,14 +194,15 @@ class PackageController extends Controller {
 			
 		}
 		
-		// Возвращаем данные для замены аяксом
+		// данные для замены аяксом
 		$this->renderPartial('index', array(
 			'client_id'=>$pack->client_id
 		));
 	}
 	
-	/*
-	 * Сохраняем заказ (пакет) со всеми заказанными услугами
+	/**
+	 *
+	 * @return
 	 */
 	public function actionSave() {
 	
@@ -232,7 +258,7 @@ class PackageController extends Controller {
 			// Log write
 			$info = date('d-m-Y')." Передача заказа: ".People::getById($pack->manager_id)->fio.' -> '.People::getById($newManager)->fio."<br>";
 			Logger::put(array(
-				'client_id'=>$pack->client_id, 'manager_id'=>Yii::app()->user->id, 'info'=>$info
+				'client_id'=>$pack->client_id,'manager_id'=>Yii::app()->user->id,'info'=>$info
 			));
 			// Action
 			$pack->manager_id = $newManager;
@@ -261,14 +287,16 @@ class PackageController extends Controller {
 				$s2p->save();
 			}
 			
-		// Возвращаем данные для замены аяксом
+		// данные для замены аяксом
 		$this->renderPartial('index', array(
 			'client_id'=>$pack->client_id
 		));
 	}
 	
-	/*
-	 * Берём себе поступивший заказ
+	/**
+	 *
+	 * @param object $id
+	 * @return
 	 */
 	public function actionTakePack($id) {
 		$package = Package::model()->findByPk($id);
@@ -280,59 +308,107 @@ class PackageController extends Controller {
 			$package->save();
 		}
 		
-		// Возвращаем данные для замены аяксом
+		// данные для замены аяксом
 		$this->renderPartial('index', array(
 			'client_id'=>$package->client_id
 		));
 	}
 	
-	/*
-	 * Отмечаем заказ как отклоненный
+	/**
+	 *
+	 * @param object $id
+	 * @return
 	 */
 	public function actionDecline($id) {
 		$package = Package::model()->findByPk($id);
-		// нельзя отклонить заказ, который в работе
+		
+		// нельзя отклонить заказ
 		if ($package->status_id < 20) {
 			$package->manager_id = 0;
 			$package->status_id = 15;
 			$package->save();
 		}
 		
-		// Возвращаем данные для замены аяксом
+		// данные для замены аяксом
 		$this->renderPartial('index', array(
 			'client_id'=>$package->client_id
 		));
 	}
 	
-	/*
+	/**
 	 *
+	 * @param object $summ
+	 * @param object $ulid
+	 * @param object $package_id
+	 * @return
 	 */
 	public function actionGetPayForm($summ, $ulid, $package_id) {
 		$this->renderPartial('payform', array(
-			'summ'=>$summ, 'ulid'=>$ulid, 'package_id'=>$package_id
+			'summ'=>$summ,'ulid'=>$ulid,'package_id'=>$package_id
 		));
 	}
 	
-	/*
-	 * Отмечаем заказ как оплаченный. Создём задачу по самому заказу (родительскую задачу).
+	/**
+	 *
+	 * @param object $package_id
+	 * @param object $summa
+	 * @param object $message [optional]
+	 * @param object $noReporting [optional]
+	 * @return
 	 */
 	public function actionAddPay($package_id, $summa, $message = null, $noReporting = false) {
 		$package = Package::model()->findByPk($package_id);
 		
-		// это нехорошо!
-		//$package->descr = $package->descr."\nПодробности оплаты: ".$message;
-		
-		if ($message)
-			$package->descr = $package->descr."\nПодробности оплаты: ".Yii::app()->request->getParam('message');
+		// создаем задачу в Redmine, если её еще нет
+		if (!$package->redmine_proj) {
+			$rmManager = Redmine::getUserByLogin(Yii::app()->user->login);
+			$rmProject = Redmine::getProjectByIdentifier('sites');
 			
-		Logger::put(array(
-			'client_id'=>$package->client_id, 'manager_id'=>Yii::app()->user->id, 'info'=>'Оплачен заказ №'.$package->id."<br> Подробности: ".Yii::app()->request->getParam('message')
-		));
+			$subject = "#{$package->id} {$package->name} для {$package->client->mail}";
+			
+			$description = "h1. $subject\n\n";
+			$description .= "h2. примечания:\n\n{$package->descr}\n\n";
+			$description .= "h2. сумма".number_format($service->summa, 0, ',', ' ')."руб.\n";
+			
+			try {
+				$issue = Redmine::createIssue(array(
+					// в каком проекте создать задачу
+					'project_id'=>$rmProject['id'],
+					// параметры задачи
+					'tracker_id'=>2,'status_id'=>1,'priority_id'=>4,
+					// кто назначил и кому наначено
+					'author_id'=>$rmManager['id'],'assigned_to_id'=>$rmManager['id'],
+					// родительская задача
+					//'parent_id'=>0,
+					// тема и описание
+					'subject'=>$subject,'description'=>$description,
+					// когда начата и когда должна быть закончена
+					'start_date'=>date('Y-m-d', strtotime($package->dt_beg)),'due_date'=>date('Y-m-d', strtotime($package->dt_beg)),
+					// время на выполнение и потраченное время
+					'estimated_hours'=>'0.0','spent_hours'=>'0.0'
+				));
+			}
+			catch(Exception $e) {
+				$this->renderPartial('index', array(
+					'client_id'=>$package->client_id
+				));
+				return;
+			}
+			
+			$package->redmine_proj = @$issue['id'];
+		}
 		
-		$usersArray = Redmine::getUsersArray();
+		// добавим в Redmine комментарий об оплате
+		try {
+			Redmine::updateIssue($package->redmine_proj, array(
+				// сообщение
+				'notes'=>"h2. поступила оплата\n\nсумма - *".number_format($summa, 0, ',', ' ')."руб.*",
+			));
+		}
+		catch(Exception $e) {
+		}
 		
-		$package->status_id = $summa >= ($package->summa - $package->paid) ? 30 : 20;
-		
+		// создадим оплату
 		$pay = new Payment();
 		$pay->name = 'Оплата заказа '.$package->name;
 		$pay->dt = date('Y-m-d');
@@ -340,156 +416,341 @@ class PackageController extends Controller {
 		$pay->amount = abs($summa);
 		$pay->debit = $summa > 0 ? 1 : - 1;
 		$pay->rekvizit_id = 0;
-		$pay->ptype_id = $noReporting ? 1 : 0;
+		$pay->ptype_id = $noReporting ? 1 : null;
 		$pay->description = $message;
 		$pay->save();
 		
-		if ($package->redmine_proj == 0) {
-			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name.' ('.$package->client->mail.')', $package->descr, $usersArray[trim((string) Yii::app()->user->login)], 0);
-			$package->redmine_proj = $issue['id'];
-		}
+		Logger::put(array(
+			'client_id'=>$package->client_id,'manager_id'=>Yii::app()->user->id,
+			//
+			'info'=>'<p>оплачено <strong>'.number_format($summa, 0, ',', ' ').'руб.</strong></p><p><strong>подробности:</strong> '.$message
+		));
+
 		
+		// обновим заказ
+		
+		$package->status_id = $summa >= ($package->summa - $package->paid) ? 30 : 20;
 		$package->paid += $summa;
 		$package->dt_change = date('Y-m-d H:i:s');
 		
 		$package->save();
 		
-		// Возвращаем данные для замены аяксом
+		// данные для замены аяксом
 		$this->renderPartial('index', array(
 			'client_id'=>$package->client_id
 		));
 	}
 	
-	/*
-	 * Создаём задачу по запросу. Если нет родительской, то и её создаём.
+	/**
+	 *
+	 * @param object $pack_id
+	 * @param object $serv_id [optional]
+	 * @param object $master_id
+	 * @return
 	 */
 	public function actionNewRedmineIssue($pack_id, $serv_id = 0, $master_id) {
 		$package = Package::model()->findByPk($pack_id);
 		
-		$usersArray = Redmine::getUsersArray();
-		
+		// если нет главной задачи - создаем
 		if (!$package->redmine_proj) {
-			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name, $package->descr, $usersArray[trim((string) Yii::app()->user->login)], 0);
-			$package->redmine_proj = $issue['id'];
+			$rmManager = Redmine::getUserByLogin(Yii::app()->user->login);
+			$rmProject = Redmine::getProjectByIdentifier('sites');
+			
+			$subject = "#{$package->id} {$package->name} для {$package->client->mail}";
+			
+			$description = "h1. $subject\n\n";
+			$description .= "h2. примечания:\n\n{$package->descr}\n\n";
+			$description .= "h2. сумма".number_format($service->summa, 0, ',', ' ')."руб.";
+			
+			try {
+				$issue = Redmine::createIssue(array(
+					// в каком проекте создать задачу
+					'project_id'=>$rmProject['id'],
+					// параметры задачи
+					'tracker_id'=>2,'status_id'=>1,'priority_id'=>4,
+					// кто назначил и кому наначено
+					'author_id'=>$rmManager['id'],'assigned_to_id'=>$rmManager['id'],
+					// родительская задача
+					//'parent_id'=>0,
+					// тема и описание
+					'subject'=>$subject,'description'=>$description,
+					// когда начата и когда должна быть закончена
+					'start_date'=>date('Y-m-d', strtotime($package->dt_beg)),'due_date'=>date('Y-m-d', strtotime($package->dt_beg)),
+					// время на выполнение и потраченное время
+					'estimated_hours'=>'0.0','spent_hours'=>'0.0'
+				));
+			}
+			catch(Exception $e) {
+				$this->renderPartial('issue', array(
+					'issue_id'=>0,'pack_id'=>$pack_id,'serv_id'=>$serv_id
+				));
+				return;
+			}
+			
+			$package->redmine_proj = @$issue['id'];
 		}
 		
-		$package->dt_change = date('Y-m-d H:i:s');
-		$package->save();
-		
-		if ($serv_id) {
+		if ($serv_id and !$service->to_redmine) {
 			$service = Serv2pack::getByIds($serv_id, $pack_id);
 			
-			// Если задача уже существует, то ничего не создаём
+			// если задача уже существует, то ничего не создаём
 			if ($service->to_redmine == 0) {
-				$siteInfo = isset($package->site) ? 'Сайт: http://'.$package->site->url."\n"."Доступы: \n".'* HOST: '.$package->site->host."\n".'* FTP: '.$package->site->ftp."\n".'* DB: '.$package->site->db."\n" : 'В заказе сайт не указан';
+				$rmManager = Redmine::getUserByLogin(Yii::app()->user->login);
+				$rmMaster = Redmine::readUser($master_id);
+				$rmProject = Redmine::getProjectByIdentifier('sites');
 				
-				$issue = Redmine::addIssue(
-				// Название
-				'№'.$package->id.' '.$service->service->name.' ('.$package->client->mail.')',
-				// Описание
-				'Задача по заказу №'.$package->id.".\n Предмет заказа: ".$service->service->name.". \n".'Примечание: '.$service->descr." \n".'Стоимость: '.$service->price." \n".'Клиент: '.$package->client->mail." \n".$siteInfo,
-				// Кому назначена
-				$master_id,
-				// Родительская задача
-				$package->redmine_proj);
+				$subject = "#{$package->id} {$service->service->name} для {$package->client->mail}";
 				
-				$service->to_redmine = $issue['id'];
+				$description = "h1. $subject\n\n";
+				
+				if (isset($package->site)) {
+					$description .= "h2. сайт:* {$package->site->url}\n\n";
+					$description .= "*хост:* {$package->site->host}\n";
+					$description .= "*ftp:* {$package->site->ftp}\n";
+					$description .= "*db:* {$package->site->db}\n";
+					//$description .=  "*старт:* {$package->site->dt_beg}\n";
+					//$description .=  "*финиш:* {$package->site->dt_end}\n";
+					$description .= "\n";
+				}
+				$description .= "h2. примечания:\n\n{$service->descr}\n\n";
+				$description .= "h2. стоимость".number_format($service->price, 0, ',', ' ')."руб.";
+				
+				try {
+					$issue = Redmine::createIssue(array(
+						// в каком проекте создать задачу
+						'project_id'=>$rmProject['id'],
+						// параметры задачи
+						'tracker_id'=>2,'status_id'=>1,'priority_id'=>4,
+						// кто назначил и кому наначено
+						'author_id'=>$rmManager['id'],'assigned_to_id'=>$master_id,
+						// родительская задача
+						'parent_id'=>$package->redmine_proj,
+						// тема и описание
+						'subject'=>$subject,'description'=>$description,
+						// когда начата и когда должна быть закончена
+						'start_date'=>date('Y-m-d', strtotime($service->dt_beg)),'due_date'=>date('Y-m-d', strtotime($service->dt_beg)),
+						// время на выполнение и потраченное время
+						'estimated_hours'=>$service->service->duration,'spent_hours'=>'0.0',
+						// XXX вид деятельности - исследовать это поле
+						//'time_entry_activity_id'=>
+					));
+				}
+				catch(Exception $e) {
+				}
+				
+				$service->to_redmine = @$issue['id'];
 				$service->save();
+				
+				// добавляем в главную задачу комментарий об этом действии
+				
+				$masterFullName = @$rmMaster['firstname'].' '.@$rmMaster['lastname'];
+				try {
+					Redmine::updateIssue($package->redmine_proj, array(
+						// сообщение
+						'notes'=>"h2. поставлена задача\n\nисполнитель - \"{$masterFullName}\":https://redmine.fabricasaitov.ru/users/{$rmMaster['id']}, задача #{$service->to_redmine}",
+						// потраченное время (прибавляется)
+						'spent_hours'=>$service->service->duration
+					));
+				}
+				catch(Exception $e) {
+				}
 			}
 		}
 		
-		// Проверяем, не пора-ли помянять статус задачи на 50 - все заказанные услуги в работе.
-		// Допустим, что все задачи уже созданы
 		$allIssuesExist = true;
 		
-		// И даже родительская задача по всему заказу.
-		$allIssuesExist = (bool)$package->redmine_proj;
-		
-		// Если задача не создана
 		foreach ($package->servPack as $service) {
-			if ((int) $service->to_redmine == 0) {
+			if (!$service->to_redmine) {
 				$allIssuesExist = false;
 				break;
 			}
 		}
 		
-		if ($allIssuesExist) { // Если всё распределено, то меняем статус проекта на 50 - всё в работе.
+		// Если всё распределено, то меняем статус проекта на 50 - всё в работе.
+		if ($allIssuesExist)
 			$package->status_id = 50;
-			$package->save();
-		}
+
+			
+		$package->dt_change = date('Y-m-d H:i:s');
+		$package->save();
 		
 		$this->renderPartial('issue', array(
-			'issue_id'=>$issue['id'], 'pack_id'=>$pack_id, 'serv_id'=>$serv_id
+			'issue_id'=>$issue['id'],'pack_id'=>$pack_id,'serv_id'=>$serv_id
 		));
 	}
 	
-	/*
-	 * Отдать в работу весь заказ - создать задачи по всем заказанным услугам.
+	/**
+	 *
+	 * @param object $id
+	 * @return
 	 */
 	public function actionCreateAllRedmineIssues($id) {
 		$package = Package::model()->findByPk($id);
 		
-		$usersArray = Redmine::getUsersArray();
-		
-		$package->status_id = 50;
-		$package->dt_change = date('Y-m-d H:i:s');
-		
+		// если нет главной задачи - создаем
 		if (!$package->redmine_proj) {
-			$issue = Redmine::addIssue('Заказ №'.$package->id.' '.$package->name.' ('.$package->client->mail.')', $package->descr, $usersArray[trim((string) Yii::app()->user->login)], 0);
-			$package->redmine_proj = $issue['id'];
+			$rmManager = Redmine::getUserByLogin(Yii::app()->user->login);
+			$rmProject = Redmine::getProjectByIdentifier('sites');
+			
+			$subject = "#{$package->id} {$package->name} для {$package->client->mail}";
+			
+			$description = "h1. $subject\n\n";
+			$description .= "h2. примечания:\n\n{$package->descr}\n\n";
+			$description .= "h2. сумма".number_format($service->summa, 0, ',', ' ')."руб.";
+			
+			try {
+				$issue = Redmine::createIssue(array(
+					// в каком проекте создать задачу
+					'project_id'=>$rmProject['id'],
+					// параметры задачи
+					'tracker_id'=>2,'status_id'=>1,'priority_id'=>4,
+					// кто назначил и кому наначено
+					'author_id'=>$rmManager['id'],'assigned_to_id'=>$rmManager['id'],
+					// родительская задача
+					//'parent_id'=>0,
+					// тема и описание
+					'subject'=>$subject,'description'=>$description,
+					// когда начата и когда должна быть закончена
+					'start_date'=>date('Y-m-d', strtotime($package->dt_beg)),'due_date'=>date('Y-m-d', strtotime($package->dt_beg)),
+					// время на выполнение и потраченное время
+					'estimated_hours'=>'0.0','spent_hours'=>'0.0'
+				));
+			}
+			catch(Exception $e) {
+				// данные для замены аяксом
+				$this->renderPartial('index', array(
+					'client_id'=>$package->client_id
+				));
+				return;
+			}
+			
+			$package->redmine_proj = @$issue['id'];
 		}
 		
-		$package->save();
+		// распределяем нераспределенные сервисы
+		
+		$rmManager = Redmine::getUserByLogin(Yii::app()->user->login);
+		$rmProject = Redmine::getProjectByIdentifier('sites');
 		
 		foreach ($package->servPack as $service) {
-			$master = @$service->master->login ? $usersArray[trim(mb_strToLower($service->master->login))] : 0;
 			if (!$service->to_redmine) {
-				$issue = Redmine::addIssue(
-				// Название
-				'№'.$package->id.' '.$service->service->name,
-				// Описание
-				'Задача по проекту #'.$package->id.'. Предмет заказа: '.$service->service->name.'.',
-				// Кому назначена
-				$master,
-				// Родительская задача
-				$package->redmine_proj);
+				// если не указан мастер, ставим менеджера мастером
+				$rmMaster = Redmine::getUserByLogin(isset($service->master->login) ? $service->master->login : $rmManager['login']);
+
 				
-				$service->to_redmine = $issue['id'];
+				$subject = "#{$package->id} {$service->service->name} для {$package->client->mail}";
+				
+				$description = "h1. $subject\n\n";
+				
+				if (isset($package->site)) {
+					$description .= "h2. сайт:* {$package->site->url}\n\n";
+					$description .= "*хост:* {$package->site->host}\n";
+					$description .= "*ftp:* {$package->site->ftp}\n";
+					$description .= "*db:* {$package->site->db}\n";
+					//$description .=  "*старт:* {$package->site->dt_beg}\n";
+					//$description .=  "*финиш:* {$package->site->dt_end}\n";
+					$description .= "\n";
+				}
+				$description .= "h2. примечания:\n\n{$service->descr}\n\n";
+				$description .= "h2. стоимость".number_format($service->price, 0, ',', ' ')."руб.";
+				
+				try {
+					$issue = Redmine::createIssue(array(
+						// в каком проекте создать задачу
+						'project_id'=>$rmProject['id'],
+						// параметры задачи
+						'tracker_id'=>2,'status_id'=>1,'priority_id'=>4,
+						// кто назначил и кому наначено
+						'author_id'=>$rmManager['id'],'assigned_to_id'=>$master_id,
+						// родительская задача
+						'parent_id'=>$package->redmine_proj,
+						// тема и описание
+						'subject'=>$subject,'description'=>$description,
+						// когда начата и когда должна быть закончена
+						'start_date'=>date('Y-m-d', strtotime($service->dt_beg)),'due_date'=>date('Y-m-d', strtotime($service->dt_beg)),
+						// время на выполнение и потраченное время
+						'estimated_hours'=>$service->service->duration,'spent_hours'=>'0.0',
+						// XXX вид деятельности - исследовать это поле
+						//'time_entry_activity_id'=>
+					));
+				}
+				catch(Exception $e) {
+					continue;
+				}
+				
+				// сохраняем
+				$service->to_redmine = @$issue['id'];
 				$service->save();
+				
+				// добавляем в главную задачу комментарий об этом действии
+				
+				$masterFullName = @$rmMaster['firstname'].' '.@$rmMaster['lastname'];
+				try {
+					Redmine::updateIssue($package->redmine_proj, array(
+						// сообщение
+						'notes'=>"h2. поставлена задача\n\nисполнитель - \"{$masterFullName}\":https://redmine.fabricasaitov.ru/users/{$rmMaster['id']}, задача #{$service->to_redmine}",
+						// потраченное время (прибавляется)
+						'spent_hours'=>$service->service->duration
+					));
+				}
+				catch(Exception $e) {
+				}
 			}
 		}
 		
-		// Возвращаем данные для замены аяксом
+		$package->status_id = 50;
+		$package->dt_change = date('Y-m-d H:i:s');
+		$package->save();
+		
+		// данные для замены аяксом
 		$this->renderPartial('index', array(
 			'client_id'=>$package->client_id
 		));
 	}
-
 	
-	/*
-	 * Добавляем в Redmine новое сообщение
+	/**
+	 *
+	 * @return
 	 */
 	public function actionAddRedmineMessage() {
 	
 		$issue_id = (int) @$_POST['id'];
-		$message = (string) @$_POST['message'];
 		$package_id = (int) @$_POST['pack'];
+		$serv_id = (int) @$_POST['pack'];
+		$message = (string) @$_POST['message'];
 		
-		Redmine::addNoteToIssue($issue_id, $message);
+		try {
+			Redmine::updateIssue($issue_id, array(
+				// комментарий
+				'notes'=>$message,
+			));
+		}
+		catch(Exception $e) {
+			// данные для замены аяксом
+			$this->renderPartial('issue', array(
+				'issue_id'=>$issue_id,'pack_id'=>$package_id,'serv_id'=>$serv_id
+			));
+			return;
+		}
+		
 		$package = Package::model()->findByPk($package_id);
 		$package->dt_change = date('Y-m-d H:i:s');
 		$package->save();
 		
-		// Возвращаем данные для замены аяксом
+		// данные для замены аяксом
 		$this->renderPartial('issue', array(
-			'issue_id'=>$issue_id, 'pack_id'=>$package_id, 'serv_id'=>$serv_id
+			'issue_id'=>$issue_id,'pack_id'=>$package_id,'serv_id'=>$serv_id
 		));
 	}
 	
-	/*
+	/**
 	 *
+	 * @param object $issue_id
+	 * @param object $pack_id
+	 * @param object $serv_id [optional]
+	 * @return
 	 */
-	public function actionBindRedmineIssue($issue_id, $pack_id, $serv_id = 0) {
+	public function actionBindRedmineIssue($issue_id, $pack_id, $serv_id = false) {
 	
 		if ($issue_id && $pack_id && $serv_id) {
 			$s2p = Serv2pack::getByIds($serv_id, $pack_id);
@@ -502,23 +763,36 @@ class PackageController extends Controller {
 		}
 	}
 	
-	/*
+	/**
 	 *
+	 * @param object $issue_id
+	 * @param object $pack_id
+	 * @param object $serv_id
+	 * @return
 	 */
 	public function actionCloseRedmineIssue($issue_id, $pack_id, $serv_id) {
-		if (Redmine::closeIssue($issue_id) == true) {
-			$serv2pack = Serv2pack::getByIds($serv_id, $pack_id);
-			$serv2pack->dt_end = date('Y-m-d H:i:s');
-			$serv2pack->save();
-			$pack = Package::model()->findByPk($pack_id);
-			$pack->dt_change = date('Y-m-d H:i:s');
-			
-			$pack->save();
-			$this->renderPartial('issue', array(
-				'issue_id'=>$issue_id, 'pack_id'=>$pack_id
+		try {
+			Redmine::updateIssue($issue_id, array(
+				'done_ratio'=>100,'status_id'=>8
 			));
-		} else {
-			print 0;
 		}
+		catch(Exception $e) {
+			$this->renderPartial('issue', array(
+				'issue_id'=>$issue_id,'pack_id'=>$pack_id
+			));
+			return;
+		}
+		
+		$serv2pack = Serv2pack::getByIds($serv_id, $pack_id);
+		$serv2pack->dt_end = date('Y-m-d H:i:s');
+		$serv2pack->save();
+		
+		$pack = Package::model()->findByPk($pack_id);
+		$pack->dt_change = date('Y-m-d H:i:s');
+		$pack->save();
+		
+		$this->renderPartial('issue', array(
+			'issue_id'=>$issue_id,'pack_id'=>$pack_id
+		));
 	}
 }

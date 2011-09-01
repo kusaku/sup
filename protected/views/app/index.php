@@ -76,7 +76,7 @@
 				<li><a href="#" class="colDate active desc">Дата</a></li>
 			</ul>		
 			<div id="sup_content">
-				<?php $this->forward('/package', false); ?>
+				<?php /*$this->forward('/package', false);*/ ?>
 			</div>
 		</div>
 		<div id="tabContent1101" class="tabContent hidden">
