@@ -1,32 +1,3 @@
-/*	
- * Показываем форму заказа.
- * Может быть новый заказ для клиента, а может и существующий на редактирование
- */
-function Package(package_id, client_id){
-	$('body').css('cursor', 'wait');
-	$('.ui-widget-content').hide();
-	showPopUpLoader();
-	$("#searchClient").val('');
-	$.ajax({
-		url: '/package/' + package_id,
-		dataType: 'html',
-		data: {
-			'package_id': package_id,
-			'client_id': client_id
-		},
-		success: function(data){
-			$('#clients').val("");
-			$("#buttonClear").addClass('hidden');
-			$('#sup_popup').html(data);			
-			showPopUp();
-			//$('#sup_popup textarea').wysiwyg();
-			$('body').css('cursor', 'default');
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-			$('#sup_popup').text(textStatus);
-		}
-	});
-}
 
 /*	
  * Считаем сумму заказа.
@@ -46,23 +17,29 @@ function sumka(){
 }
 
 /*	
- * Создаём новый хост.
+ * Показываем форму заказа.
+ * Может быть новый заказ для клиента, а может и существующий на редактирование
  */
-function loadNewSite(){
+function Package(package_id, client_id){
+	$("#searchClient").val('');
+	$('.ui-widget-content').hide();
+	showPopUpLoader();	
 	$.ajax({
-		url: '/site/0',
+		url: '/package/' + package_id,
 		dataType: 'html',
 		data: {
-			'no_button': true
+			'client_id': client_id
 		},
 		success: function(data){
-			// разрушение селектбоксов 
-			//$('#site_selector select').selectBox('destroy');
-			$('#site_selector').html(data);
-			prepareHtml();
+			$('#clients').val('');
+			$("#buttonClear").addClass('hidden');
+			$('#sup_popup').html(data);
+			showPopUp();
+			sumka();
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			$('#site_selector').text(textStatus);
+			$('#sup_popup').text(textStatus);
+			showPopUp();			
 		}
 	});
 }
@@ -70,17 +47,17 @@ function loadNewSite(){
 /*
  *	Сохранение заказа. Это новый или не оплаченный заказ.
  */
-function packSave(){
+function packSave(client_id){
 	saveAndProceed('#sup_popup form', function(data){
 		hidePopUp();
-		loadData(0);
+		loadData();
 	})
 }
 
 /*
  *	Обновление заказа. Это оплаченный заказ - привязываем сайт или меняем менеджера.
  */
-function packUpdate(){
+function packUpdate(client_id){
 	var error = false;
 	$('.redmineMessage').each(function(){
 		if ($(this).val() != '') {
@@ -89,13 +66,13 @@ function packUpdate(){
 	});
 	
 	if (error) 
-		if (!confirm("Есть не сохранённые сообщения! \nOK - Вернуться к редактированию заказа? \nОтмена - сохранить изменения проекта, но потерять сообщения!")) {
+		if (confirm("Есть неотправленные сообщения в Redmine\nOK - Не отправлять сообщения\nОтмена - Продолжить просмотр")) {
 			error = false;
 		}
 	
-	saveAndProceed('#sup_popup form', function(data){
+	error || saveAndProceed('#sup_popup form', function(data){
 		hidePopUp();
-		loadData(0);
+		loadData();
 	})
 }
 

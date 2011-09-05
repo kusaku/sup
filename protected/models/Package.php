@@ -36,11 +36,11 @@ class Package extends CActiveRecord {
 			),
 			// связка с сервисами. Возврящает все сервися по этму пакету (заказу)
 			'services'=>array(
-				self::MANY_MANY, 'Service', 'serv2pack(pack_id, serv_id)'
+				self::MANY_MANY, 'Service', 'serv2pack(pack_id, serv_id)' 
 			),
 			// связка с сервисами. Возвращает все сервисы вместе с данными из serv2pack (blablabla->quant, blablabla->service->name)
 			'servPack'=>array(
-				self::HAS_MANY, 'Serv2pack', 'pack_id', 'with'=>'service'
+				self::HAS_MANY, 'Serv2pack', 'pack_id', 'with'=>'service', 'index'=>'serv_id'
 			),
 			// оплыты по заказу
 			'payments'=>array(

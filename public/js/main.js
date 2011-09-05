@@ -191,6 +191,29 @@ function loadSites(client_id, selected){
 	});
 }
 
+
+/*	
+ * Создаём новый хост.
+ */
+function loadNewSite(){
+	$.ajax({
+		url: '/site/0',
+		dataType: 'html',
+		data: {
+			'no_button': true
+		},
+		success: function(data){
+			// разрушение селектбоксов 
+			//$('#site_selector select').selectBox('destroy');
+			$('#site_selector').html(data);
+			prepareHtml();
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			$('#site_selector').text(textStatus);
+		}
+	});
+}
+
 /*
  * Отмечаем заказ как оплаченный.
  */

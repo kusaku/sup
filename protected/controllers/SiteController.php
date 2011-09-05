@@ -1,4 +1,9 @@
 <?php 
+
+/**
+ * XXX переписать!!!
+ */
+
 class SiteController extends Controller {
 
 	/**
@@ -68,9 +73,11 @@ class SiteController extends Controller {
 		
 		if (!$client_id)
 			$client_id = 0;
+		
 		//if ( !$id and !$client_id ) die('Нужен ID клиента для нового сайта или ID сайта для существующего!');
 		
-		if ($id) // Если передан нулевой ID, создаём новый сайт
+		// Если передан нулевой ID, создаём новый сайт
+		if ($id) 
 			$site = Site::getById($id);
 		else {
 			$site = new Site();

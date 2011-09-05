@@ -18,7 +18,7 @@ class People extends CActiveRecord {
 				self::BELONGS_TO, 'PeopleGroup', 'pgroup_id'
 			), 'my_packages'=>array(
 				self::HAS_MANY, 'Package', 'manager_id'
-			), 'my_sites'=>array(
+			), 'sites'=>array(
 				self::HAS_MANY, 'Site', 'client_id'
 			), 'contacts'=>array(
 				self::HAS_MANY, 'People', 'parent_id'

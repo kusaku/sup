@@ -111,9 +111,8 @@ class RedmineConnector {
 				// от суперадмина
 				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
 			else				
-				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
-				// от имени текущего пользователя
-				//curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.':'.base64_decode(Yii::app()->user->key));
+				// от имени текущего пользователя				
+				curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.':'.base64_decode(Yii::app()->user->key));
 				
 			// пробуем все типы авторизации
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);

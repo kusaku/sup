@@ -1,6 +1,13 @@
 <?php if ($client = People::model()->findByPk($client_id)): ?>
 	<ul id="ul<?= $client->primaryKey?>" class="columnsBody">
-		<?php if (count($client->packages) > 1): ?>
+		<?php $condition = Yii::app()->user->checkAccess('admin') ? null : 'packages.manager_id = '.Yii::app()->user->id; ?>
+		<?php $packages = $client->packages(array(
+			//'condition'=>'packages.status_id NOT IN (15, 999)',
+			'condition'=>$condition, 
+			//'order'=>'status_id ASC, dt_change DESC',
+			'order'=>'dt_change DESC',			
+			)); ?>
+		<?php if (count($packages) > 1): ?>
 		<li class="more"><a class="lessClick" onClick="ShowHide('ul<?= $client->primaryKey?>');"></a>
 		<?php else : ?>
 		<li>
@@ -28,13 +35,8 @@
 			<a onClick="Package(0, <?=$client->id?>)" title="Создать новый заказ">Новый заказ</a>&nbsp;<a onClick="clientCard(<?=$client->id?>)" title="Просмотреть заказы клиента">Карточка клиента</a>&nbsp;<a onClick="loggerForm(<?=$client->id?>)" title="Просмотреть журнал">Журнал</a>
 		</div>							
 		<?php $class = ''; ?>
-		<?php $style = ''; ?>
-		<?php $condition = Yii::app()->user->checkAccess('admin') ? null : 'packages.manager_id = '.Yii::app()->user->id; ?>
-		<?php foreach ($client->packages(array(
-			//'condition'=>'packages.status_id NOT IN (15, 999)',
-			'condition'=>$condition, 
-			'order'=>'status_id ASC, dt_change DESC',			
-			)) as $package): ?>
+		<?php $style = ''; ?>		
+		<?php foreach ($packages as $package): ?>
 			<?php 
 				switch ($package->status_id) {
 					case 0: $color = 'orange'; break;
@@ -52,8 +54,9 @@
 			<div class="projectBox <?=$class?> <?=$class?>" <?=$style?>>
 		
 			<div class="projectType">
-				<a onClick="Package(<?=$package->primaryKey?>, 0)" class="type">Заказ №<?= $package->primaryKey?>: <?= $package->name?><?= $package->summa ? " <strong>{$package->summa} руб.</strong>" : ''?></a>
-				<a onClick="Package(<?=$package->primaryKey?>, 0)" class="more">Подробно...</a>
+				<a onClick="Package(<?=$package->primaryKey?>, 0)" class="type">#<?= $package->primaryKey?>: <?= $package->name?>
+				<?= $package->summa ? " <strong style=\"float:right;\">{$package->summa} руб.</strong>" : ''?></a>				
+				<a onClick="Package(<?=$package->primaryKey?>, 0)" class="more">Подробно...</a> 
 				<?php if($package->manager_id != Yii::app()->user->id): ?>
 				<br/>
 				<span style="color:#999999"><?=($package->manager) ? "({$package->manager->fio})" : '(не присвоен менеджеру)'?></span>

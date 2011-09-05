@@ -64,7 +64,7 @@ $summa = 0;
 		<div class="scroll-wrap">
 			<div class="scroll-pane">
 				<?php 
-				$sites = $client->my_sites;
+				$sites = $client->sites;
 				foreach ($sites as $site) {
 					print '<div class="orderBlock" id="orderBlock'.$site->id.'">';
 					print '<div class="header">';

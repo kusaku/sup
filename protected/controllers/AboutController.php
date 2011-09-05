@@ -49,7 +49,7 @@ class AboutController extends Controller {
 	public function actionTest() {
 		echo '<pre>';
 		
-		$array = Redmine::readIssue(5522);
+		$array = Redmine::readIssue(5978, false);
 		
 		echo count($array);
 		print_r($array);

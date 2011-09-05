@@ -32,7 +32,7 @@ return array(
 			'port' => '443',
 			'url' => 'redmine.fabricasaitov.ru',
 			'rootLogin' => 'sup',
-			'rootPassword' => 'zVRaDio(5mWEdFW'
+			'rootPassword' => 'ekISozOrs9ixcLRt'
 		),
 	),
 	

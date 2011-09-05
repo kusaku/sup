@@ -39,7 +39,8 @@
 				<?php endforeach; ?>
 			</select>
 			<label style="width:180px;">Выводить пустые заказы</label>
-			<input<?= UserRegistry::model()->report_show_empty ? ' checked="checked"' : ''?> type="checkbox" name="show_empty"></div>
+			<input<?= UserRegistry::model()->report_show_empty ? ' checked="checked"' : ''?> type="checkbox" name="show_empty">
+		</div>
 		<div class="buttons">
 			<a class="grayButton" onclick="hidePopUp();">Отмена</a>
 			<a style="float:right;" class="orangeButton" onclick="$('#megaform').attr('action',$('#megaform').attr('action') + '/' + $('#megaform #reportType').val()).submit();">Генерировать</a>
