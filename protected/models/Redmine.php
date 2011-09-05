@@ -303,41 +303,48 @@ class RedmineModel extends RedmineConnector {
 	}
 	
 	/**
-	 * получить список задач
+	 * получить список задач 
 	 * @param string $index [optional] по какому полю проекта проидексировать список
-	 * @param string $project_id [optional] get issues from the project with the given id
-	 * @param string $tracker_id [optional] get issues from the tracker with the given id
-	 * @param string $status_id [optional] get issues with the given status id only (you can use * to get open and closed issues)
-	 * @param string $assigned_to_id [optional] get issues which are assigned to the given user id
+	 * @param array $params [optional] параметры:
+	 * string $params['sort'] [optional] sorting parameters
+	 * string $params['project_id'] [optional] get issues from the project with the given id
+	 * int $params['tracker_id'] [optional] get issues from the tracker with the given id
+	 * int $params['status_id'] [optional] get issues with the given status id only (you can use * to get open and closed issues)
+	 * int $params['assigned_to_id'] [optional] get issues which are assigned to the given user id
 	 * @return array
 	 */
-	public static function readIssues($index = 'id', $project_id = false, $tracker_id = false, $status_id = false, $assigned_to_id = false, $useCache = true) {
-		static $cache;
+	public static function readIssues($index = 'id', $params = null, $useCache = true) {
+		static $cached;
 		
 		$query = '';
-		$project_id and $queryAdd .= "&project_id={$project_id}";
-		$tracker_id and $queryAdd .= "&tracker_id={$tracker_id}";
-		$status_id and $queryAdd .= "&status_id={$status_id}";
-		$assigned_to_id and $queryAdd .= "&assigned_to_id={$assigned_to_id}";
 		
-		$hash = md5($index.$queryAdd);
+		isset($params['sort']) and $query .= "&sort={$params['sort']}";
+		isset($params['project_id']) and $query .= "&project_id={$params['project_id']}";
+		isset($params['tracker_id']) and $query .= "&tracker_id={$params['tracker_id']}";
+		isset($params['status_id']) and $query .= "&status_id={$params['status_id']}";
+		isset($params['assigned_to_id']) and $query .= "&assigned_to_id={$params['assigned_to_id']}";
 		
-		if (!isset($cache[$hash])) {
-			if ($useCache and $cache[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
-				return $cache[$hash];
+		isset($params['start']) and $start = $params['start'] or $start = 0;
+		isset($params['count']) and $count = $params['count'] or $count = PHP_INT_MAX;
+		
+		$hash = md5($index.','.$query.','.$start.','.$count);
+		
+		if (!isset($cached[$hash])) {
+			if ($useCache and $cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash))
+				return $cached[$hash];
 			// если много данных не влезло
-			elseif ($cache[$hash] = Persistent::getData(__METHOD__.'.'.$hash.'.0')) {
+			elseif ($useCache and $cached[$hash] = Persistent::getData(__METHOD__.'.'.$hash.'.0')) {
 				$index = 1;
 				while ($partial = Persistent::getData(__METHOD__.'.'.$hash.'.'.($index++))) {
-					$cache[$hash] += $partial;
+					$cached[$hash] += $partial;
 				}
-				return $cache[$hash];
+				return $cached[$hash];
 			}
 			
 			try {
-				for ($cache[$hash] = array(
-				), $offset = 0, $limit = 50; count($data = self::xml2array(self::runRequest("issues.xml?offset={$offset}&limit={$limit}{$query}"), $index)); $offset += $limit) {
-					$cache[$hash] += $data;
+				for ($cached[$hash] = array(
+				), $offset = $start, $limit = $count < 50 ? $count : 50; count($cached[$hash]) < $count and count($data = self::xml2array(self::runRequest("issues.xml?offset={$offset}&limit={$limit}{$query}"), $index)); $offset += $limit) {
+					$cached[$hash] += $data;
 				}
 			}
 			catch(CHttpException $e) {
@@ -345,19 +352,19 @@ class RedmineModel extends RedmineConnector {
 			}
 			
 			// много данных не влезет, разобъем по 100
-			if (($count = count($cache[$hash])) > 100) {
+			if (($count = count($cached[$hash])) > 100) {
 				for ($index = 0, $offset = 0, $limit = 100; $offset < $count; $index++, $offset += $limit) {
-					$partial = array_slice($cache[$hash], $offset, $limit, true);
+					$partial = array_slice($cached[$hash], $offset, $limit, true);
 					// а еще - увеличим время хранения - процедура получения слишком дорого обходится
 					Persistent::setData(__METHOD__.'.'.$hash.'.'.$index, $partial, '+10 minutes');
 				}
 			} else {
-				Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash]);
+				Persistent::setData(__METHOD__.'.'.$hash, $cached[$hash]);
 			}
 		}
 		
-		return $cache[$hash];
-	}
+		return $cached[$hash];
+	}	
 	
 	/**
 	 * получить задачу
