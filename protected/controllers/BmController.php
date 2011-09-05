@@ -20,16 +20,28 @@ class BMController extends Controller {
 	 */
 	public function accessRules() {
 		// доступные роли:
-		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner', 'marketolog');
 		return array(
 			array(
-				'allow', 'actions'=>array(
-					'register', 'open', 'updateAttributes', 'orderVhost', 'orderDomain'
-				), 'roles'=>array(
-					'admin', 'moder', 'topmanager', 'manager', 'master'
+				'allow',
+					'actions'=>array(
+					'register',
+					'open',
+					'updateAttributes',
+					'orderVhost',
+					'orderDomain'
 				),
-			), array(
-				'deny', 'users'=>array(
+				'roles'=>array(
+					'admin',
+					'moder',
+					'topmanager',
+					'manager',
+					'master'
+				)
+			),
+			array(
+				'deny',
+					'users'=>array(
 					'*'
 				),
 			),
@@ -154,7 +166,7 @@ class BMController extends Controller {
 		// от имени пользователя - выполняем вход
 		$bmr = new BMRequest();
 		$result = $bmr->login(array(
-			'username'=>$username, 'key'=>$result['key']
+			'username'=>$username,'key'=>$result['key']
 		));
 		
 		// при ошибке авторизации - выход
@@ -248,13 +260,12 @@ class BMController extends Controller {
 	 * Заказывает витруальный хостинг
 	 * @return
 	 */
-	public function actionOrderVhost($package_id, $service_id) {
+	public function actionOrderVhost($package_id, $service_id, $use_promo = false) {
 		$package = Package::model()->findByPk($package_id);
 		
 		// клиент и сайт
 		$client = $package->client;
 		$username = isset($client->attr['username']) ? $client->attr['username']->values[0]->value : '';
-		$site = $package->site;
 		
 		// от имени менеджера
 		$bmr = new BMRequest(true);
@@ -272,7 +283,7 @@ class BMController extends Controller {
 		// от имени пользователя
 		$bmr = new BMRequest();
 		$result = $bmr->login(array(
-			'username'=>$username, 'key'=>$result['key']
+			'username'=>$username,'key'=>$result['key']
 		));
 		
 		// при ошибке авторизации - выход
@@ -286,57 +297,147 @@ class BMController extends Controller {
 		$prices = array(
 			// оптимальный
 			70=>array(
-				'price'=>27, 'period'=>10, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10
-			), 71=>array(
-				'price'=>27, 'period'=>7, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10
-			), 72=>array(
-				'price'=>27, 'period'=>8, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10
-			), 73=>array(
-				'price'=>27, 'period'=>47, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10
-			), 74=>array(
-				'price'=>27, 'period'=>9, 'addon_28'=>3000, 'addon_31'=>10, 'addon_31'=>10
-			), 75=>array(
-				'price'=>27, 'period'=>46, 'addon_28'=>3000, 'addon_31'=>10, 'addon_32'=>10
+				'price'=>27,
+				'period'=>10,
+				'addon_28'=>3000,
+				'addon_31'=>10,
+				'addon_32'=>10
 			),
-			
+			71=>array(
+				'price'=>27,
+				'period'=>7,
+				'addon_28'=>3000,
+				'addon_31'=>10,
+				'addon_32'=>10
+			),
+			72=>array(
+				'price'=>27,
+				'period'=>8,
+				'addon_28'=>3000,
+				'addon_31'=>10,
+				'addon_32'=>10
+			),
+			73=>array(
+				'price'=>27,
+				'period'=>47,
+				'addon_28'=>3000,
+				'addon_31'=>10,
+				'addon_32'=>10
+			),
+			74=>array(
+				'price'=>27,
+				'period'=>9,
+				'addon_28'=>3000,
+				'addon_31'=>10,
+				'addon_31'=>10
+			),
+			75=>array(
+				'price'=>27,
+				'period'=>46,
+				'addon_28'=>3000,
+				'addon_31'=>10,
+				'addon_32'=>10
+			),
+					
 			// легкий
 			76=>array(
-				'price'=>39, 'period'=>24, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1
-			), 77=>array(
-				'price'=>39, 'period'=>21, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1
-			), 78=>array(
-				'price'=>39, 'period'=>22, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1
-			), 79=>array(
-				'price'=>39, 'period'=>23, 'addon_40'=>1000, 'addon_43'=>1, 'addon_44'=>1
+				'price'=>39,
+				'period'=>24,
+				'addon_40'=>1000,
+				'addon_43'=>1,
+				'addon_44'=>1
 			),
-			
+			77=>array(
+				'price'=>39,
+				'period'=>21,
+				'addon_40'=>1000,
+				'addon_43'=>1,
+				'addon_44'=>1
+			),
+			78=>array(
+				'price'=>39,
+				'period'=>22,
+				'addon_40'=>1000,
+				'addon_43'=>1,
+				'addon_44'=>1
+			),
+			79=>array(
+				'price'=>39,
+				'period'=>23,
+				'addon_40'=>1000,
+				'addon_43'=>1,
+				'addon_44'=>1
+			),
+					
 			// профессиональный
 			80=>array(
-				'price'=>47, 'period'=>29, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20
-			), 81=>array(
-				'price'=>47, 'period'=>26, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20
-			), 82=>array(
-				'price'=>47, 'period'=>27, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20
-			), 83=>array(
-				'price'=>47, 'period'=>28, 'addon_48'=>5000, 'addon_51'=>20, 'addon_52'=>20
+				'price'=>47,
+				'period'=>29,
+				'addon_48'=>5000,
+				'addon_51'=>20,
+				'addon_52'=>20
+			),
+			81=>array(
+				'price'=>47,
+				'period'=>26,
+				'addon_48'=>5000,
+				'addon_51'=>20,
+				'addon_52'=>20
+			),
+			82=>array(
+				'price'=>47,
+				'period'=>27,
+				'addon_48'=>5000,
+				'addon_51'=>20,
+				'addon_52'=>20
+			),
+			83=>array(
+				'price'=>47,
+				'period'=>28,
+				'addon_48'=>5000,
+				'addon_51'=>20,
+				'addon_52'=>20
 			)
 		);
+
+		
+		// использование промокода
+		if ($use_promo) {
+			$manager = People::model()->findByPk(Yii::app()->user->id);
+			$promocode = isset($manager->attr['promocode']) ? $manager->attr['promocode']->values[0]->value : null;
+		} else {
+			$promocode = null;
+		}
+		
+		$serv2pack = Serv2pack::getByIds($service_id, $package_id);
 		
 		// передаем данные
 		$data = array_merge($prices[$service_id], array(
-			'domain'=>$site->url, 'payfrom'=>'neworder'
+			'domain'=>$serv2pack->descr,'payfrom'=>'neworder','promocode'=>$promocode,
 		));
 		$result = $bmr->orderVhost($data);
 		
 		// период хостинга относительно now
 		$next = array(
-			70=>'+10 days', 71=>'+3 month', 72=>'+6 month', 73=>'+9 month', 74=>'+1 year', 75=>'+2 year', 76=>'+10 days', 77=>'+3 month', 78=>'+6 month', 79=>'+1 year', 80=>'+10 days', 81=>'+3 month', 82=>'+6 month', 83=>'+1 year'
+			70=>'+10 days',
+				71=>'+3 month',
+				72=>'+6 month',
+				73=>'+9 month',
+				74=>'+1 year',
+				75=>'+2 year',
+				76=>'+10 days',
+				77=>'+3 month',
+				78=>'+6 month',
+				79=>'+1 year',
+				80=>'+10 days',
+				81=>'+3 month',
+				82=>'+6 month',
+				83=>'+1 year'
 		);
 		
 		// при успехе
 		if ($result['success']) {
-			// обновим дату создания и истечения услуги
-			$serv2pack = Serv2pack::getByIds($service_id, $package_id);
+			// обновим дату создания и истечения услуги			
 			$serv2pack->dt_beg = date('Y-m-d H:i:s');
 			$serv2pack->dt_end = date('Y-m-d H:i:s', strtotime('now '.$next[$service_id]));
 			$serv2pack->save();
@@ -344,7 +445,7 @@ class BMController extends Controller {
 			$event = new Calendar();
 			$event->people_id = Yii::app()->user->id;
 			$event->date = date('Y-m-d', strtotime('now '.$next[$service_id]));
-			$event->message = "У $client->fio для сайта $site->url заканчивается хостинг";
+			$event->message = "У $client->fio заканчивается хостинг";
 			$event->status = 1;
 			$event->save();
 		}
@@ -358,13 +459,12 @@ class BMController extends Controller {
 	 * Заказывает доменное имя
 	 * @return
 	 */
-	public function actionOrderDomain($package_id, $service_id) {
+	public function actionOrderDomain($package_id, $service_id, $use_promo = false) {
 		$package = Package::model()->findByPk($package_id);
 		
 		// клиент и сайт
 		$client = $package->client;
 		$username = isset($client->attr['username']) ? $client->attr['username']->values[0]->value : '';
-		$site = $package->site;
 		
 		// от имени менеджера
 		$bmr = new BMRequest(true);
@@ -382,7 +482,7 @@ class BMController extends Controller {
 		// от имени пользователя
 		$bmr = new BMRequest();
 		$result = $bmr->login(array(
-			'username'=>$username, 'key'=>$result['key']
+			'username'=>$username,'key'=>$result['key']
 		));
 		
 		// при ошибке авторизации - выход
@@ -398,14 +498,14 @@ class BMController extends Controller {
 		// если есть контакты домена, используем последний, иначе - создаем новый
 		if (! empty($result['cdata'])) {
 			$lastdc = array_pop($result['cdata']);
-			$lastdcid = $lastdc['id'];
+			$lastdcid = $lastdc['id'];$serv2pack = Serv2pack::getByIds($service_id, $package_id);
 		} else {
 			$data = array(
 			);
 			foreach ($client->attr as $name=>$attr) {
 				$data[$name] = $attr->values[0]->value;
 			}
-			$data['name'] = "AutoContact from SUP for $site->url";
+			$data['name'] = "AutoContact from SUP";
 			
 			$result = $bmr->saveItem($data, 'domaincontact');
 			
@@ -422,42 +522,86 @@ class BMController extends Controller {
 		// данные для конкретного тарифа - с периодом и дополнениями
 		$prices = array(
 			84=>array(
-				'price'=>54, 'period'=>30, 'autoprolong'=>30
-			), 85=>array(
-				'price'=>55, 'period'=>34, 'autoprolong'=>30
-			), 86=>array(
-				'price'=>56, 'period'=>38, 'autoprolong'=>30
-			), 87=>array(
-				'price'=>57, 'period'=>42, 'autoprolong'=>30
-			), 88=>array(
-				'price'=>38, 'period'=>16, 'autoprolong'=>30
-			), 89=>array(
-				'price'=>58, 'period'=>48, 'autoprolong'=>30
-			), 90=>array(
-				'price'=>59, 'period'=>52, 'autoprolong'=>30
-			), 91=>array(
-				'price'=>60, 'period'=>56, 'autoprolong'=>30
-			), 92=>array(
-				'price'=>61, 'period'=>60, 'autoprolong'=>30
-			), 93=>array(
-				'price'=>62, 'period'=>64, 'autoprolong'=>30
-			), 94=>array(
-				'price'=>63, 'period'=>68, 'autoprolong'=>30
-			), 95=>array(
-				'price'=>64, 'period'=>72, 'autoprolong'=>30
+				'price'=>54,
+				'period'=>30,
+				'autoprolong'=>30
+			),
+			85=>array(
+				'price'=>55,
+				'period'=>34,
+				'autoprolong'=>30
+			),
+			86=>array(
+				'price'=>56,
+				'period'=>38,
+				'autoprolong'=>30
+			),
+			87=>array(
+				'price'=>57,
+				'period'=>42,
+				'autoprolong'=>30
+			),
+			88=>array(
+				'price'=>38,
+				'period'=>16,
+				'autoprolong'=>30
+			),
+			89=>array(
+				'price'=>58,
+				'period'=>48,
+				'autoprolong'=>30
+			),
+			90=>array(
+				'price'=>59,
+				'period'=>52,
+				'autoprolong'=>30
+			),
+			91=>array(
+				'price'=>60,
+				'period'=>56,
+				'autoprolong'=>30
+			),
+			92=>array(
+				'price'=>61,
+				'period'=>60,
+				'autoprolong'=>30
+			),
+			93=>array(
+				'price'=>62,
+				'period'=>64,
+				'autoprolong'=>30
+			),
+			94=>array(
+				'price'=>63,
+				'period'=>68,
+				'autoprolong'=>30
+			),
+			95=>array(
+				'price'=>64,
+				'period'=>72,
+				'autoprolong'=>30
 			)
 		);
 		
+		// использование промокода
+		if ($use_promo) {
+			$manager = People::model()->findByPk(Yii::app()->user->id);
+			$promocode = isset($manager->attr['promocode']) ? $manager->attr['promocode']->values[0]->value : null;
+		} else {
+			$promocode = null;
+		}
+		
+		$serv2pack = Serv2pack::getByIds($service_id, $package_id);
+		
 		$data = array_merge($prices[$service_id], array(
-			'customer'=>$lastdcid, 'subjnic'=>$lastdcid, 'domain'=>$site->url, 'elid'=>$lastdcid, 'customertype'=>'person'
+			'customer'=>$lastdcid,'subjnic'=>$lastdcid,'domain'=>$serv2pack->descr,'elid'=>$lastdcid,'customertype'=>'person','promocode'=>$promocode
 		));
 		
 		$result = $bmr->orderDomain($data);
 		
 		// при успехе
 		if ($result['success']) {
-			// обновим дату создания и истечения услуги
-			$serv2pack = Serv2pack::getByIds($service_id, $package_id);
+			// обновим дату создания и истечения услуги			
 			$serv2pack->dt_beg = date('Y-m-d H:i:s');
 			$serv2pack->dt_end = date('Y-m-d H:i:s', strtotime('now +12 month'));
 			$serv2pack->save();
@@ -465,7 +609,7 @@ class BMController extends Controller {
 			$event = new Calendar();
 			$event->people_id = Yii::app()->user->id;
 			$event->date = date('Y-m-d', strtotime('now +12 month'));
-			$event->message = "У $client->fio для сайта $site->url заканчивается регистрация домена";
+			$event->message = "У $client->fio заканчивается срок регистрация домена";
 			$event->status = 1;
 			$event->save();
 		}

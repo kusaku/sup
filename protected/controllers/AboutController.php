@@ -19,7 +19,7 @@ class AboutController extends Controller {
 	 */
 	public function accessRules() {
 		// доступные роли:
-		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner', 'marketolog');
 		return array(
 			array(
 				'allow',
@@ -27,13 +27,13 @@ class AboutController extends Controller {
 					'index',
 					'test'
 				),
-					'roles'=>array(
+				'roles'=>array(
 					'admin',
 					'manager',
 					'guest'
 				)
 			),
-					array(
+			array(
 				'deny',
 					'users'=>array(
 					'*'

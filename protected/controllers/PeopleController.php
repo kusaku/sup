@@ -23,40 +23,44 @@ class PeopleController extends Controller {
 	 */
 	public function accessRules() {
 		// доступные роли:
-		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner', 'marketolog');
 		return array(
 			array(
-				'allow', 'actions'=>array(
-					'getClients', 'getMamagers', 'index', 'view', 'save', 'globalSearchJSON', 'card'
-				), 'roles'=>array(
-					'admin', 'moder', 'topmanager', 'manager', 'master'
+				'allow',
+				'actions'=>array(
+					'index',
+					'view',
+					'save',
+					'globalSearchJSON',
+					'card'
 				),
-			), array(
-				'deny', 'users'=>array(
+				'roles'=>array(
+					'admin',
+					'moder',
+					'topmanager',
+					'manager',
+					'master'
+				),
+			),
+			array(
+				'allow',
+				'actions'=>array(
+					'index',
+					'view',
+					'globalSearchJSON',
+					'card'
+				),
+				'roles'=>array(
+					'marketolog'
+				),
+			),
+			array(
+				'deny',
+				'users'=>array(
 					'*'
 				),
 			),
 		);
-	}
-	
-	/*
-	 Возвращаем всех клиентов
-	 */
-	public function actionGetClients() {
-		$peoples = PeopleGroup::getById(7)->peoples;
-		$this->renderPartial('getlist', array(
-			'peoples'=>$peoples
-		));
-	}
-	
-	/*
-	 Возвращаем всех менеджеров
-	 */
-	public function actionGetManagers() {
-		$peoples = PeopleGroup::getById(4)->peoples;
-		$this->renderPartial('getlist', array(
-			'peoples'=>$peoples
-		));
 	}
 	
 	/*
@@ -136,8 +140,7 @@ class PeopleController extends Controller {
 			
 			if (Yii::app()->request->isAjaxRequest)
 				print(json_encode(array(
-					'success'=>true,
-					'people_id'=>$people->primaryKey
+					'success'=>true,'people_id'=>$people->primaryKey
 				)));
 			else
 				// Возвращаемся к редактируемому (добавляемому) элементу

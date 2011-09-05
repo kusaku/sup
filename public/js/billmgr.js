@@ -137,7 +137,8 @@ function bmVHost(package_id, service_id){
 		url: '/bm/ordervhost',
 		data: {
 			'package_id': package_id,
-			'service_id': service_id
+			'service_id': service_id,
+			'use_promo': confirm('Использовать промокод?') ? 1 : 0
 		},
 		//dataType: 'json',
 		success: function(data){
@@ -176,7 +177,8 @@ function bmDomainName(package_id, service_id){
 		url: '/bm/orderdomain',
 		data: {
 			'package_id': package_id,
-			'service_id': service_id
+			'service_id': service_id,
+			'use_promo': confirm('Использовать промокод?') ? 1 : 0
 		},
 		//dataType: 'json',
 		success: function(data){

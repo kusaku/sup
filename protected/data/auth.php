@@ -20,10 +20,12 @@ return array (
       2 => 'topmanager',
       3 => 'manager',
       4 => 'master',
-      5 => 'client',
-      6 => 'leadmaster',
-      7 => 'remotemaster',
-      8 => 'superpartner',
+	  5 => 'partner',
+      6 => 'client',
+      7 => 'leadmaster',
+      8 => 'remotemaster',
+      9 => 'superpartner',
+	  10 => 'marketolog',
     ),
   ),
   'admin' => 
@@ -96,22 +98,11 @@ return array (
     'bizRule' => 'return isset(Yii::app()->user->group_id) and Yii::app()->user->group_id=="10";',
     'data' => NULL,
   ),
-  'role1' => 
+  'marketolog' => 
   array (
     'type' => 2,
-    'description' => '',
-    'bizRule' => NULL,
+    'description' => 'Маркетолог',
+    'bizRule' => 'return isset(Yii::app()->user->group_id) and Yii::app()->user->group_id=="12";',
     'data' => NULL,
-    'children' => 
-    array (
-      0 => 'role2',
-    ),
-  ),
-  'role2' => 
-  array (
-    'type' => 2,
-    'description' => '',
-    'bizRule' => NULL,
-    'data' => NULL,
-  ),
+  ),  
 );

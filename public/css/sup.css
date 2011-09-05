@@ -36,13 +36,6 @@ a.grayButton	{padding: 4px 9px;background: #c8d2d5;background:url(../images/ubut
 .supAccordion h3 {color: #ff7b0b;cursor: pointer;}
 .clientHead {cursor: move;}
 
-#sup_popup .orderBlock .orderPart .subPart {padding: 0 0 0 15px;}
-#sup_popup .orderBlock .orderPart .subPart p {width: auto; padding:0px 10px}
-
-.orderBlock .orderPart .subPart .column1 {width: auto;}
-.orderBlock .orderPart .subPart .column2 {width: auto;}
-.orderBlock .orderPart .subPart .column3 {width: auto;}
-
 .report {padding: 10px 0px; clear:both;}
 .report h1 {color: #FF7B0B;font-size: 16px; margin:10px 0px;}
 .report h2 {font-size: 14px;}

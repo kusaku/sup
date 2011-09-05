@@ -56,7 +56,7 @@
 						</div>
 						<div class="projectPart <?= in_array($group->primaryKey, array_keys($orderedServs)) ? '' : 'hidden';?>" id="projectPart<?= $group->primaryKey;?>">
 							<?php foreach (Service::getAllByParent($group->primaryKey) as $serv): ?>
-							<div class="subPart  <?= ($active = in_array($serv->primaryKey, array_keys($orderedServs))) ? '' : 'hidden';;?>">
+							<div class="subPart  <?= ($active = in_array($serv->primaryKey, array_keys($orderedServs))) ? '' : 'hidden';?>">
 								<label class="column1"><?= $serv->name;?>:</label>
 								
 								<?php if ($group->exclusive): ?>

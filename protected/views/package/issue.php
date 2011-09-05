@@ -7,9 +7,9 @@ catch(CHttpException $e) {
 	
 ?>
 <div id="redmineIssue" style="width:95%;margin: 0 auto;">
-	<h3>Не удалось открыть задачу <a target="_blank" href="https://redmine.fabricasaitov.ru/issies/<?= $issue_id; ?>">#<?= $issue_id; ?></a></h3>
-	<div style="clear:both;margin: 10px 0;background-color:#eeeeee">
-		<div style="float:left;">Совпадает ли пароль от SUP с паролем от Redmine?</div>
+	<h3>Не удалось открыть задачу <a target="_blank" href="https://redmine.fabricasaitov.ru/issues/<?= $issue_id; ?>">#<?= $issue_id; ?></a></h3>
+	<h3>Есть ли у Вас доступ в Redmine? Существует ли такая задача?</h3>
+	<div style="clear:both;margin: 10px 0;background-color:#eeeeee">		
 		<pre><?= $e->getMessage(); ?></pre>
 	</div>
 </div>
@@ -26,7 +26,7 @@ $issueIsOpen = !in_array($issue['status']['id'], array(
 			<?= $issue['subject']; ?>
 		</div>
 		<div style="float:left;margin-left:10px;">
-			<a target="_blank" href="https://redmine.fabricasaitov.ru/issies/<?= $issue_id; ?>">#<?= $issue_id; ?></a>
+			<a target="_blank" href="https://redmine.fabricasaitov.ru/issues/<?= $issue_id; ?>">#<?= $issue_id; ?></a>
 		</div>		
 		<div style="float:left;margin-left:10px;" class="progressBar">
 			<div class="progressStat" style="width:<?= $issue['done_ratio']; ?>%">

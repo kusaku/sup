@@ -4,7 +4,7 @@
 		<div style="padding:10px 0px;">
 			<label>Вид отчета: </label>
 			<select id="reportType" name="reportType">
-				<?php if ($roles['admin']): ?>
+				<?php if ($roles['admin'] || $roles['marketolog']): ?>
 				<option<?= UserRegistry::model()->report_reportType == 'pays' ? ' selected="selected"' : ''?> value="pays">Отчет по выплатам</option>
 				<option<?= UserRegistry::model()->report_reportType == 'projects' ? ' selected="selected"' : ''?> value="projects">Отчет по проектам</option>
 				<?php else : ?>
@@ -12,7 +12,7 @@
 				<option<?= UserRegistry::model()->report_reportType == 'myprojects' ? ' selected="selected"' : ''?> value="myprojects">Мой отчет по проектам</option>				
 				<?php endif; ?>
 			</select>
-			<?php if ($roles['admin']): ?>
+			<?php if ($roles['admin'] || $roles['marketolog']): ?>
 			<label>Менеджер: </label>
 			<select id="manager_id" name="manager_id">
 				<?php if ($roles['admin']): ?>

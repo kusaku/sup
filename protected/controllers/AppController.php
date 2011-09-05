@@ -17,13 +17,13 @@ class AppController extends Controller {
 	 */
 	public function accessRules() {
 		// доступные роли:
-		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner', 'marketolog');
 		return array(
 			array(
 				'allow', 'actions'=>array(
 					'index'
 				), 'roles'=>array(
-					'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner'
+					'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner', 'marketolog'
 				),
 			), array(
 				'allow', 'actions'=>array(

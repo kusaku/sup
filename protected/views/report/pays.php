@@ -33,7 +33,7 @@
 		<a style="float:right;" class="orangeButton hiddenprint expandall">Развернуть всё</a>
 	</div>
 	<div class="report">
-		<h1>Отчет за период c <?= $total['dt_beg']?>по <?= $total['dt_end']?></h1>
+		<h1>Отчет за период c <?= $total['dt_beg']?> по <?= $total['dt_end']?></h1>
 		<?php foreach ($data as $managerItem): ?>
 		<?php if (!$managerItem['count']) continue; ?>
 		<h1 class="expandnext" style="cursor:pointer;"><?= $managerItem['name']?></h1>
@@ -66,7 +66,7 @@
 			<?php endforeach; ?>
 			<tr>
 				<th>Количество:</th>
-				<th style="width:37%;">
+				<th>
 					<?= $managerItem['count']?>
 				</th>
 				<th></th>

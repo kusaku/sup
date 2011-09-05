@@ -17,16 +17,26 @@ class LoggerController extends Controller {
 	 */
 	public function accessRules() {
 		// доступные роли:
-		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner', 'marketolog');
 		return array(
 			array(
-				'allow', 'actions'=>array(
-					'index', 'put'
-				), 'roles'=>array(
-					'admin', 'moder', 'topmanager', 'manager', 'master'
+				'allow',
+				'actions'=>array(
+					'index',
+					'put'
 				),
-			), array(
-				'deny', 'users'=>array(
+				'roles'=>array(
+					'admin',
+					'moder',
+					'topmanager',
+					'manager',
+					'master',
+					'marketolog'
+				),
+			),
+			array(
+				'deny',
+				'users'=>array(
 					'*'
 				),
 			),

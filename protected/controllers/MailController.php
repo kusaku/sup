@@ -20,16 +20,31 @@ class MailController extends Controller {
 	 */
 	public function accessRules() {
 		// доступные роли:
-		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner', 'marketolog');
 		return array(
 			array(
-				'allow', 'actions'=>array(
-					'index', 'list', 'send', 'massMail', 'resetQueue', 'makeQueue', 'processQueue', 'saveTemplate'
-				), 'roles'=>array(
-					'admin', 'moder', 'topmanager', 'manager', 'master'
+				'allow',
+				'actions'=>array(
+					'index',
+					'list',
+					'send',
+					'massMail',
+					'resetQueue',
+					'makeQueue',
+					'processQueue',
+					'saveTemplate'
 				),
-			), array(
-				'deny', 'users'=>array(
+				'roles'=>array(
+					'admin',
+					'moder',
+					'topmanager',
+					'manager',
+					'master'
+				),
+			),
+			array(
+				'deny',
+				'users'=>array(
 					'*'
 				),
 			),
@@ -46,7 +61,7 @@ class MailController extends Controller {
 	public function actionList($client_id = 0) {
 		$templates = MailTemplates::model()->findAll('people_id='.Yii::app()->user->id.' or people_id = 0');
 		$this->renderPartial('list', array(
-			'client_id'=>$client_id, 'templates'=>$templates
+			'client_id'=>$client_id,'templates'=>$templates
 		));
 	}
 	
@@ -147,8 +162,8 @@ class MailController extends Controller {
 		Registry::setValue('Queue.mail.total', MailQueue::length());
 		
 		print(json_encode(array(
-			'success'=>true, 'total'=>count($recipients), 'done'=>MailQueue::length(), 'left'=>max(array(
-				0, count($recipients) - $quantity - $offset
+			'success'=>true,'total'=>count($recipients),'done'=>MailQueue::length(),'left'=>max(array(
+				0,count($recipients) - $quantity - $offset
 			))
 		)));
 		Yii::app()->end();
@@ -169,7 +184,7 @@ class MailController extends Controller {
 		}
 		
 		print(json_encode(array(
-			'success'=>true, 'total'=>Registry::getValue('Queue.mail.total'), 'left'=>MailQueue::length(), 'failed'=>FailedMailQueue::length()
+			'success'=>true,'total'=>Registry::getValue('Queue.mail.total'),'left'=>MailQueue::length(),'failed'=>FailedMailQueue::length()
 		)));
 		Yii::app()->end();
 		
@@ -192,7 +207,7 @@ class MailController extends Controller {
 			}
 			catch(Exception $e) {
 				exit(json_encode(array(
-					'success'=>false, 'message'=>'Ошибка сохранения...'
+					'success'=>false,'message'=>'Ошибка сохранения...'
 				)));
 			}
 		}

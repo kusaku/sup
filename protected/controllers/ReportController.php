@@ -17,18 +17,30 @@ class ReportController extends Controller {
 	 */
 	public function accessRules() {
 		// доступные роли:
-		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner', 'marketolog');
 		return array(
 			array(
-				'allow', 'actions'=>array(
-					'index', 'generate'
-				), 'roles'=>array(
-					'admin', 'moder', 'topmanager', 'manager', 'master'
+				'allow',
+					'actions'=>array(
+					'index',
+					'generate'
 				),
-			), array(
-				'deny', 'users'=>array(
+				'roles'=>array(
+					'admin',
+					'moder',
+					'topmanager',
+					'manager',
+					'master',
+					'marketolog'
+				),
+					
+			),
+				array(
+				'deny',
+					'users'=>array(
 					'*'
 				),
+					
 			),
 		);
 	}
@@ -48,12 +60,12 @@ class ReportController extends Controller {
 		
 		$managers = People::model()->findAllByAttributes(array(
 			'pgroup_id'=>array(
-				3, 4
+				3,4
 			)
 		));
 		
 		$this->renderPartial('index', array(
-			'roles'=>$roles, 'managers'=>$managers,
+			'roles'=>$roles,'managers'=>$managers,
 		));
 	}
 	
@@ -67,8 +79,8 @@ class ReportController extends Controller {
 	 * @return
 	 */
 	public function actionGenerate($id) {
+
 	
-		
 		$manager_id = (int) @$_POST['manager_id'];
 		$dt_beg = (string) @$_POST['dt_beg'];
 		$dt_end = (string) @$_POST['dt_end'];
@@ -80,10 +92,11 @@ class ReportController extends Controller {
 		$dt_end or $dt_end = date('01.m.Y', strtotime('+1 month'));
 		
 		$total = array(
-			'dt_beg'=>$dt_beg, 'dt_end'=>$dt_end,
+			'dt_beg'=>$dt_beg,
+			'dt_end'=>$dt_end,
 		);
 		
-		UserRegistry::model()->report_reportType = $id;		
+		UserRegistry::model()->report_reportType = $id;
 		UserRegistry::model()->report_manager_id = $manager_id;
 		UserRegistry::model()->report_dt_beg = $dt_beg;
 		UserRegistry::model()->report_dt_end = $dt_end;
@@ -105,7 +118,7 @@ class ReportController extends Controller {
 					// выберем менеджеров и старших менеджеров
 					$managers = People::model()->findAllByAttributes(array(
 						'pgroup_id'=>array(
-							3, 4
+							3,4
 						)
 					));
 				}
@@ -174,16 +187,22 @@ class ReportController extends Controller {
 					
 					$totalSumm += $managerSumm;
 					$data[$manager->primaryKey] = array(
-						'name'=>$manager->fio, 'pays'=>$pays, 'count'=>count($pays), 'summ'=>$managerSumm
+						'name'=>$manager->fio,
+						'pays'=>$pays,
+						'count'=>count($pays),
+						'summ'=>$managerSumm
 					);
 				}
 				
 				$total = array(
-					'dt_beg'=>$dt_beg, 'dt_end'=>$dt_end, 'count'=>$totalCount, 'summ'=>$totalSumm
+					'dt_beg'=>$dt_beg,
+					'dt_end'=>$dt_end,
+					'count'=>$totalCount,
+					'summ'=>$totalSumm
 				);
 				
 				$this->render('/report/pays', array(
-					'data'=>$data, 'total'=>$total,
+					'data'=>$data,'total'=>$total,
 				));
 				
 				break;
@@ -204,7 +223,7 @@ class ReportController extends Controller {
 					// любой оплаченный
 					case '-2':
 						$criteria->addColumnCondition(array(
-							'status_id'=>20, 'status_id'=>30,
+							'status_id'=>20,'status_id'=>30,
 						), ' OR ');
 						break;
 						
@@ -222,7 +241,8 @@ class ReportController extends Controller {
 				
 				// сортировка - берем из модели
 				$criteria->scopes = array(
-					'byclient', 'bychanged'
+					'byclient',
+					'bychanged'
 				);
 				
 				$data = array(
@@ -315,7 +335,11 @@ class ReportController extends Controller {
 					}
 					
 					$data[$manager->primaryKey] = array(
-						'name'=>$manager->fio, 'packs'=>$packs, 'count'=>count($packs), 'summ'=>$managerSumm, 'paid'=>$managerPaid,
+						'name'=>$manager->fio,
+						'packs'=>$packs,
+						'count'=>count($packs),
+						'summ'=>$managerSumm,
+						'paid'=>$managerPaid,
 					);
 					
 					$totalCount += count($packs);
@@ -323,13 +347,16 @@ class ReportController extends Controller {
 					$totalPaid += $managerPaid;
 				}
 				$total = array(
-					'dt_beg'=>$dt_beg, 'dt_end'=>$dt_end, 'count'=>$totalCount, 'summ'=>$totalSumm, 'paid'=>$totalPaid,
+					'dt_beg'=>$dt_beg,
+					'dt_end'=>$dt_end,
+					'count'=>$totalCount,
+					'summ'=>$totalSumm,
+					'paid'=>$totalPaid,
 				);
 				$this->render('/report/projects', array(
-					'data'=>$data, 'total'=>$total,
+					'data'=>$data,'total'=>$total,
 				));
 				break;
 		}
 	}
 }
-

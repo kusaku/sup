@@ -85,11 +85,14 @@ class UserIdentity extends CUserIdentity {
 						
 					case '***FS-Вебдизайнеры':
 					case '***FS-Вебмастера':
-					case '***FS-Хостинг':
-					case '***FS-SEO':
+					case '***FS-Хостинг':					
 					case '***FS-Копирайтеры':
 					case '***FS-Удаленщики':
 						$user->pgroup_id = 5;
+						break;
+					
+					case '***FS-SEO':
+						$user->pgroup_id = 11;
 						break;
 						
 					// по-умолчанию - клиент

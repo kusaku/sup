@@ -1,9 +1,8 @@
 <?php 
-
 /**
  * XXX переписать!!!
  */
-
+ 
 class SiteController extends Controller {
 
 	/**
@@ -22,16 +21,37 @@ class SiteController extends Controller {
 	 */
 	public function accessRules() {
 		// доступные роли:
-		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner', 'marketolog');
 		return array(
 			array(
-				'allow', 'actions'=>array(
-					'getList', 'view', 'save', 'checker'
-				), 'roles'=>array(
-					'admin', 'moder', 'topmanager', 'manager', 'master'
+				'allow',
+					'actions'=>array(
+					'getList',
+					'view',
+					'save',
+					'checker'
 				),
-			), array(
-				'deny', 'users'=>array(
+				'roles'=>array(
+					'admin',
+					'moder',
+					'topmanager',
+					'manager',
+					'master'					
+				),
+			),
+			array(
+				'allow',
+					'actions'=>array(
+					'view',
+					'checker'
+				),
+				'roles'=>array(
+					'marketolog'
+				),
+			),
+			array(
+				'deny',
+					'users'=>array(
 					'*'
 				),
 			),
@@ -73,11 +93,11 @@ class SiteController extends Controller {
 		
 		if (!$client_id)
 			$client_id = 0;
-		
+			
 		//if ( !$id and !$client_id ) die('Нужен ID клиента для нового сайта или ID сайта для существующего!');
 		
 		// Если передан нулевой ID, создаём новый сайт
-		if ($id) 
+		if ($id)
 			$site = Site::getById($id);
 		else {
 			$site = new Site();
@@ -85,7 +105,7 @@ class SiteController extends Controller {
 		}
 		
 		$this->renderPartial('view', array(
-			'site'=>$site, 'no_button'=>Yii::app()->request->getParam('no_button')
+			'site'=>$site,'no_button'=>Yii::app()->request->getParam('no_button')
 		));
 	}
 	
@@ -110,7 +130,7 @@ class SiteController extends Controller {
 			$site->save();
 			$this->redirect(Yii::app()->homeUrl);
 		} else
-			throw new CHttpException('_00', 'Не указан идентификатор (ID) сайта!');
+			throw new CHttpException(500, 'Не указан идентификатор (ID) сайта!');
 	}
 	
 	public function actionChecker() {

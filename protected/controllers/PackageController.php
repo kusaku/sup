@@ -17,7 +17,7 @@ class PackageController extends Controller {
 	 */
 	public function accessRules() {
 		// доступные роли:
-		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner', 'marketolog');
 		return array(
 			array(
 				'allow',
@@ -36,7 +36,7 @@ class PackageController extends Controller {
 					'closeRedmineIssue',
 					'getPayForm'
 				),
-					'roles'=>array(
+				'roles'=>array(
 					'admin',
 					'moder',
 					'topmanager',
@@ -44,7 +44,17 @@ class PackageController extends Controller {
 					'master'
 				)
 			),
-					array(
+			array(
+				'allow',
+					'actions'=>array(
+					'index',
+					'view'
+				),
+					'roles'=>array(
+					'marketolog'
+				)
+			),			
+			array(
 				'deny',
 					'users'=>array(
 					'*'

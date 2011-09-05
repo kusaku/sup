@@ -64,10 +64,10 @@
 	<?php if(Yii::app()->user->checkAccess('admin')): ?>
 	<div class="tabs" style="clear:both;">
 		<div class="tabcontainer">
-			<span class="tab selected" onclick="selectTab(1001)">Все проекты</span>
-			<span class="tab" onclick="selectTab(1101)">Пользователи</span>
+			<span id="tabAllProjects" class="tab selected" onclick="selectTab('AllProjects')">Все проекты</span>
+			<span id="tabUsers" class="tab" onclick="selectTab('Users')">Пользователи</span>
 		</div>
-		<div id="tabContent1001" class="tabContent">
+		<div id="tabContentAllProjects" class="tabContent">
 			<ul class="columnsHead">
 				<li><a href="#" class="colClient">Клиент</a></li>
 				<li><a href="#" class="colOrder">Заказ</a></li>
@@ -79,7 +79,7 @@
 				<?php /*$this->forward('/package', false);*/ ?>
 			</div>
 		</div>
-		<div id="tabContent1101" class="tabContent hidden">
+		<div id="tabContentUsers" class="tabContent hidden">
 			<?php $this->renderPartial('/snippets/users'); ?>
 		</div>
 	</div>

@@ -17,16 +17,27 @@ class CalendarController extends Controller {
 	 */
 	public function accessRules() {
 		// доступные роли:
-		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner');
+		// list('guest', 'admin', 'moder', 'topmanager', 'manager', 'master', 'partner', 'client', 'leadmaster', 'remotemaster', 'superpartner', 'marketolog');
 		return array(
 			array(
-				'allow', 'actions'=>array(
-					'index', 'save', 'view', 'ready'
-				), 'roles'=>array(
-					'admin', 'moder', 'topmanager', 'manager', 'master'
+				'allow',
+				'actions'=>array(
+					'index',
+					'save',
+					'view',
+					'ready'
 				),
-			), array(
-				'deny', 'users'=>array(
+				'roles'=>array(
+					'admin',
+					'moder',
+					'topmanager',
+					'manager',
+					'master'
+				),
+			),
+			array(
+				'deny',
+				'users'=>array(
 					'*'
 				),
 			),
@@ -62,7 +73,7 @@ class CalendarController extends Controller {
 			$event->people_id = $data['people_id'] ? $data['people_id'] : Yii::app()->user->id;
 			$event->date = date('Y-m-d', strtotime($data['date']));
 			$event->message = $data['message'];
-			$event->interval = (int)$data['interval'];
+			$event->interval = (int) $data['interval'];
 			$event->status = 1;
 			
 			$event->save();
@@ -70,7 +81,7 @@ class CalendarController extends Controller {
 				return 1;
 			else
 				$this->redirect(Yii::app()->homeUrl);
-
+				
 		} else
 			return 0;
 	}
@@ -101,13 +112,21 @@ class CalendarController extends Controller {
 				$event = Calendar::GetById($id);
 				$event->status = 0;
 				$event->save();
-				if ( $event->interval > 0 ){
+				if ($event->interval > 0) {
 					self::actionSave(array(
+						//
 						'event_id'=>0,
+						//
 						'people_id'=>$event->people_id,
-						'date'=> date('Y-m-d', (int)strtotime($event->date. " + {$event->interval} month") ),
+						//
+						'date'=>date('Y-m-d', 
+						//
+						(int) strtotime($event->date." + {$event->interval} month")),
+						//
 						'message'=>$event->message,
+						//
 						'interval'=>$event->interval,
+						//
 						'NOredirect'=>true,
 					));
 				}
