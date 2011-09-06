@@ -12,6 +12,7 @@
 		<link href="/css/sup.css?<?= Yii::app()->name['version']?>" rel="stylesheet" type="text/css" />
 		<link href="/css/tabs.css" rel="stylesheet" type="text/css" />
 		<link href="/css/calendar.css" rel="stylesheet" type="text/css" />
+		<!-- общие скрипты -->
 		<script language="JavaScript" src="/js/jquery-1.6.2.min.js"></script>
 		<script language="JavaScript" src="/js/jquery.ui.datepicker-ru.js"></script>
 		<script language="JavaScript" src="/js/jquery-ui-1.8.11.custom.min.js"></script>

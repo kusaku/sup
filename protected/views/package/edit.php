@@ -49,13 +49,13 @@
 			</div>
 			<div class="scroll-wrap">
 				<div class="scroll-pane">
-					<?php foreach (Service::getAllByParent(0) as $group): ?>
+					<?php foreach (Service::model()->with('childs')->findAllByAttributes(array('parent_id'=>0)) as $group): ?>
 					<div class="projectBlock">
 						<div class="header">
 							<a onClick="$('#projectPart<?= $group->primaryKey;?>').removeClass('hidden').children().removeClass('hidden'); $(this).attr('onClick', '$(\'#projectPart<?= $group->primaryKey;?>\').toggleClass(\'hidden\');')"><?= $group->name;?>:</a>
 						</div>
 						<div class="projectPart <?= in_array($group->primaryKey, array_keys($orderedServs)) ? '' : 'hidden';?>" id="projectPart<?= $group->primaryKey;?>">
-							<?php foreach (Service::getAllByParent($group->primaryKey) as $serv): ?>
+							<?php foreach ($group->childs as $serv): ?>
 							<div class="subPart  <?= ($active = in_array($serv->primaryKey, array_keys($orderedServs))) ? '' : 'hidden';?>">
 								<label class="column1"><?= $serv->name;?>:</label>
 								

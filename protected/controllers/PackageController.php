@@ -21,7 +21,7 @@ class PackageController extends Controller {
 		return array(
 			array(
 				'allow',
-					'actions'=>array(
+				'actions'=>array(
 					'index',
 					'view',
 					'save',
@@ -46,17 +46,17 @@ class PackageController extends Controller {
 			),
 			array(
 				'allow',
-					'actions'=>array(
+				'actions'=>array(
 					'index',
 					'view'
 				),
-					'roles'=>array(
+				'roles'=>array(
 					'marketolog'
 				)
-			),			
+			),
 			array(
 				'deny',
-					'users'=>array(
+				'users'=>array(
 					'*'
 				)
 			)
@@ -169,11 +169,17 @@ class PackageController extends Controller {
 					$site->host = $_POST['site_host'];
 					$site->ftp = $_POST['site_ftp'];
 					$site->db = $_POST['site_db'];
-					$site->client_id = $_POST['client_id'];
+				}
+				$site->client_id = $pack->client_id;
+				$site->save();
+				$pack->site_id = $site->primaryKey;
+			} 
+			// иначе изменяем привязываем сайт к клиенту проекту
+			elseif (isset($_POST['site_id'])) {
+				if ($site = Site::getById($_POST['site_id'])) {
+					$site->client_id = $pack->client_id;
 					$site->save();
 				}
-				$pack->site_id = $site->primaryKey;
-			} elseif (isset($_POST['site_id'])) {
 				$pack->site_id = $_POST['site_id'];
 			}
 			
@@ -222,6 +228,29 @@ class PackageController extends Controller {
 			$pack->client_id = $client->primaryKey;
 		}
 		
+		// создание сайта при $_POST['site_url'] или изменение при $_POST['site_id']
+		if (isset($_POST['site_url'])) {
+			$site = Site::getByUrl($_POST['site_url']);
+			if (!$site) {
+				$site = new Site();
+				$site->url = $_POST['site_url'];
+				$site->host = $_POST['site_host'];
+				$site->ftp = $_POST['site_ftp'];
+				$site->db = $_POST['site_db'];
+			}
+			$site->client_id = $pack->client_id;
+			$site->save();
+			$pack->site_id = $site->primaryKey;
+		} 
+		// иначе изменяем привязываем сайт к клиенту проекту
+		elseif (isset($_POST['site_id'])) {
+			if ($site = Site::getById($_POST['site_id'])) {
+				$site->client_id = $pack->client_id;
+				$site->save();
+			}
+			$pack->site_id = $_POST['site_id'];
+		}
+		
 		// отдаём другому менеджеру
 		if ($manager_id = $_POST['people_id']['manager'] and $manager_id != $pack->manager_id) {
 			// Log write
@@ -236,23 +265,6 @@ class PackageController extends Controller {
 		$pack->descr = $_POST['pack_descr'];
 		$pack->dt_change = date('Y-m-d H:i:s');
 		$pack->summa = $_POST['pack_summa'];
-		
-		// создание сайта при $_POST['site_url'] или изменение при $_POST['site_id']
-		if (isset($_POST['site_url'])) {
-			$site = Site::getByUrl($_POST['site_url']);
-			if (!$site) {
-				$site = new Site();
-				$site->client_id = $client->primaryKey;
-				$site->url = $_POST['site_url'];
-				$site->host = $_POST['site_host'];
-				$site->ftp = $_POST['site_ftp'];
-				$site->db = $_POST['site_db'];
-				$site->save();
-			}
-			$pack->site_id = $site->primaryKey;
-		} elseif (isset($_POST['site_id'])) {
-			$pack->site_id = $_POST['site_id'];
-		}
 		
 		$pack->save();
 
@@ -345,18 +357,20 @@ class PackageController extends Controller {
 	 * @return
 	 */
 	public function actionAddPay($package_id, $summa, $message = null, $noReporting = false) {
+	
 		$package = Package::model()->findByPk($package_id);
+		$package->paid += (float) $summa;
 		
 		// создаем задачу в Redmine, если её еще нет
 		if (!$package->redmine_proj) {
 			$rmManager = Redmine::getUserByLogin(Yii::app()->user->login);
-			$rmProject = Redmine::getProjectByIdentifier('sites');
+			$rmProject = Redmine::getProjectByIdentifier(Yii::app()->params['redmineConfig']['defaulProject']);
 			
 			$subject = "#{$package->id} {$package->name} для {$package->client->mail}";
 			
 			$description = "h1. $subject\n\n";
 			$description .= "h2. примечания:\n\n{$package->descr}\n\n";
-			$description .= "h2. сумма".number_format($package->summa, 0, ',', ' ')."руб.\n";
+			$description .= "h2. сумма: ".number_format($package->summa, 0, ',', ' ')."руб.\n";
 			try {
 				$issue = Redmine::createIssue(array(
 					// в каком проекте создать задачу
@@ -366,7 +380,7 @@ class PackageController extends Controller {
 					// кто назначил и кому наначено
 					'author_id'=>$rmManager['id'],'assigned_to_id'=>$rmManager['id'],
 					// родительская задача
-					//'parent_id'=>0,
+					//'parent_issue_id'=>0,
 					// тема и описание
 					'subject'=>$subject,'description'=>$description,
 					// когда начата и когда должна быть закончена
@@ -382,13 +396,17 @@ class PackageController extends Controller {
 				return;
 			}
 			
-			$package->redmine_proj = @$issue['id'];
+			$package->redmine_proj = $issue['id'];
 		}
 		// добавим в Redmine комментарий об оплате
 		try {
 			Redmine::updateIssue($package->redmine_proj, array(
 				// сообщение
-				'notes'=>"h2. поступила оплата\n\n*сумма* - ".number_format($summa, 0, ',', ' ')."руб.\n\n*подробности:* ".$message,
+				'notes'=>"h2. поступила оплата\n\n*сумма* - ".number_format($summa, 0, ',', ' ')."руб., оплачено "
+				//
+				.($package->summa > 0 ? number_format(100 * $package->paid / $package->summa, 0)."%" : '')
+				//
+				."\n\n*подробности:* ".$message,
 			));
 		}
 		catch(Exception $e) {
@@ -413,8 +431,7 @@ class PackageController extends Controller {
 		$pay->save();
 		
 		// обновим заказ
-		$package->status_id = $summa >= ($package->summa - $package->paid) ? 30 : 20;
-		$package->paid += $summa;
+		$package->status_id = $package->paid >= $package->summa ? 30 : 20;
 		$package->dt_change = date('Y-m-d H:i:s');
 		
 		$package->save();
@@ -439,13 +456,13 @@ class PackageController extends Controller {
 		if (!$package->redmine_proj) {
 			// при создании главной задачи, её могли назначить другому менеджеру, в этом случае $master_id != 0
 			$rmManager = (!$serv_id and $master_id) ? Redmine::getUserByLogin(People::model()->findByPk($master_id)->login) : Redmine::getUserByLogin(Yii::app()->user->login);
-			$rmProject = Redmine::getProjectByIdentifier('sites');
+			$rmProject = Redmine::getProjectByIdentifier(Yii::app()->params['redmineConfig']['defaulProject']);
 			
 			$subject = "#{$package->id} {$package->name} для {$package->client->mail}";
 			
-			$description = "h1. $subject\n\n";
+			$description = "h1. {$subject}\n\n";
 			$description .= "h2. примечания:\n\n{$package->descr}\n\n";
-			$description .= "h2. сумма".number_format($package->summa, 0, ',', ' ')."руб.";
+			$description .= "h2. сумма: ".number_format($package->summa, 0, ',', ' ')."руб.";
 			
 			try {
 				$issue = Redmine::createIssue(array(
@@ -456,7 +473,7 @@ class PackageController extends Controller {
 					// кто назначил и кому наначено
 					'author_id'=>$rmManager['id'],'assigned_to_id'=>$rmManager['id'],
 					// родительская задача
-					//'parent_id'=>0,
+					//'parent_issue_id'=>0,
 					// тема и описание
 					'subject'=>$subject,'description'=>$description,
 					// когда начата и когда должна быть закончена
@@ -481,15 +498,14 @@ class PackageController extends Controller {
 			
 			// если не нашелся мастер, назначаем мастером менеджера
 			$rmMaster = Redmine::getUserByLogin(isset($service->master->login) ? $service->master->login : $rmManager['login']);
-			
-			$rmProject = Redmine::getProjectByIdentifier('sites');
+			$rmProject = Redmine::getProjectByIdentifier(Yii::app()->params['redmineConfig']['defaulProject']);
 			
 			$subject = "#{$package->id} {$service->service->name} для {$package->client->mail}";
 			
-			$description = "h1. $subject\n\n";
+			$description = "h1. {$subject}\n\n";
 			
 			if (isset($package->site)) {
-				$description .= "h2. сайт:* {$package->site->url}\n\n";
+				$description .= "h2. сайт: {$package->site->url}\n\n";
 				$description .= "*хост:* {$package->site->host}\n";
 				$description .= "*ftp:* {$package->site->ftp}\n";
 				$description .= "*db:* {$package->site->db}\n";
@@ -498,7 +514,7 @@ class PackageController extends Controller {
 				$description .= "\n";
 			}
 			$description .= "h2. примечания:\n\n{$service->descr}\n\n";
-			$description .= "h2. стоимость".number_format($service->price, 0, ',', ' ')."руб.";
+			$description .= "h2. стоимость: ".number_format($service->price, 0, ',', ' ')."руб.";
 			
 			try {
 				$issue = Redmine::createIssue(array(
@@ -509,7 +525,7 @@ class PackageController extends Controller {
 					// кто назначил и кому наначено
 					'author_id'=>$rmManager['id'],'assigned_to_id'=>$rmMaster['id'],
 					// родительская задача
-					'parent_id'=>$package->redmine_proj,
+					'parent_issue_id'=>$package->redmine_proj,
 					// тема и описание
 					'subject'=>$subject,'description'=>$description,
 					// когда начата и когда должна быть закончена
@@ -523,16 +539,18 @@ class PackageController extends Controller {
 			catch(Exception $e) {
 			}
 			
-			$service->to_redmine = @$issue['id'];
+			$service->to_redmine = $issue['id'];
 			$service->save();
 			
 			// добавляем в главную задачу комментарий об этом действии
 			
+			$serviceName = $service->service->name;
 			$masterFullName = @$rmMaster['firstname'].' '.@$rmMaster['lastname'];
+			
 			try {
 				Redmine::updateIssue($package->redmine_proj, array(
 					// сообщение
-					'notes'=>"h2. поставлена задача\n\nисполнитель - \"{$masterFullName}\":https://redmine.fabricasaitov.ru/users/{$rmMaster['id']}, задача #{$service->to_redmine}",
+					'notes'=>"h2. поставлена задача - {$serviceName}\n\nисполнитель - \"{$masterFullName}\":https://redmine.fabricasaitov.ru/users/{$rmMaster['id']}, задача #{$service->to_redmine}",
 					// потраченное время (прибавляется)
 					'spent_hours'=>$service->service->duration
 				));
@@ -557,7 +575,7 @@ class PackageController extends Controller {
 		$package->save();
 		
 		$this->renderPartial('issue', array(
-			'issue_id'=>$package->redmine_proj,'pack_id'=>$pack_id,'serv_id'=>$serv_id
+			'issue_id'=>@$issue['id'],'pack_id'=>$pack_id,'serv_id'=>$serv_id
 		));
 	}
 	
@@ -572,13 +590,13 @@ class PackageController extends Controller {
 		// если нет главной задачи - создаем
 		if (!$package->redmine_proj) {
 			$rmManager = Redmine::getUserByLogin(Yii::app()->user->login);
-			$rmProject = Redmine::getProjectByIdentifier('sites');
+			$rmProject = Redmine::getProjectByIdentifier(Yii::app()->params['redmineConfig']['defaulProject']);
 			
 			$subject = "#{$package->id} {$package->name} для {$package->client->mail}";
 			
-			$description = "h1. $subject\n\n";
+			$description = "h1. {$subject}\n\n";
 			$description .= "h2. примечания:\n\n{$package->descr}\n\n";
-			$description .= "h2. сумма".number_format($service->summa, 0, ',', ' ')."руб.";
+			$description .= "h2. сумма: ".number_format($service->summa, 0, ',', ' ')."руб.";
 			
 			try {
 				$issue = Redmine::createIssue(array(
@@ -606,13 +624,13 @@ class PackageController extends Controller {
 				return;
 			}
 			
-			$package->redmine_proj = @$issue['id'];
+			$package->redmine_proj = $issue['id'];
 		}
 		
 		// распределяем нераспределенные сервисы
 		
 		$rmManager = Redmine::getUserByLogin(Yii::app()->user->login);
-		$rmProject = Redmine::getProjectByIdentifier('sites');
+		$rmProject = Redmine::getProjectByIdentifier(Yii::app()->params['redmineConfig']['defaulProject']);
 		
 		foreach ($package->servPack as $service) {
 			if (!$service->to_redmine) {
@@ -634,7 +652,7 @@ class PackageController extends Controller {
 					$description .= "\n";
 				}
 				$description .= "h2. примечания:\n\n{$service->descr}\n\n";
-				$description .= "h2. стоимость".number_format($service->price, 0, ',', ' ')."руб.";
+				$description .= "h2. стоимость: ".number_format($service->price, 0, ',', ' ')."руб.";
 				
 				try {
 					$issue = Redmine::createIssue(array(
@@ -645,7 +663,7 @@ class PackageController extends Controller {
 						// кто назначил и кому наначено
 						'author_id'=>$rmManager['id'],'assigned_to_id'=>$rmMaster['id'],
 						// родительская задача
-						'parent_id'=>$package->redmine_proj,
+						'parent_issue_id'=>$package->redmine_proj,
 						// тема и описание
 						'subject'=>$subject,'description'=>$description,
 						// когда начата и когда должна быть закончена
@@ -708,9 +726,9 @@ class PackageController extends Controller {
 	 */
 	public function actionAddRedmineMessage() {
 	
-		$issue_id = (int) @$_POST['id'];
-		$package_id = (int) @$_POST['pack'];
-		$serv_id = (int) @$_POST['pack'];
+		$issue_id = (int) @$_POST['issue_id'];
+		$package_id = (int) @$_POST['pack_id'];
+		$serv_id = (int) @$_POST['serv_id'];
 		$message = (string) @$_POST['message'];
 		
 		try {
@@ -744,17 +762,31 @@ class PackageController extends Controller {
 	 * @param object $serv_id [optional]
 	 * @return
 	 */
-	public function actionBindRedmineIssue($issue_id, $pack_id, $serv_id = false) {
+	public function actionBindRedmineIssue($issue_id, $pack_id, $serv_id = 0) {
 	
 		if ($issue_id && $pack_id && $serv_id) {
 			$s2p = Serv2pack::getByIds($serv_id, $pack_id);
 			$s2p->to_redmine = $issue_id;
 			$s2p->save();
+			
+			$this->renderPartial('issue', array(
+				'issue_id'=>$issue_id,'pack_id'=>$pack_id,'serv_id'=>$serv_id
+			));
+			return;
 		} elseif ($issue_id && $pack_id && !$serv_id) {
 			$pack = Package::model()->findByPk($pack_id);
 			$pack->redmine_proj = $issue_id;
 			$pack->save();
+			
+			$this->renderPartial('issue', array(
+				'issue_id'=>$issue_id,'pack_id'=>$pack_id,'serv_id'=>$serv_id
+			));
+			return;
 		}
+		
+		$this->renderPartial('issue', array(
+			'issue_id'=>$issue_id,'pack_id'=>$pack_id,'serv_id'=>$serv_id
+		));
 	}
 	
 	/**
@@ -764,7 +796,7 @@ class PackageController extends Controller {
 	 * @param object $serv_id
 	 * @return
 	 */
-	public function actionCloseRedmineIssue($issue_id, $pack_id, $serv_id) {
+	public function actionCloseRedmineIssue($issue_id, $pack_id, $serv_id = 0) {
 		try {
 			Redmine::updateIssue($issue_id, array(
 				'done_ratio'=>100,'status_id'=>8
@@ -772,21 +804,23 @@ class PackageController extends Controller {
 		}
 		catch(Exception $e) {
 			$this->renderPartial('issue', array(
-				'issue_id'=>$issue_id,'pack_id'=>$pack_id
+				'issue_id'=>$issue_id,'pack_id'=>$pack_id,'serv_id'=>$serv_id
 			));
 			return;
 		}
 		
-		$serv2pack = Serv2pack::getByIds($serv_id, $pack_id);
-		$serv2pack->dt_end = date('Y-m-d H:i:s');
-		$serv2pack->save();
+		if ($serv_id) {
+			$serv2pack = Serv2pack::getByIds($serv_id, $pack_id);
+			$serv2pack->dt_end = date('Y-m-d H:i:s');
+			$serv2pack->save();
+		}
 		
 		$pack = Package::model()->findByPk($pack_id);
 		$pack->dt_change = date('Y-m-d H:i:s');
 		$pack->save();
 		
 		$this->renderPartial('issue', array(
-			'issue_id'=>$issue_id,'pack_id'=>$pack_id
+			'issue_id'=>$issue_id,'pack_id'=>$pack_id,'serv_id'=>$serv_id
 		));
 	}
 }

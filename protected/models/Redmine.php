@@ -107,7 +107,7 @@ class RedmineConnector {
 			curl_setopt($curl, CURLOPT_URL, $url.'/'.$function);
 			curl_setopt($curl, CURLOPT_PORT, $config['port']);
 			
-			if (stristr('users.xml', $function))
+			if (stristr($function, 'users.xml') || stristr($function, 'projects.xml'))
 				// от суперадмина
 				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
 			else				

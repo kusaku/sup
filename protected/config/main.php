@@ -26,13 +26,16 @@ return array(
 	'params'=>array(
 		// конфиг редмайна. на продуктиве, естественно, свой.
 		'redmineConfig'=>array(
+			'defaulProject' => 'dev',
 			'enabled' => true,
-			'proxy' => '192.168.0.254:3128',
-			'protocol' => 'https',
-			'port' => '443',
-			'url' => 'redmine.fabricasaitov.ru',
-			'rootLogin' => 'sup',
-			'rootPassword' => 'ekISozOrs9ixcLRt'
+			//'proxy' => '192.168.0.254:3128',
+			//'protocol' => 'https',
+			'protocol' => 'http',
+			//'port' => '443',
+			'port' => '80',
+			'url' => 'redmine.sandbox.loc',
+			'rootLogin' => 'dmitry.k',
+			'rootPassword' => 'Ij3Ohmee'
 		),
 	),
 	

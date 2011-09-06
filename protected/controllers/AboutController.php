@@ -49,7 +49,29 @@ class AboutController extends Controller {
 	public function actionTest() {
 		echo '<pre>';
 		
-		$array = Redmine::readIssue(5978, false);
+		$project = Redmine::getProjectByIdentifier('dev');
+		$user = Redmine::getUserByLogin(Yii::app()->user->login);
+		
+		//echo count($user);
+		//print_r($user);
+		//exit();
+		
+		$array = Redmine::createIssue(array(
+					// в каком проекте создать задачу
+					'project_id'=>$project['id'],
+					// параметры задачи
+					'tracker_id'=>2,'status_id'=>1,'priority_id'=>4,
+					// кто назначил и кому наначено
+					'author_id'=>$user['id'],'assigned_to_id'=>$user['id'],
+					// родительская задача
+					'parent_issue_id'=>3165,
+					// тема и описание
+					'subject'=>'test','description'=>'test',
+					// когда начата и когда должна быть закончена
+					'start_date'=>date('Y-m-d', strtotime('now')),'due_date'=>date('Y-m-d', strtotime('now +1 day')),
+					// время на выполнение и потраченное время
+					'estimated_hours'=>'0.0','spent_hours'=>'0.0'
+				));
 		
 		echo count($array);
 		print_r($array);
