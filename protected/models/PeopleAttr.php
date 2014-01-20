@@ -1,8 +1,4 @@
 <?php 
-/*
- Атрибуты клиента
- */
-
 class PeopleAttr extends CActiveRecord {
 	public static function model($className = __CLASS__) {
 		return parent::model($className);
@@ -14,8 +10,18 @@ class PeopleAttr extends CActiveRecord {
 	
 	public function relations() {
 		return array(
-			'client'=>array(self::BELONGS_TO, 'People', 'people_id'),
-			'attr'=>array(self::BELONGS_TO, 'Attributes', 'attribute_id', 'joinType'=>'INNER JOIN')
-			);
+			'client'=>array(
+				self::BELONGS_TO,
+				'People',
+				'people_id'
+			),
+				
+			'attr'=>array(
+				self::BELONGS_TO,
+				'Attributes',
+				'attribute_id',
+				'joinType'=>'INNER JOIN'
+			)
+		);
 	}
 }

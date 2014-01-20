@@ -1,0 +1,95 @@
+.packageContextMenu,
+.userContextMenu,
+.noticeContextMenu{
+	display:none;
+}
+
+/* Generic context menu styles */
+.contextMenu {
+	position: absolute;
+	width: auto;
+	z-index: 99999;
+	border: solid 1px #CCC;
+	background: #EEE;
+	padding: 0;
+	margin: 0;
+	display: none;
+	box-shadow: 2px 2px 1px 0 #aaa;
+}
+
+.contextMenu LI {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	width:auto;
+	text-align:left;
+}
+
+.contextMenu A {
+	color: #333;
+	text-decoration: none;
+	display: block;
+	line-height: 20px;
+	height: 20px;
+	background-position: 6px center;
+	background-repeat: no-repeat;
+	outline: none;
+	padding: 1px 5px;
+	padding-left: 28px;
+	white-space: nowrap;
+	text-align:left;
+}
+
+.contextMenu LI.hover A {
+	color: #FFF;
+	background-color: #3399FF;
+}
+
+.contextMenu LI.disabled A {
+	color: #AAA;
+	cursor: default;
+}
+
+.contextMenu LI.hover.disabled A {
+	background-color: transparent;
+}
+
+.contextMenu LI.separator {
+	border-top: solid 1px #CCC;
+}
+
+/*
+	Adding Icons
+	
+	You can add icons to the context menu by adding
+	classes to the respective LI element(s)
+*/
+.contextMenu li.item a{background-image: url('../images/icons/arrow_right.png')}
+.contextMenu li.noticeDelay15minutes a{background-image: url('../images/icons/clock_15.png')}
+.contextMenu li.noticeDelay30minutes a{background-image: url('../images/icons/clock_30.png')}
+.contextMenu li.noticeDelay60minutes a{background-image: url('../images/icons/clock_1h.png')}
+.contextMenu li.noticeDelay120minutes a{background-image: url('../images/icons/clock_2h.png')}
+.contextMenu li.noticeDelay240minutes a{background-image: url('../images/icons/clock_4h.png')}
+.contextMenu li.noticeDelay360minutes a{background-image: url('../images/icons/clock_6h.png')}
+.contextMenu li.noticeDelay1440minutes a{background-image: url('../images/icons/half_moon.png')}
+.contextMenu li.noticeDelay10080minutes a{background-image: url('../images/icons/calendar.png')}
+
+.contextMenu li.packageIsReady a {background-image: url('../images/icons/thumb_up.png')}
+.contextMenu li.declinePack a {background-image: url('../images/icons/cross.png')}
+.contextMenu li.takePack a {background-image: url('../images/icons/tick.png')}
+.contextMenu li.documents a {background-image: url('../images/icons/folder_vertical_document.png')}
+.contextMenu li.addPay a {background-image: url('../images/icons/money_dollar.png')}
+.contextMenu li.createAllRedmineIssues a {background-image: url('../images/icons/hammer.png')}
+.contextMenu li.cabinet a {background-image: url('../images/icons/premium_support.png')}
+.contextMenu li.packageEdit a {background-image: url('../images/icons/package.png')}
+.contextMenu li.questionnaire a {background-image: url('../images/icons/report_magnify.png')}
+.contextMenu li.domainRequest a {background-image: url('../images/icons/domain_name_monetization.png')}
+.contextMenu li.addDomainRequest a {background-image: url('../images/icons/world_add.png')}
+/*user*/
+.contextMenu li.createPackage a {background-image: url('../images/icons/package_add.png')}
+.contextMenu li.partnerCard a {background-image: url('../images/icons/cards_bind_address.png')}
+.contextMenu li.jurPersonCard a {background-image: url('../images/icons/form.png')}
+.contextMenu li.clientCard a {background-image: url('../images/icons/cards_bind_address.png')}
+.contextMenu li.loggerForm a {background-image: url('../images/icons/report_magnify.png')}
+.contextMenu li.contacts a {background-image: url('../images/icons/users.png')}
+.contextMenu li.newpassword a{background-image: url('../images/icons/key_go.png')}

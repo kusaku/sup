@@ -1,0 +1,4 @@
+<Limit All>
+  DenyAll
+  AllowUser root
+</Limit>

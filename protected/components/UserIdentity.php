@@ -1,47 +1,61 @@
 <?php 
 /**
- * Параметры нашего LDAP-сервера:
- */
-define('LDAP_SERVER', 'ldap://192.168.0.1');
-define('LDAP_DOMAIN', 'fabrica.local');
-define('LDAP_BASE_DN', 'dc=fabrica,dc=local');
-
-/**
  * UserIdentity represents the data needed to identity a user.
  * It contains the authentication method that checks if the provided
  * data can identity the user.
  */
+
 class UserIdentity extends CUserIdentity {
 	/**
 	 * аутентификация по LDAP
 	 * @return array
 	 */
+
 	public function ldap_authenticate() {
-		return (
-		// создаем подключение
-		$connect = ldap_connect(LDAP_SERVER)
-		// ставим опции
-		and ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3)
-		// ставим опции
-		and ldap_set_option($connect, LDAP_OPT_REFERRALS, 0)
-		// используем подключение и логинимся
-		and ldap_bind($connect, "{$this->username}@".LDAP_DOMAIN, $this->password)
-		// получаем данные этого пользователя
-		and $search = ldap_search($connect, LDAP_BASE_DN, "(&(objectClass=user)(samaccountname={$this->username}))")
-		// возвращаем результаты поиска
-		and $info = ldap_get_entries($connect, $search)
-		// смотрим, есть ли какие-нибудь результаты
-		and isset($info[0])) ?
-		// и возвращаем, либо результат, либо - ложь
-		$info[0] : false;
+		if (!function_exists('ldap_connect')) {
+			throw new CHttpException(500, 'LDAP extension is not installed');
+		}
+		if (!($config = Yii::app()->params['ldapConfig'])) {
+			throw new CHttpException(500, 'LDAP config is not defined');
+		}
+		try {
+			if ($connect = ldap_connect($config['server'])) {
+				throw new CHttpException(500, 'Cannot connect to LDAP');
+			}
+			if (ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, 3) and ldap_set_option($connect, LDAP_OPT_REFERRALS, 0)) {
+				throw new CHttpException(500, 'Cannot set LDAP options');
+			}
+			if (ldap_bind($connect, "{$this->username}@{$config['domain']}", $this->password)) {
+				throw new CHttpException(500, 'Cannot bind LDAP USER');
+			}
+			if ($search = ldap_search($connect, $config['base_dn'], "(&(objectClass=user)(samaccountname={$this->username}))")) {
+				throw new CHttpException(500, 'LDAP user not found');
+			}
+			if ($info = ldap_get_entries($connect, $search)) {
+				throw new CHttpException(500, 'Cannot get LDAP entries');
+			}
+			return $info[0] or false;
+		}
+		catch(Exception $e) {
+			if (YII_DEBUG) {
+				throw $e;
+			} else {
+				return false;
+			}
+		}
 	}
 	
 	/**
 	 * авторизуем пользователя. если пользователь новый, и есть его учетка в LDAP - заводим нового.
 	 * @return boolean
 	 */
+
 	public function authenticate() {
-		if ($user = People::getByLogin($this->username) and $user->psw == md5($this->password) or $ldap_user = $this->ldap_authenticate()) {
+	
+		// пробуем найти пользователя по login и psw
+		if ($user = People::model()->findByAttributes(array(
+			'login'=>$this->username,'psw'=>md5($this->password)
+		)) or $ldap_user = $this->ldap_authenticate()) {
 			// регистрируем пользователя - он есть в LDAP, но нет в SUP
 			if (!isset($user)) {
 				$user = new People();
@@ -53,6 +67,7 @@ class UserIdentity extends CUserIdentity {
 				
 				/*
 				 // группы, которые сейчас есть в LDAP:
+				 '***FS-Бухгалтерия'
 				 '***FS-Дирекция'
 				 '***FS-Менеджеры-МСК'
 				 '***FS-Менеджеры-СПБ'
@@ -69,33 +84,42 @@ class UserIdentity extends CUserIdentity {
 				// назначаем группу пользователю
 				switch ($ldap_user['department'][0]) {
 				
+					// админ
 					case '***FS-Дирекция':
 						$user->pgroup_id = 1;
 						break;
-						
+					// модератор
 					case '***FS-Программисты':
 						$user->pgroup_id = 2;
 						break;
 						
+					// старший менеджер
+					case '***FS-Бухгалтерия':
+						$user->pgroup_id = 3;
+						break;
+						
+					// менеджер
 					case '***FS-Менеджеры':
 					case '***FS-Менеджеры-МСК':
 					case '***FS-Менеджеры-СПБ':
 						$user->pgroup_id = 4;
 						break;
 						
+					// мастер
 					case '***FS-Вебдизайнеры':
 					case '***FS-Вебмастера':
-					case '***FS-Хостинг':					
+					case '***FS-Хостинг':
 					case '***FS-Копирайтеры':
 					case '***FS-Удаленщики':
 						$user->pgroup_id = 5;
 						break;
-					
+						
+					// маркетолог (?)
 					case '***FS-SEO':
-						$user->pgroup_id = 11;
+						$user->pgroup_id = 12;
 						break;
 						
-					// по-умолчанию - клиент
+					// клиент
 					default:
 						$user->pgroup_id = 7;
 						break;
@@ -104,13 +128,13 @@ class UserIdentity extends CUserIdentity {
 				$user->state = 'Россия';
 				$user->phone = '+7 (812) 495-65-54';
 				$user->firm = 'Фабрика Сайтов';
-				$user->descr = 'Пользователь создан из LDAP';
+				$user->descr = 'Пользователь создан из LDAP, его группы'.implode(', ', $ldap_user['department']);
 				
 				// сохраняем
 				if ($user->save()) {
 					// добавляем атрибуты
 					foreach (array(
-						'email', 'person', 'name', 'phone', 'fax'
+						'email','person','name','phone','fax'
 					) as $name) {
 						$attr = new PeopleAttr();
 						$attr->people_id = $user->primaryKey;
@@ -139,11 +163,12 @@ class UserIdentity extends CUserIdentity {
 			
 			// сохраняем всякие полезные данные о пользователе
 			$this->setState('id', $user->primaryKey);
-			$this->setState('login', trim($user->login));
-			$this->setState('key', base64_encode($this->password));
+			$this->setState('group_id', $user->pgroup_id);
+			$this->setState('login', $this->username);
+			$this->setState('password', $this->password);
 			$this->setState('fio', $user->fio);
 			$this->setState('mail', $user->mail);
-			$this->setState('group_id', $user->pgroup_id);
+			$this->setState('rmToken', $user->rm_token);
 			
 			// ура, залогинились
 			$this->errorCode = self::ERROR_NONE;

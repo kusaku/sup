@@ -1,0 +1,93 @@
+@media print {
+	body {overflow-y:visible;}
+	.logo,.documentMenu,.today{display:none;}
+	
+	.documentLayout {
+		padding:0px;
+		margin:0px;
+		background:white;
+	}
+	
+	.documentContent {
+		width:100%;
+		border:0px none;
+	}
+}
+
+@media screen {	
+	.history .date {
+		border-bottom:1px solid black;
+		margin: 0 0 10px 0;
+		padding: 10px 0px 7px 15px;
+	}	
+	.history .date span {
+		font-weight:bold;
+	}
+	
+	.history .document {
+		border-bottom:2px solid #FEF1EC;
+		margin: 15px 0 5px 20px;
+		padding: 0 0 0 13px;
+	}
+	
+	.history .document .time {
+		color:gray;
+		font-size:11px;
+	}
+	
+	.history .document .icon {
+		float:left;
+		margin-right:10px;
+	}
+	
+	.history .document .formats {
+		float:right;
+		border-left:2px solid #FEF1EC;
+	}
+	
+	.history .document .formats .format {
+		float:left;
+		border-right:2px solid #FEF1EC;
+		padding:3px 10px 0 10px;
+	}
+	
+	.buttons {
+		border:1px solid #FF7B0B;
+		padding:0px;
+	}
+	
+	.buttons .button {
+		float:left;
+		padding:0;
+		margin:0;
+	}
+	
+	.buttons .button a {
+		border-right:1px solid #FF7B0B;
+		display:block;
+		height:25px;
+		line-height:25px;
+		padding-right:7px;
+		text-decoration:none;
+	}
+	
+	.buttons .button a img {
+		margin:5px 5px 0 5px;
+		float:left;
+	}
+	
+	.documentContent {
+	    width: 800px;
+	    padding: 50px 30px 150px 30px;
+	    border-width: 1px 2px 2px 1px;
+	    border-color: #000000;
+	    border-style: solid;
+	    margin: 0px;
+	    background:white;
+	}
+	
+	.documentLayout {
+		padding:50px 48px;
+		background:#bbb;
+	}
+}

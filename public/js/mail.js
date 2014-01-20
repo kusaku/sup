@@ -5,20 +5,20 @@
  * Список доступных шаблонов для отправки письма клиенту
  * @param {Object} client_id
  */
-function selectMailTemplate(client_id){
+function selectMailTemplate(package_id){
 	showPopUpLoader();
 	$.ajax({
-		url: '/mail/list',
+		url: '/manager/mail/list',
 		dataType: 'html',
 		data: {
-			'client_id': client_id
+			'package_id': package_id
 		},
 		success: function(data){
 			$('#sup_popup').html(data);
 			showPopUp();
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			$('#sup_popup').text(textStatus);
+			$('#sup_popup').html($('<div style="width:300px;"/>').append($('<h1/>').text(jqXHR.statusText + ':' + jqXHR.status)).append(jqXHR.responseXML ? $('<div/>').html(jqXHR.responseXML) : $('<div/>').text(jqXHR.responseText)).html());
 			showPopUp();
 		}
 	});
@@ -31,7 +31,7 @@ function EditMailTemplates(){
 	hidePopUp();
 	showPopUpLoader();
 	$.ajax({
-		url: '/mail/index',
+		url: '/manager/mail/index',
 		dataType: 'html',
 		success: function(data){
 			$('#sup_popup').html(data);
@@ -39,7 +39,7 @@ function EditMailTemplates(){
 			$('#sup_popup textarea').wysiwyg();
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			$('#sup_popup').text(textStatus);
+			$('#sup_popup').html($('<div style="width:300px;"/>').append($('<h1/>').text(jqXHR.statusText + ':' + jqXHR.status)).append(jqXHR.responseXML ? $('<div/>').html(jqXHR.responseXML) : $('<div/>').text(jqXHR.responseText)).html());
 			showPopUp();
 		}
 	});
@@ -50,10 +50,10 @@ function EditMailTemplates(){
  */
 function SendMail(){
 	$.ajax({
-		url: '/mail/send',
+		url: '/manager/mail/send',
 		dataType: 'html',
 		data: {
-			'client_id': $('#client_id').val(),
+			'package_id': $('#package_id').val(),
 			'template_id': $('#template_id').val()
 		},
 		success: function(data){
@@ -74,14 +74,14 @@ function massMail(){
 	hidePopUp();
 	showPopUpLoader();
 	$.ajax({
-		url: '/mail/massmail',
+		url: '/manager/mail/massmail',
 		dataType: 'html',
 		success: function(data){
 			$('#sup_popup').html(data);
 			showPopUp();
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			$('#sup_popup').text(textStatus);
+			$('#sup_popup').html($('<div style="width:300px;"/>').append($('<h1/>').text(jqXHR.statusText + ':' + jqXHR.status)).append(jqXHR.responseXML ? $('<div/>').html(jqXHR.responseXML) : $('<div/>').text(jqXHR.responseText)).html());
 			showPopUp();
 		}
 	});
@@ -96,7 +96,7 @@ function resetQueue(){
 	
 	$.ajax({
 		type: 'GET',
-		url: '/mail/resetqueue',
+		url: '/manager/mail/resetqueue',
 		//dataType: 'json',
 		success: function(data){
 			try {
@@ -128,7 +128,7 @@ function makeQueue(){
 	
 	$.ajax({
 		type: 'GET',
-		url: '/mail/makequeue',
+		url: '/manager/mail/makequeue',
 		data: {
 			'filter': filter,
 			'template_id': template_id
@@ -168,7 +168,7 @@ function processQueue(){
 	
 	$.ajax({
 		type: 'GET',
-		url: '/mail/processqueue',
+		url: '/manager/mail/processqueue',
 		//dataType: 'json',
 		success: function(data){
 			try {

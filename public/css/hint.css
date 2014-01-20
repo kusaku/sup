@@ -1,0 +1,19 @@
+#hint {
+	position: absolute;
+	z-index:10000;
+	text-align: left;
+}
+
+#hint .hint_content {
+	border:1px solid #ee7900;
+	background:white;
+	color:#EE7900;
+	padding:10px;
+    text-align: left;
+}
+
+#hint .hint_arrow {
+	background:transparent url('../images/arrow_hint.png') 21px top no-repeat;
+	height:12px;
+	margin-top:-1px;
+}

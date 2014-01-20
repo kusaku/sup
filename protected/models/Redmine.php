@@ -19,12 +19,14 @@
 /**
  * коннектор Redmine
  */
+
 class RedmineConnector {
 	/**
 	 * получить о курле
 	 * @param resourse $curl
 	 * @return
 	 */
+
 	private static function getCurlInfo($curl) {
 		$errors = '';
 		foreach (curl_getinfo($curl) as $key=>$value)
@@ -36,6 +38,7 @@ class RedmineConnector {
 	 * получить инфо об ошибке XML
 	 * @return
 	 */
+
 	private static function getXMLErrors() {
 		$errors = '';
 		foreach (libxml_get_errors() as $error) {
@@ -47,15 +50,26 @@ class RedmineConnector {
 	/**
 	 * запрос к Redmine
 	 * @param string $function url функции
-	 * @param SimpleXMLElement $data [optional] параметры
+	 * @param string $data [optional] параметры (XML)
 	 * @param object $method [optional] метод запроса
 	 * @return SimpleXMLElement
 	 */
+
 	public static function runRequest($function, $data = null, $method = 'GET') {
 	
-		// здесь кешируем все GET запросы в течении жизни проложения
-		static $cache;
-		static $config;
+		// $cache - здесь кешируем все GET запросы в течении жизни проложения
+
+		static $cache, $config, $proxy;
+		
+		$http_headers = array(
+		);
+		
+		// кодировка UTF-8
+		$http_headers[] = 'Content-Type: text/xml; charset=UTF-8';
+		// длина сообщения, если есть
+		if (isset($data)) {
+			$http_headers[] = 'Content-Length: '.strlen($data);
+		}
 		
 		// уникальный хеш запроса
 		$hash = md5($function.','.$data);
@@ -71,15 +85,14 @@ class RedmineConnector {
 			if (!($config or $config = Yii::app()->params['redmineConfig']))
 				throw new CHttpException(500, 'Redmine config is not defined');
 				
-			// плюемся, если в настройках не разрешено использовать Redmine
-			if (!$config['enabled'])
-				throw new CHttpException(500, 'Redmine is disabled');
-				
-			// формируем url сервара с указанием протокола
-			$url = $config['protocol'].'://'.$config['url'];
-			
 			// открываем ресурс
 			$curl = curl_init();
+			
+			// формируем url запроса
+			curl_setopt($curl, CURLOPT_URL, "{$config['url']}/{$function}");
+			
+			// нужен ли порт?
+			//curl_setopt($curl, CURLOPT_PORT, $config['port']);
 			
 			// ставим курлю тип запроса
 			$method = strtoupper(trim($method));
@@ -103,26 +116,38 @@ class RedmineConnector {
 					break;
 			}
 			
-			// формируем url запроса
-			curl_setopt($curl, CURLOPT_URL, $url.'/'.$function);
-			curl_setopt($curl, CURLOPT_PORT, $config['port']);
-			
-			if (stristr($function, 'users.xml') || stristr($function, 'projects.xml'))
-				// от суперадмина
-				curl_setopt($curl, CURLOPT_USERPWD, "{$config['rootLogin']}:{$config['rootPassword']}");
-			else				
-				// от имени текущего пользователя				
-				curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.':'.base64_decode(Yii::app()->user->key));
-				
+			// в некоторых случаях нужно использовать суперадимина
+			if (stristr($function, 'users.xml') or stristr($function, 'projects.xml')) {
+				// от имени суперадмина
+				if ( empty($config['token'])) {
+					curl_setopt($curl, CURLOPT_USERPWD, "{$config['login']}:{$config['password']}");
+				} else {
+					$http_headers[] = 'X-Redmine-API-Key: '.$config['token'];
+				}
+			} else {
+				// от имени текущего пользователя
+				if ( empty(Yii::app()->user->rmToken)) {
+					curl_setopt($curl, CURLOPT_USERPWD, Yii::app()->user->login.':'.Yii::app()->user->password);
+				} else {
+					$http_headers[] = 'X-Redmine-API-Key: '.Yii::app()->user->rmToken;
+				}
+			}
 			// пробуем все типы авторизации
 			curl_setopt($curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
 			
-			// если мы сидим за проксей
-			if (2 == count(@list($proxy,$port) = explode(':', @$config['proxy']))) {
-				curl_setopt($curl, CURLOPT_PROXY, $proxy);
-				curl_setopt($curl, CURLOPT_PROXYPORT, $port);
-				//curl_setopt($curl, CURLOPT_PROXYAUTH,  CURLAUTH_BASIC | CURLAUTH_NTLM);
-				//curl_setopt($curl, CURLOPT_PROXYUSERPWD, "user:password");
+			// если есть прокси
+			if ($proxy or $proxy = Yii::app()->params['proxyConfig']) {
+				if (count(@list($server,$port) = explode(':', $proxy['server'])) == 2) {
+					curl_setopt($curl, CURLOPT_PROXY, $server);
+					curl_setopt($curl, CURLOPT_PROXYPORT, $port);
+				} else {
+					curl_setopt($curl, CURLOPT_PROXY, $proxy['server']);
+				}
+				if ($proxy['login'] and $proxy['password']) {
+					// вид авторизации можно было бы тоже брать из конфига
+					curl_setopt($curl, CURLOPT_PROXYUSERPWD, "{$proxy['login']}:{$proxy['password']}");
+					curl_setopt($curl, CURLOPT_PROXYAUTH, CURLAUTH_BASIC | CURLAUTH_NTLM);
+				}
 			}
 			
 			// не проверяем SSL сертификаты
@@ -143,43 +168,41 @@ class RedmineConnector {
 			curl_setopt($curl, CURLOPT_FOLLOWLOCATION, true);
 			// 10 метров буфера, должно хватить
 			curl_setopt($curl, CURLOPT_BUFFERSIZE, 1024 * 1024 * 10); // max 10 mb!
-			// кодировка UTF-8 и длина сообщения
-			curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-				'Content-Type: text/xml; charset=UTF-8','Content-Length: '.strlen($data)
-			));
-
+			// ставим заголовки
+			curl_setopt($curl, CURLOPT_HTTPHEADER, $http_headers);
 			
 			// делаем запрос
 			if (false === $response = curl_exec($curl))
-				throw new CHttpException(500, 'cURL request failed: '.curl_error($curl));
+				throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
 				
 			$http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
 			
-			// проверяем успешность
+			// проверяем http код
 			switch ($method) {
 				case 'POST':
 					if (!in_array($http_code, array(
 						201,422
 					)))
-						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
+						throw new CHttpException(500, "cURL request failed (http code $http_code): ".self::getCurlInfo($curl));
 					break;
 				case 'PUT':
 					if (!in_array($http_code, array(
 						200,422
 					)))
-						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
+						throw new CHttpException(500, "cURL request failed (http code $http_code): ".self::getCurlInfo($curl));
 					break;
 				case 'DELETE':
 					if (!in_array($http_code, array(
 						200,422
 					)))
-						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
+						throw new CHttpException(500, "cURL request failed (http code $http_code): ".self::getCurlInfo($curl));
 					break;
 				case 'GET':
 					if (!in_array($http_code, array(
 						200,422
 					)))
-						throw new CHttpException(500, 'cURL request failed: '.self::getCurlInfo($curl));
+						throw new CHttpException(500, "cURL request failed (http code $http_code): ".self::getCurlInfo($curl));
+					break;
 				default:
 					break;
 			}
@@ -196,11 +219,10 @@ class RedmineConnector {
 		libxml_use_internal_errors(true);
 		
 		if (false === $sxml = simplexml_load_string($response))
-			throw new CHttpException(500, 'XML is not well-formed: '.self::getXMLErrors());
+			throw new CHttpException(500, 'XML is not well-formed: '.self::getXMLErrors(), 1);
 			
 		return $sxml;
 	}
-
 	
 	/**
 	 * преобразование xml в массив
@@ -209,6 +231,7 @@ class RedmineConnector {
 	 * @param bool $withAttributes [optional] вывести атрибуты базового элемента
 	 * @return
 	 */
+
 	protected static function xml2array($xml, $index = false, $withAttributes = false) {
 	
 		$array = array(
@@ -251,7 +274,6 @@ class RedmineConnector {
 		}
 		return $array;
 	}
-
 	
 	/**
 	 * преобразование из массива в xml
@@ -260,6 +282,7 @@ class RedmineConnector {
 	 * @param object $xml [optional] над элементом объектом работать
 	 * @return SimpleXMLElement
 	 */
+
 	protected static function array2xml($base, $children = null, &$xml = null) {
 	
 		$children or $children = array(
@@ -285,6 +308,7 @@ class RedmineConnector {
 /**
  * модель Redmine
  */
+
 class RedmineModel extends RedmineConnector {
 
 	/**
@@ -292,18 +316,19 @@ class RedmineModel extends RedmineConnector {
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function createIssue($data) {
 		try {
 			$xml = self::array2xml('issue', $data);
 			return self::xml2array(self::runRequest('issues.xml', $xml->asXML(), 'POST'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
 	/**
-	 * получить список задач 
+	 * получить список задач
 	 * @param string $index [optional] по какому полю проекта проидексировать список
 	 * @param array $params [optional] параметры:
 	 * string $params['sort'] [optional] sorting parameters
@@ -313,7 +338,9 @@ class RedmineModel extends RedmineConnector {
 	 * int $params['assigned_to_id'] [optional] get issues which are assigned to the given user id
 	 * @return array
 	 */
+
 	public static function readIssues($index = 'id', $params = null, $useCache = true) {
+
 		static $cached;
 		
 		$query = '';
@@ -348,7 +375,7 @@ class RedmineModel extends RedmineConnector {
 				}
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			// много данных не влезет, разобъем по 100
@@ -364,14 +391,16 @@ class RedmineModel extends RedmineConnector {
 		}
 		
 		return $cached[$hash];
-	}	
+	}
 	
 	/**
 	 * получить задачу
 	 * @param int $issue_id ID задачи
 	 * @return array
 	 */
+
 	public static function readIssue($issue_id, $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($issue_id);
@@ -384,10 +413,10 @@ class RedmineModel extends RedmineConnector {
 				$cache[$hash] = self::xml2array(self::runRequest("issues/{$issue_id}.xml?include=relations,journals"), 'id');
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
-			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash]);
+			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash], '+ 12 hours');
 		}
 		
 		return $cache[$hash];
@@ -399,13 +428,14 @@ class RedmineModel extends RedmineConnector {
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function updateIssue($issue_id, $data) {
 		try {
 			$xml = self::array2xml('issue', $data);
 			return self::xml2array(self::runRequest("issues/{$issue_id}.xml", $xml->asXML(), 'PUT'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -414,38 +444,40 @@ class RedmineModel extends RedmineConnector {
 	 * @param int $version_id ID задачи
 	 * @return array
 	 */
+
 	public static function deleteIssue($issue_id) {
 		try {
 			return self::xml2array(self::runRequest("issues/{$issue_id}.xml", null, 'DELETE'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
-
 	
 	/**
 	 * создать проект
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function createProject($data) {
 		try {
 			$xml = self::array2xml('project', $data);
 			return self::xml2array(self::runRequest('projects.xml', $xml->asXML(), 'POST'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
-
 	
 	/**
 	 * получить список проектов
 	 * @param string $index [optional] по какому полю элемента проидексировать список
 	 * @return array
 	 */
+
 	public static function readProjects($index = 'id', $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($index);
@@ -461,7 +493,7 @@ class RedmineModel extends RedmineConnector {
 				}
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash], '+1 day');
@@ -475,7 +507,9 @@ class RedmineModel extends RedmineConnector {
 	 * @param string $project_id ID проекта
 	 * @return array
 	 */
+
 	public static function readProject($project_id, $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($project_id);
@@ -488,7 +522,7 @@ class RedmineModel extends RedmineConnector {
 				$cache[$hash] = self::xml2array(self::runRequest("projects/{$project_id}.xml"), 'id');
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash], '+ 1 hour');
@@ -496,7 +530,6 @@ class RedmineModel extends RedmineConnector {
 		
 		return $cache[$hash];
 	}
-
 	
 	/**
 	 * обновить проект
@@ -504,13 +537,14 @@ class RedmineModel extends RedmineConnector {
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function updateProject($project_id, $data) {
 		try {
 			$xml = self::array2xml('project', $data);
 			return self::xml2array(self::runRequest("projects/{$project_id}.xml", $xml->asXML(), 'PUT'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -519,28 +553,29 @@ class RedmineModel extends RedmineConnector {
 	 * @param string $version_id ID проекта
 	 * @return array
 	 */
+
 	public static function deleteProject($project_id) {
 		try {
 			return self::xml2array(self::runRequest("projects/{$project_id}.xml", null, 'DELETE'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
-
 	
 	/**
 	 * создать пользователя
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function createUser($data) {
 		try {
 			$xml = self::array2xml('project', $data);
 			return self::xml2array(self::runRequest('users.xml', $xml->asXML(), 'POST'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -549,7 +584,9 @@ class RedmineModel extends RedmineConnector {
 	 * @param string $index [optional] по какому полю элемента проидексировать список
 	 * @return array
 	 */
+
 	public static function readUsers($index = 'id', $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($index);
@@ -565,7 +602,7 @@ class RedmineModel extends RedmineConnector {
 				}
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash], '+3 hour');
@@ -579,7 +616,9 @@ class RedmineModel extends RedmineConnector {
 	 * @param int $user_id ID пользователя
 	 * @return array
 	 */
+
 	public static function readUser($user_id, $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($user_id);
@@ -592,7 +631,7 @@ class RedmineModel extends RedmineConnector {
 				$cache[$hash] = self::xml2array(self::runRequest("users/{$user_id}.xml?include=memberships"), 'id');
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash], '+ 1 hour');
@@ -600,7 +639,6 @@ class RedmineModel extends RedmineConnector {
 		
 		return $cache[$hash];
 	}
-
 	
 	/**
 	 * обновить пользователя
@@ -608,13 +646,14 @@ class RedmineModel extends RedmineConnector {
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function updateUser($user_id, $data) {
 		try {
 			$xml = self::array2xml('project', $data);
 			return self::xml2array(self::runRequest("users/{$user_id}.xml", $xml->asXML(), 'PUT'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -623,28 +662,29 @@ class RedmineModel extends RedmineConnector {
 	 * @param int $version_id ID пользователя
 	 * @return array
 	 */
+
 	public static function deleteUser($user_id) {
 		try {
 			return self::xml2array(self::runRequest("users/{$user_id}.xml", null, 'DELETE'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
-
 	
 	/**
 	 * создать запись времени
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function createTimeEntry($data) {
 		try {
 			$xml = self::array2xml('project', $data);
 			return self::xml2array(self::runRequest('time_entries.xml', $xml->asXML(), 'POST'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -654,13 +694,14 @@ class RedmineModel extends RedmineConnector {
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function updateTimeEntry($time_entry_id, $data) {
 		try {
 			$xml = self::array2xml('project', $data);
 			return self::xml2array(self::runRequest("time_entries/{$time_entry_id}.xml", $xml->asXML(), 'PUT'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -669,7 +710,9 @@ class RedmineModel extends RedmineConnector {
 	 * @param string $index [optional] по какому полю элемента проидексировать список
 	 * @return array
 	 */
+
 	public static function readTimeEntries($index = 'id', $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($index);
@@ -682,7 +725,7 @@ class RedmineModel extends RedmineConnector {
 				$cache[$hash] = self::xml2array(self::runRequest('time_entries.xml'), $index);
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash], '+1 hour');
@@ -696,7 +739,9 @@ class RedmineModel extends RedmineConnector {
 	 * @param int $time_entry_id ID записи времени
 	 * @return array
 	 */
+
 	public static function readTimeEntry($time_entry_id, $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($time_entry_id);
@@ -709,7 +754,7 @@ class RedmineModel extends RedmineConnector {
 				$cache[$hash] = self::xml2array(self::runRequest("time_entries/{$time_entry_id}.xml?include=memberships"), 'id');
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash], '+ 1 hour');
@@ -723,12 +768,13 @@ class RedmineModel extends RedmineConnector {
 	 * @param int $version_id ID связи времени
 	 * @return array
 	 */
+
 	public static function deleteTimeEntry($time_entry_id) {
 		try {
 			return self::xml2array(self::runRequest("time_entries/{$time_entry_id}.xml", null, 'DELETE'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -737,8 +783,9 @@ class RedmineModel extends RedmineConnector {
 	 * @param string $index [optional] по какому полю элемента проидексировать список
 	 * @return array
 	 */
+
 	public static function readNews($index = 'id', $useCache = true) {
-	
+
 		static $cache;
 		
 		$hash = md5($index);
@@ -754,7 +801,7 @@ class RedmineModel extends RedmineConnector {
 				}
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash], '+1 day');
@@ -762,7 +809,6 @@ class RedmineModel extends RedmineConnector {
 		
 		return $cache[$hash];
 	}
-
 	
 	/**
 	 * создать связь задач
@@ -770,13 +816,14 @@ class RedmineModel extends RedmineConnector {
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function createIssueRelation($issue_id, $data) {
 		try {
 			$xml = self::array2xml('relation', $data);
 			return self::xml2array(self::runRequest("relation/{$issue_id}.xml", $xml->asXML(), 'POST'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -785,7 +832,9 @@ class RedmineModel extends RedmineConnector {
 	 * @param int $issue_id ID задачи
 	 * @return array
 	 */
+
 	public static function readIssueRelations($issue_id, $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($issue_id);
@@ -798,7 +847,7 @@ class RedmineModel extends RedmineConnector {
 				$cache[$hash] = self::xml2array(self::runRequest("issues/{$issue_id}/relations.xml"), 'id');
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash], '+1 hour');
@@ -806,7 +855,6 @@ class RedmineModel extends RedmineConnector {
 		
 		return $cache[$hash];
 	}
-
 	
 	/**
 	 * обновить связь задач
@@ -814,13 +862,14 @@ class RedmineModel extends RedmineConnector {
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function updateIssueRelation($issue_id, $data) {
 		try {
 			$xml = self::array2xml('relation', $data);
 			return self::xml2array(self::runRequest("relation/{$issue_id}.xml", $xml->asXML(), 'PUT'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -829,15 +878,15 @@ class RedmineModel extends RedmineConnector {
 	 * @param int $version_id ID связи задач
 	 * @return array
 	 */
+
 	public static function deleteIssueRelation($issue_id) {
 		try {
 			return self::xml2array(self::runRequest("relation/{$issue_id}.xml", null, 'DELETE'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
-
 	
 	/**
 	 * создать версию проекта
@@ -845,13 +894,14 @@ class RedmineModel extends RedmineConnector {
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function createProjectVersion($project_id, $data) {
 		try {
 			$xml = self::array2xml('version', $data);
 			return self::xml2array(self::runRequest("projects/{$project_id}/versions.xml", $xml->asXML(), 'POST'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -860,7 +910,9 @@ class RedmineModel extends RedmineConnector {
 	 * @param string $project_id ID проекта
 	 * @return array
 	 */
+
 	public static function readProjectVersions($project_id, $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($project_id);
@@ -873,7 +925,7 @@ class RedmineModel extends RedmineConnector {
 				$cache[$hash] = self::xml2array(self::runRequest("project/{$project_id}/versions.xml"), 'id');
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash], '+3 hour');
@@ -887,7 +939,9 @@ class RedmineModel extends RedmineConnector {
 	 * @param string $version_id ID версии
 	 * @return array
 	 */
+
 	public static function readVersion($version_id, $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($version_id);
@@ -900,7 +954,7 @@ class RedmineModel extends RedmineConnector {
 				$cache[$hash] = self::xml2array(self::runRequest("versions/{$version_id}.xml"));
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash], '+3 hour');
@@ -908,7 +962,6 @@ class RedmineModel extends RedmineConnector {
 		
 		return $cache[$hash];
 	}
-
 	
 	/**
 	 * обновить версию
@@ -916,13 +969,14 @@ class RedmineModel extends RedmineConnector {
 	 * @param array $data параметы
 	 * @return array
 	 */
+
 	public static function updateVersion($version_id, $data) {
 		try {
 			$xml = self::array2xml('version', $data);
 			return self::xml2array(self::runRequest("versions/{$version_id}.xml", $xml->asXML(), 'PUT'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -931,12 +985,13 @@ class RedmineModel extends RedmineConnector {
 	 * @param int $version_id ID версии
 	 * @return array
 	 */
+
 	public static function deleteVersion($version_id) {
 		try {
 			return self::xml2array(self::runRequest("versions/{$version_id}.xml", null, 'DELETE'));
 		}
 		catch(CHttpException $e) {
-			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+			throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 		}
 	}
 	
@@ -945,7 +1000,9 @@ class RedmineModel extends RedmineConnector {
 	 * @param string $index [optional] по какому полю элемента проидексировать список
 	 * @return array
 	 */
+
 	public static function readQueries($index = 'id', $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($index);
@@ -958,7 +1015,7 @@ class RedmineModel extends RedmineConnector {
 				$cache[$hash] = self::xml2array(self::runRequest("queries.xml"), $index);
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash]);
@@ -972,7 +1029,9 @@ class RedmineModel extends RedmineConnector {
 	 * @param string $attacment_id ID вложения
 	 * @return array
 	 */
+
 	public static function readAttachment($attacment_id, $useCache = true) {
+
 		static $cache;
 		
 		$hash = md5($attacment_id);
@@ -985,7 +1044,7 @@ class RedmineModel extends RedmineConnector {
 				$cache[$hash] = self::xml2array(self::runRequest("attachments/{$attacment_id}.xml"), 'id');
 			}
 			catch(CHttpException $e) {
-				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage());
+				throw new CHttpException(500, __METHOD__.' failed: '.$e->getMessage(), $e->getCode());
 			}
 			
 			Persistent::setData(__METHOD__.'.'.$hash, $cache[$hash]);
@@ -998,12 +1057,14 @@ class RedmineModel extends RedmineConnector {
 /**
  * прикладные (полезные) функции
  */
+
 class Redmine extends RedmineModel {
 	/**
 	 * получить массив вида Array( [alaksey.d] => 50 [elena.c] => 39 [igor.p] => 5 ) соответствие Login-ID
 	 * Нужно переделать с учётом, что пользователей может быть более 100 (переделано!)
 	 * @return array
 	 */
+
 	public static function getUsersArray() {
 		try {
 			foreach (self::readUsers('login') as $login=>$data) {
@@ -1022,6 +1083,7 @@ class Redmine extends RedmineModel {
 	 * @param string $login
 	 * @return array
 	 */
+
 	public static function getUserByLogin($login) {
 		try {
 			$users = self::readUsers('login');
@@ -1044,6 +1106,7 @@ class Redmine extends RedmineModel {
 	 * @param string $login
 	 * @return array
 	 */
+
 	public static function getProjectByIdentifier($identifier) {
 		try {
 			$projects = self::readProjects('identifier');
@@ -1059,13 +1122,14 @@ class Redmine extends RedmineModel {
 			return array(
 			);
 		}
-	}	
+	}
 	
 	/**
 	 * получить процент готовности задачи
 	 * @param string $issue_id ID задачи
 	 * @return int
 	 */
+
 	public static function getIssuePercent($issue_id) {
 		try {
 			$issue = self::readIssue($issue_id);
@@ -1075,5 +1139,222 @@ class Redmine extends RedmineModel {
 		catch(Exception $e) {
 			return 0;
 		}
+	}
+	
+	/**
+	 * закрыть задачу
+	 * @param string $issue_id ID задачи
+	 */
+
+	public static function closeIssue($issue_id) {
+		try {
+			self::updateIssue($issue_id, array(
+				'done_ratio'=>100,'status_id'=>8
+			));
+		}
+		catch(Exception $e) {
+			// операция успешна, только если $e->getCode() != 0
+			return $e->getCode() != 0;
+		}
+		return true;
+	}
+	
+	/**
+	 * Расчитываем дату окончания с учётом выходных дней.
+	 * Расчёт идёт от текущего дня.
+	 * @param int $days
+	 * @return string
+	 */
+
+	private static function dueDate($days) {
+		$weeks = floor($days / 5);
+		$unUsedDays = $days - $weeks * 5;
+		$nowDay = date('w', time());
+		
+		if (5 - $nowDay < $unUsedDays)
+			$unUsedDays += 2;
+			
+		$daysRes = $weeks * 7 + $unUsedDays;
+		
+		return strtotime('+ '.$daysRes.' days');
+	}
+	
+	/**
+	 * создает задачи заказа или услуг
+	 * @param object $context объект Package или Serv2Pack
+	 * @param object $master_id [optional] ID исполнителя
+	 * @return bool
+	 */
+
+	public static function postIssue(&$context, $master_id = false) {
+		switch (true) {
+			case ($context instanceof Package):
+				// это задача для менеджера
+				$package = &$context;
+				
+				// создатель задачи
+				if (!$rmManager = self::getUserByLogin(Yii::app()->user->login)) {
+					break;
+				}
+				
+				// если передан мастер, патаемся его найти
+				$master_id and $master = People::model()->findByPk($master_id)
+				// иначе используем назначенного менеджера
+				or $master = $package->manager
+				// но если и его нет, назначаем задачу пользователю
+				or $master = People::model()->findByPk(Yii::app()->user->id);
+				
+				// исполнитель задачи
+				if (!$rmMaster = self::getUserByLogin($master->login)) {
+					break;
+				}
+				
+				// XXX проект выбираем исходя из роли мастера
+				$project = @Yii::app()->params['redmineConfig']['assignTo'][$master->people_group->name];
+				
+				// если не нашелся проект, выбираем проект по-умолчанию
+				isset($project) or $project = Yii::app()->params['redmineConfig']['defaulProject'];
+				$rmProject = self::getProjectByIdentifier($project);
+				
+				$subject = "#{$package->id} {$package->name} для {$package->client->mail}";
+				isset($package->site) and $subject .= " ({$package->site->url})";
+				
+				$description = '';
+				$description .= "h3. примечания:\n{$package->descr}\n\n";
+				if (isset($package->site)) {
+					$description .= "*сайт: {$package->site->url}*\n";
+					$description .= "*хост:* {$package->site->host}\n";
+					$description .= "*ftp:* {$package->site->ftp}\n";
+					$description .= "*db:* {$package->site->db}\n";
+					//$description .=  "*старт:* {$package->site->dt_beg}\n";
+					//$description .=  "*финиш:* {$package->site->dt_end}\n";
+					$description .= "\n";
+				}
+				$description .= "h3. сумма: ".number_format($package->summ, 0, ',', ' ')."руб.";
+				
+				$issue = self::createIssue(array(
+					// в каком проекте создать задачу
+					'project_id'=>$rmProject['id'],
+					// параметры задачи
+					'tracker_id'=>2,'status_id'=>1,'priority_id'=>4,
+					// кто назначил и кому наначено
+					'author_id'=>$rmManager['id'],'assigned_to_id'=>$rmManager['id'],
+					// родительская задача
+					//'parent_issue_id'=>0,
+					// тема и описание
+					'subject'=>$subject,'description'=>$description,
+					// когда начата и когда должна быть закончена
+					'start_date'=>date('Y-m-d', strtotime($package->dt_beg)),
+					//'due_date'=>date('Y-m-d', strtotime($package->dt_beg)),
+					
+					// время на выполнение и потраченное время
+					'estimated_hours'=>'0.0','spent_hours'=>'0.0'
+				));
+				
+				if (!$package->rm_issue_id = @$issue['id']) {
+					throw new CHttpException(500, __METHOD__.' failed: '.'Не удалось создать задачу');
+				}
+				
+				break;
+			///////////////////////////////
+			case ($context instanceof Serv2pack):
+			
+				// это задача для мастера
+				$service = &$context;
+				$package = $service->package;
+				
+				// создатель задачи
+				if (!$rmManager = self::getUserByLogin(Yii::app()->user->login)) {
+					break;
+				}
+				
+				// если передан мастер, патаемся его найти
+				$master_id and $master = People::model()->findByPk($master_id)
+				// иначе используем назначенного мастера
+				or $master = $context->master
+				// но если и его нет, назначаем задачу пользователю
+				or $master = People::model()->findByPk(Yii::app()->user->id);
+				
+				// исполнитель задачи
+				if (!$rmMaster = self::getUserByLogin($master->login)) {
+					break;
+				}
+				
+				// XXX проект выбираем исходя из роли мастера
+				$project = @Yii::app()->params['redmineConfig']['assignTo'][$master->people_group->name];
+				
+				// если не нашелся проект, выбираем проект по-умолчанию
+				isset($project) or $project = Yii::app()->params['redmineConfig']['defaulProject'];
+				$rmProject = self::getProjectByIdentifier($project);
+				
+				$subject = "#{$package->id} {$service->service->name} для {$package->client->mail}";
+				isset($package->site) and $subject .= " ({$package->site->url})";
+				
+				$description = '';
+				if (isset($package->site)) {
+					$description .= "*сайт: {$package->site->url}*\n";
+					$description .= "*хост:* {$package->site->host}\n";
+					$description .= "*ftp:* {$package->site->ftp}\n";
+					$description .= "*db:* {$package->site->db}\n";
+					//$description .=  "*старт:* {$package->site->dt_beg}\n";
+					//$description .=  "*финиш:* {$package->site->dt_end}\n";
+					$description .= "\n";
+				}
+				$description .= "h3. примечания:\n\n{$service->descr}\n\n";
+				
+				if ($service->quant == 1) {
+					$description .= "h3. стоимость: ".number_format($service->price, 0, ',', ' ')."руб.";
+				} else {
+					$description .= "h3. количество: ".number_format($service->quant, 0, ',', ' ')."шт.\n";
+					$description .= "h3. цена: ".number_format($service->price, 0, ',', ' ')."руб.\n";
+					$description .= "h3. стоимость: ".number_format($service->quant * $service->price, 0, ',', ' ')."руб.";
+				}
+				
+				$issue = self::createIssue(array(
+					// в каком проекте создать задачу
+					'project_id'=>$rmProject['id'],
+					// параметры задачи
+					'tracker_id'=>2,'status_id'=>1,'priority_id'=>4,
+					// кто назначил и кому наначено
+					'author_id'=>$rmManager['id'],'assigned_to_id'=>$rmMaster['id'],
+					// родительская задача
+					'parent_issue_id'=>$package->rm_issue_id,
+					// тема и описание
+					'subject'=>$subject,'description'=>$description,
+					// когда начата и когда должна быть закончена
+					'start_date'=>date('Y-m-d'),'due_date'=>date('Y-m-d', self::dueDate($service->service->duration)),
+					// XXX время на выполнение и потраченное время
+					//'estimated_hours'=>$service->service->duration,'spent_hours'=>'0.0',
+					// XXX вид деятельности - исследовать это поле
+					//'time_entry_activity_id'=>
+				));
+				
+				if (!$service->rm_issue_id = @$issue['id']) {
+					throw new CHttpException(500, __METHOD__.' failed: '.'Не удалось создать подзадачу');
+				}
+				
+				// если нет главной задачи
+				if (!$package->rm_issue_id) {
+					self::postIssue($package);
+				}
+				
+				// добавляем в главную задачу комментарий об этом действии
+				$masterFullName = @$rmMaster['firstname'].' '.@$rmMaster['lastname'];
+				
+				try {
+					self::updateIssue($package->rm_issue_id, array(
+						// сообщение
+						'notes'=>"h2. поставлена задача - {$service->service->name}\n\nисполнитель - \"{$masterFullName}\":/users/{$rmMaster['id']}, задача #{$service->rm_issue_id}",
+						// XXX потраченное время (прибавляется)
+						//'spent_hours'=>$service->service->duration
+					));
+				}
+				catch(Exception $e) {
+					// XXX это исключение генерируется всегда!
+					// это не логично, но нормально =)
+				}
+				break;
+		}
+		return true;
 	}
 }

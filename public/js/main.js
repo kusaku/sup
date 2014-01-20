@@ -1,63 +1,118 @@
-/* 
+/*global loadCalendar: true,
+		prepareHtml:true,
+		positionPopUp:true,
+		Package:true,
+		DashboardFullInfo:true,
+		CabinetWindow:true,
+		DomainRequestListWindow:true,
+		DomainRequestWindow:true,
+		PopupWindow:true,
+		PackageQuestionnaire: true,
+		HashEvents:true*/
+var tabs,hashHandler;
+/**
  * Автоматическая загрузка - выполнится как загрузится страница.
  */
 $(function(){
 	loadData();
 	loadCalendar();
+
+	var obSearchClient = $("#searchClient");
+	var obSearchClientInput = obSearchClient.find(".inputField");
+	var obSearchClientButton = obSearchClient.find('.buttonClear');
+
 	//	Показываем кнопку очистки поля автокомплита при незавершенном поиске
-	$("#searchClient").keyup(function(){
-		if ($(this).val().length > 2) {
-			$("#buttonClear").removeClass('hidden');
+	obSearchClientInput.keyup(function() {
+		if($(this).val().length > 2) {
+			obSearchClientButton.removeClass('hidden');
+		} else {
+			obSearchClientButton.addClass('hidden');
 		}
-		else {
-			$("#buttonClear").addClass('hidden');
-		}
-	});
-	//Автокомплит - поиск на главной странице.
-	$("#searchClient").autocomplete({
-		source: "/people/GlobalSearchJSON",
-		minLength: 3,
-		select: function(event, ui){
-			$("#buttonClear").removeClass('hidden');
+	}).autocomplete({
+		// Автокомплит - поиск на главной странице.
+		source : "/manager/people/search",
+		minLength : 3,
+		select : function(event, ui) {
+			obSearchClientButton.removeClass('hidden');
 			loadData(ui.item.id);
 		}
 	});
-	// считаем сумму при изменении опций в пакете
-	$('input.cbox').live('change', function(){
-		sumka();
+	// Обработчик сабмита формы
+	obSearchClient.bind('submit', function(event){
+		event.stopPropagation();
+		loadData(obSearchClientInput.val());
+		return false;
 	});
-	$.datepicker.setDefaults($.datepicker.regional["ru"]); // Устанавливаем локаль для календаря
+
+	// Обработчик кнопки очистки формы
+	obSearchClientButton.click(function(event){
+		loadData();
+		obSearchClientInput.val('');
+		obSearchClientButton.addClass('hidden');
+	});
+
+	// устанавливаем локаль для календаря
+	//noinspection JSUnresolvedVariable
+	$.datepicker.setDefaults($.datepicker.regional.ru);
+
 	// реализация аккордеона
 	$('.supAccordion h3').live('click', function(){
 		$(this).next().slideDown();
 		$('.supAccordion > div').not($(this).next()).slideUp();
 	});
+
 	prepareHtml();
-});
 
-/*
- * Прячем попап при нажатии Esc.
- */
-$(document).keyup(function(e){
-	if (e.keyCode == 27) {
-		hidePopUp();
-	}
-});
+	tabs = $('.tabscontainer.projects').tabs();
 
-/*
- * Подготовка динимаческого html при его загрузке и изменении
- */
-function prepareHtml(){
-	// замена стандартных элементов
-	//$('select').selectBox(); // Отключено, т.к. возникают сложности
-	$('input[type="checkbox"], input[type="radio"]').radiocheckBox();
-	$('#sup_popup').draggable({
-		handle: '.clientHead',
-		containment: 'parent'
+	$(window).resize(function(){
+		if ($('#sup_popup:visible').length > 0) {
+			positionPopUp();
+		}
 	});
+
+	hashHandler=new HashEvents();
+	hashHandler.addHandler('main',processHashAction);
+});
+
+function processHashAction(arHash) {
+	if (arHash.length > 0) {
+		if (arHash[0] === '#cabinet' && arHash.length >= 2) {
+			if (arHash.length >= 3 && /^step\d+$/i.test(arHash[2])) {
+				var id = arHash[2];
+				id = id.substring(4, id.length);
+				var obWin = cabinet(arHash[1], function(){
+					obWin.loadStepData(id);
+				});
+			}
+			else {
+				cabinet(arHash[1]);
+			}
+		} else if (arHash[0] === '#package' && arHash.length === 3) {
+			Package(arHash[1], arHash[2]);
+		} else if (arHash[0] === '#packageQuestionnaire' && arHash.length === 2) {
+			PackageQuestionnaire(arHash[1]);
+		} else if (arHash[0] === '#domainRequests' && arHash[1]==='package' && arHash.length==3) {
+			DomainRequests(arHash[2]);
+		} else if (arHash[0]=== '#domainRequest') {
+			if(arHash.length===2) {
+				DomainRequest(arHash[1],'',null);
+			} else if(arHash.length===3) {
+				DomainRequest(arHash[2],arHash[1],null);
+			}
+		} else if(arHash[0]==='#dashboard' && arHash.length===6) {
+			DashboardFullInfo(arHash[1],arHash[2],arHash[3],arHash[4],arHash[5]);
+		} else if(arHash[0]==='#partnerCard' && arHash.length===2) {
+			PartnerCard(arHash[1]);
+		} else if(arHash[0]==='#payments' && arHash.length===2) {
+			PaymentsList(arHash[1]);
+		} else if(arHash[0]==='#payment' && arHash.length===3) {
+			PaymentEdit(arHash[1],arHash[2]);
+		}
+	}
 }
 
-/*	
+/*
  * Очистка результатов поиска. Убираем введённое значение и прячем кнопку очистки.
  */
 function searchClear(){
@@ -66,22 +121,81 @@ function searchClear(){
 	loadData();
 }
 
-/* 
+/**
+ * Функция загружает скрипт управления окном ЛКК и вызывает функцию его отображения
+ *
+ * @param packageId int номер пакета
+ * @param callback function функция, которую необходимо выопнлить при открытии окна
+ *
+ * @return CabinetWindow
+ */
+function cabinet(packageId, callback){
+	//$.getScript('/js/cabinet.js',function(){
+	var obCabinetWindow = new CabinetWindow(packageId, callback);
+	obCabinetWindow.show();
+	return obCabinetWindow;
+	//cabinetWindow.init(packageId).show();
+	//})
+}
+
+function contextMenuInit(){
+	var hMenuItemClick;
+
+	hMenuItemClick=function(a,el,pos) {
+		return $(a).attr('target') === '_blank' || $(a).attr('rel') === 'auto';
+	};
+
+	$(".projectBox").each(function(){
+		$(this).bind('contextmenu', function(e){
+			e.preventDefault();
+			return false;
+		}).contextMenu({
+			menu: $(this).find('.packageContextMenu').first()
+		}, hMenuItemClick);
+	});
+	$(".clientInfo").each(function(){
+		$(this).bind('contextmenu', function(e){
+			e.preventDefault();
+			return false;
+		}).contextMenu({
+			menu: $(this).find('.userContextMenu').first()
+		}, hMenuItemClick);
+	});
+	$('.contextMenuButton').click(function(e){
+		e.preventDefault();
+		var obDiv = $(this).parentsUntil('.projectBox').parent();
+		var pos = $(this).offset();
+		pos.top+=$(this).outerHeight();
+		obDiv.showContextMenu(pos);
+	});
+}
+
+/*
  * Загружаем данные для главной страницы.
  */
-function loadData(client_id){
+function loadData(search, page){
 	$('#sup_content').html('<div id="preloader"></div>');
 	$.ajax({
-		url: '/package',
+		url: '/manager/package',
 		data: {
-			'client_id': client_id
+			'search': search,
+			'page': page
 		},
 		dataType: 'html',
 		success: function(data){
 			$('#sup_content').html(data);
-			$("#searchClient").focus();
-			// скрываем заказы клиента - все кроме первого			
+			$("#searchClient .inputField").focus();
+			$('li a.lessClick').click(function(e){
+				e.preventDefault();
+				$(this).parent().toggleClass('less').children('.forhide').slideToggle(300);
+			});
+			// скрываем заказы клиента - все кроме первого
+			$('.forhide').hide(0);
 			flagsUpdate();
+			contextMenuInit();
+			$("[data-tooltip]").mouseenter(function(e){
+				hint($(this),$(this).attr("data-tooltip"),250);
+			});
 		},
 		error: function(jqXHR, textStatus, errorThrown){
 			$('#sup_content').text(textStatus);
@@ -89,121 +203,50 @@ function loadData(client_id){
 	});
 }
 
-/* 
- * Показываем всплвающее окно.
- */
-function showPopUp(){
-	$('#sup_popup').attr('scrollPos', $(window).scrollTop());
-	$(window).bind('scroll', function(){
-		$('body').animate({
-			scrollTop: $('#sup_popup').attr('scrollPos')
-		}, 300, function(){
-			$('body').stop(true);
-		});
-	});
-	
-	$('#modal').fadeIn(0); // 200
-	$('#sup_preloader').hide(0); // Прячем preloader
-	$('#sup_popup').show(0);
-	$('#sup_popup').html($('#sup_popup').html() + '<a id="popup_close" onClick="hidePopUp()"></a>');
-	
-	var left = Math.round($(document).width() / 2) - Math.round($('#sup_popup').width() / 2);
-	var top = Math.round($(window).height() / 2) - Math.round($('#sup_popup').height() / 2);
-	
-	if (top > 10) 
-		top = 10; // Так проще работать с маленьким экраном.
-	$('#sup_popup').css({
-		'left': left,
-		'top': top
-	});
-	
-	prepareHtml();
-}
-
-/* 
- * Прячем всплвающее окно.
- */
-function hidePopUp(){
-	// разрушение селектбоксов 
-	//$('#sup_popup select').selectBox('destroy');
-	$(window).unbind('scroll');
-	$('#sup_popup').fadeOut(0);
-	$('#sup_preloader').hide(0); // Прячем preloader
-	$('#modal').fadeOut(0); // 200
-	$('body').css('cursor', 'default');
-}
-
-/* 
- * Показываем всплвающее окно.
- */
-function showPopUpLoader(){
-	$('#modal').fadeIn(0);
-	$('#sup_preloader').show(0);
-	
-	var left = Math.round($(document).width() / 2) - Math.round($('#sup_preloader').width() / 2);
-	if (left < 1) 
-		left = 0;
-	var top = Math.round($(window).height() / 2) - Math.round($('#sup_preloader').height() / 2);
-	if (top < 1) 
-		top = 0;
-	
-	$('#sup_preloader').css('left', left + 'px');
-	$('#sup_preloader').css('top', top + 'px');
-}
-
-/*	
- * Сворачиваем/разворачиваем заказы клиетна на главной странице.
- * Фактически прячем/показываем все заказы кроме первого.
- */
-function ShowHide(id){
-	$('#' + id).find('li').toggleClass('less').children('.forhide').slideToggle(300);
-}
-
-/*	
+/*
  * Сворачиваем/разворачиваем блок сайта в карточке клиента.
  */
 function CardShowHide(id){
 	$('#orderBlock' + id).toggleClass('open');
-	$('#orderBlock' + id).children('.orderPart').toggleClass('hidden'); // 150
+	$('#orderBlock' + id).children('.orderPart').toggleClass('hidden');
+	// 150
 }
 
-/*	
+/*
  * Подгружаем список сайтов этого клиента.
  */
 function loadSites(client_id, selected){
 	$.ajax({
-		url: '/site/getlist',
+		url: '/manager/site/getlist',
 		dataType: 'html',
 		data: {
 			'client_id': client_id,
 			'selected': selected
 		},
 		success: function(data){
-			// разрушение селектбоксов 
-			//$('#site_selector select').selectBox('destroy');
+			// разрушение селектбоксов
+			// $('#site_selector select').selectBox('destroy');
 			$('#site_selector').html(data);
 			prepareHtml();
 		},
 		error: function(jqXHR, textStatus, errorThrown){
 			$('#site_selector').text(textStatus);
 		}
-		
 	});
 }
 
-
-/*	
+/*
  * Создаём новый хост.
  */
 function loadNewSite(){
 	$.ajax({
-		url: '/site/0',
+		url: '/manager/site/0',
 		dataType: 'html',
 		data: {
 			'no_button': true
 		},
 		success: function(data){
-			// разрушение селектбоксов 
+			// разрушение селектбоксов
 			//$('#site_selector select').selectBox('destroy');
 			$('#site_selector').html(data);
 			prepareHtml();
@@ -215,103 +258,25 @@ function loadNewSite(){
 }
 
 /*
- * Отмечаем заказ как оплаченный.
- */
-function addPayment(package_id, ulid, summa, message, noReporting){
-	$('body').css('cursor', 'wait');
-	if (message == undefined) 
-		message = "";
-	if (noReporting != 'checked') 
-		noReporting = 1;
-	else 
-		noReporting = 0;
-	
-	$.ajax({
-		url: '/package/addpay',
-		dataType: 'html',
-		method: 'POST',
-		data: {
-			'package_id': package_id,
-			'summa': summa,
-			'message': message,
-			'noReporting': noReporting
-		},
-		success: function(data){
-			$('#ul' + ulid).replaceWith(data);
-			flagsUpdate();
-			$('#modal').fadeOut(0);
-			hidePopUp();
-			$('body').css('cursor', 'default');
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-			$('#modal').fadeOut(0);
-			$('#ul' + ulid).replaceWith($('<span/>').text(textStatus));
-			hidePopUp();
-			$('body').css('cursor', 'default');
-		}
-	});
-}
-
-
-/*	
- * Берём новый заказ себе.
- */
-function takePack(package_id, ulid){
-	if (package_id != null) {
-		$.ajax({
-			url: '/package/takepack/' + package_id,
-			dataType: 'html',
-			success: function(data){
-				$('#ul' + ulid).replaceWith(data);
-				flagsUpdate();
-			},
-			error: function(jqXHR, textStatus, errorThrown){
-				$('#ul' + ulid).replaceWith($('<span/>').text(textStatus));
-			}
-		});
-	}
-}
-
-/*	
- * Добавляем нового клиента.
- */
-function addEditClient(id, parent){
-	showPopUpLoader();
-	$.ajax({
-		url: '/people/' + id,
-		dataType: 'html',
-		data: {
-			'parent': parent
-		},
-		success: function(data){
-			$('#sup_popup').html(data);
-			showPopUp(); // Окно сформировано - показываем его
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-			$('#sup_popup').text(textStatus);
-			showPopUp(); // Окно сформировано - показываем его
-		}
-	});
-}
-
-/*	
  * Редактируем сайт (домен)
  */
 function editDomain(id, client_id){
 	showPopUpLoader();
 	$.ajax({
-		url: '/site/' + id,
+		url: '/manager/site/' + id,
 		dataType: 'html',
 		data: {
 			'client_id': client_id
 		},
 		success: function(data){
 			$('#sup_popup').html(data);
-			showPopUp(); // Окно сформировано - показываем его
+			showPopUp();
+			// Окно сформировано - показываем его
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			$('#sup_popup').text(textStatus);
-			showPopUp(); // Окно сформировано - показываем его
+			$('#sup_popup').html($('<div style="width:300px;"/>').append($('<h1/>').text(jqXHR.statusText + ':' + jqXHR.status)).append(jqXHR.responseXML ? $('<div/>').html(jqXHR.responseXML) : $('<div/>').text(jqXHR.responseText)).html());
+			showPopUp();
+			// Окно сформировано - показываем его
 		}
 	});
 }
@@ -322,7 +287,7 @@ function editDomain(id, client_id){
 function checkDomain(){
 	if ($("#site_url").val() != '') 
 		$.ajax({
-			url: '/site/checker',
+			url: '/manager/site/checker',
 			dataType: 'html',
 			data: {
 				'url': $("#site_url").val()
@@ -334,34 +299,14 @@ function checkDomain(){
 				else 
 					//$("#site_url").css('background-color', '#c6ffca');
 					$("#site_url").css('background-color', '#009646').css('color', '#FFF');
-				
-				
+
 			//$('#sup_popup').html(data);
 			//showPopUp(); // Окно сформировано - показываем его
 			}
 		});
 }
 
-/*	
- * Отказывамся от заказа
- */
-function decline(package_id, ulid){
-	if (package_id != null) {
-		$.ajax({
-			url: '/package/decline/' + package_id,
-			dataType: 'html',
-			success: function(data){
-				$('#ul' + ulid).replaceWith(data);
-				flagsUpdate();
-			},
-			error: function(jqXHR, textStatus, errorThrown){
-				$('#ul' + ulid).replaceWith($('<span/>').text(textStatus));
-			}
-		});
-	}
-}
-
-/*	
+/*
  * Обновляем значения флажков (Новые заказы, Новые события, Выполненные проекты)
  */
 function flagsUpdate(){
@@ -370,25 +315,7 @@ function flagsUpdate(){
 	$('#doneProjectsCount').html($('.green').size());
 }
 
-/*	
- * Карточка клиента.
- */
-function clientCard(id){
-	$.ajax({
-		url: '/people/card/' + id,
-		dataType: 'html',
-		success: function(data){
-			$('#sup_popup').html(data);
-			showPopUp(); // Окно сформировано - показываем его
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-			$('#sup_popup').text(textStatus);
-			showPopUp(); // Окно сформировано - показываем его
-		}
-	});
-}
-
-/*	
+/*
  * About
  */
 function about(){
@@ -397,16 +324,18 @@ function about(){
 		dataType: 'html',
 		success: function(data){
 			$('#sup_popup').html(data);
-			showPopUp(); // Окно сформировано - показываем его
+			showPopUp();
+			// Окно сформировано - показываем его
 		},
 		error: function(jqXHR, textStatus, errorThrown){
-			$('#sup_popup').text(textStatus);
-			showPopUp(); // Окно сформировано - показываем его
+			$('#sup_popup').html($('<div style="width:300px;"/>').append($('<h1/>').text(jqXHR.statusText + ':' + jqXHR.status)).append(jqXHR.responseXML ? $('<div/>').html(jqXHR.responseXML) : $('<div/>').text(jqXHR.responseText)).html());
+			showPopUp();
+			// Окно сформировано - показываем его
 		}
 	});
 }
 
-/*	
+/*
  * Работа с табами в окне оплаченного (выполняемого) заказа.
  */
 function selectTab(id){
@@ -421,11 +350,11 @@ function selectTab(id){
  */
 function saveAndProceed(what, where){
 	var form = $(what);
-	
-	if (!form.length) {		
+
+	if (!form.length) {
 		return false;
 	}
-	
+
 	var data = form.serialize();
 	data += '&ajax=1';
 	$.ajax({
@@ -453,73 +382,3 @@ function saveAndProceed(what, where){
 	return false;
 }
 
-/*
- * Показываем форму заказа.
- * Может быть новый заказ для клиента, а может и существующий на редактирование
- */
-function payForm(package_id, ulid, summ){
-	$('body').css('cursor', 'wait');
-	showPopUpLoader();
-	$("#searchClient").val('');
-	$.ajax({
-		url: '/package/getpayform',
-		dataType: 'html',
-		data: {
-			'package_id': package_id,
-			'ulid': ulid,
-			'summ': summ
-		},
-		success: function(data){
-			$('#clients').val("");
-			$("#buttonClear").addClass('hidden');
-			$('#sup_popup').html(data);
-			showPopUp();
-			$('body').css('cursor', 'default');
-			$('#pay_description').focus();
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-			$('#sup_popup').text(textStatus);
-		}
-	});
-}
-
-/*
-
- * Отмечаем заказ как оплаченный. Устаревшая функция.
-
- */
-
-//function addPay(package_id, ulid, summ){
-//	$('#modal').fadeIn(0);
-//	if (package_id != null) {
-//		var msg = 'Подробности платежа';
-//		var message = prompt("Провести оплату заказа #" + package_id + "?", msg);
-//
-//		if (message != null)
-//			var summa = prompt("Оплаченная сумма", summ);
-//
-//		if (message != null && summa != null) {
-//			$('#modal').fadeIn(0);
-//			if (message == msg)
-//				message = ""; // Если ничего не ввели, то сообщение очищаем
-//			$.ajax({
-//				url: '/package/addpay/' + package_id,
-//				dataType: 'html',
-//				data: {
-//					'message': message,
-//					'summa': summa
-//				},
-//				success: function(data){
-//					$('#ul' + ulid).replaceWith(data);
-//					flagsUpdate();
-//					$('#modal').fadeOut(0);
-//				},
-//				error: function(jqXHR, textStatus, errorThrown){
-//					$('#modal').fadeOut(0);
-//					$('#ul' + ulid).replaceWith($('<span/>').text(textStatus));
-//				}
-//			});
-//		}
-//	}
-//	$('#modal').fadeOut(0);
-//}

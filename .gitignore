@@ -1,5 +1,4 @@
-nbproject
 /logs
 /protected/runtime/*
 .tmp*
-.project
+.idea

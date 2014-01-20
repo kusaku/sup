@@ -1,0 +1,46 @@
+table.services {
+	
+}
+
+table.services td {
+	padding: 2px;
+	border:1px solid black;
+}
+
+table.services th {
+	text-align:center;
+	border:1px solid black;
+}
+
+table.services th.devider,
+table.services td.devider {
+	border-right:2px solid black;
+}
+
+form.form {
+	
+}
+
+form.form .row {
+	display:block;
+	margin-bottom:10px;
+}
+
+form.form .row label {
+	display:block;
+	width:300px;
+	float:left;
+}
+
+form.form .row input {
+	width:600px;
+}
+
+form.form .row textarea {
+	width:600px;
+	height:100px;
+	border: 1px solid #B0C3C9;
+	padding: 2px 3px;
+	font-weight: normal;
+	margin: 0px 0 0 0;
+}

@@ -3,8 +3,8 @@
  * @param {Object} id
  */
 function selectTab(id){
-    $('.tab').removeClass('selected');
-    $('.tabContent').addClass('hidden');
+	$('.tab').removeClass('selected');
+	$('.tabContent').addClass('hidden');
 	$('#tab' + id).addClass('selected');
-    $('#tabContent' + id).removeClass('hidden');
+	$('#tabContent' + id).removeClass('hidden');
 }

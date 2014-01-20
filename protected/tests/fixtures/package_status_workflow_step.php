@@ -1,0 +1,21 @@
+<?php
+return array(
+	array(
+		'id'=>1,
+		'status_id'=>70,
+		'step_id'=>10,
+		'set_step'=>1,
+	),
+	array(
+		'id'=>2,
+		'status_id'=>999,
+		'step_id'=>10,
+		'set_step'=>1,
+	),
+	array(
+		'id'=>3,
+		'status_id'=>60,
+		'step_id'=>9,
+		'set_step'=>1,
+	),
+);

@@ -11,7 +11,7 @@
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
 
-.calendar {position: absolute; left: 10px; top: 10px;}
+#calendarDock.calendar {position: absolute; left: 10px; top: 10px;}
 .calendar .event {position: static; padding: 5px; margin-bottom: 1em; border: 1px solid #B0C3C9; background: #FAFAFA; color: #000; width:200px;}
 .calendar .event .date {position: static;  border: 0px; color: #555;}
 .calendar .event .message {position: static;  border: 0px;}

@@ -1,5 +1,4 @@
-<?php
-
+<?php 
 /**
  * JPhpMailer class file.
  *
@@ -24,9 +23,21 @@
  * $mail->Send();
  * </pre>
  */
-
+ 
 require_once dirname(__FILE__).DIRECTORY_SEPARATOR.'class.phpmailer.php';
+/**
+ * Extended class
+ */
 
-class JPhpMailer extends PHPMailer
-{
+class JPhpMailer extends PHPMailer {
+
+  public function init() {
+    //dummy
+  }
+
+  public function Clear() {
+    $this->ClearAllRecipients();
+    $this->ClearAttachments();
+    $this->ClearCustomHeaders();
+  }
 }

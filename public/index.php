@@ -1,16 +1,44 @@
-<?php
-if (  file_exists('closed.php')  )
+<?php 
+if (file_exists('closed.php')) {
 	include 'closed.php';
-else {
-	// change the following paths if necessary
-	$yii=dirname(__FILE__).'/../framework/yii.php';
-	$config=dirname(__FILE__).'/../protected/config/main.php';
-
-	// remove the following lines when in production mode
-	defined('YII_DEBUG') or define('YII_DEBUG',true);
-	// specify how many levels of call stack should be shown in each log message
-	defined('YII_TRACE_LEVEL') or define('YII_TRACE_LEVEL',3);
-
-	require_once($yii);
-	Yii::createWebApplication($config)->run();
+} else {
+	switch (TRUE) {
+		// development environment
+		case stristr($_SERVER['HTTP_HOST'], 'sup.fsdev.loc'):
+			define('YII_FRAMEWORK', dirname(__FILE__).'/framework/yii.php');
+			define('YII_CONFIG', dirname(__FILE__).'/protected/config/dev_main.php');
+			define('YII_DEBUG', true);
+			define('YII_TRACE_LEVEL', 3);
+			break;
+		case stristr($_SERVER['HTTP_HOST'], '.aks'):
+		case stristr($_SERVER['SERVER_ADDR'], '192.168.0.235'):
+			define('YII_FRAMEWORK', dirname(__FILE__).'/../framework/yii.php');
+			define('YII_CONFIG', dirname(__FILE__).'/../protected/config/dev_aks.php');
+			define('YII_DEBUG', true);
+			define('YII_TRACE_LEVEL', 0);
+			break;
+		case stristr($_SERVER['HTTP_HOST'], '.anton'):
+		case stristr($_SERVER['SERVER_ADDR'], '192.168.0.244'):
+			define('YII_FRAMEWORK', dirname(__FILE__).'/../framework/yii.php');
+			define('YII_CONFIG', dirname(__FILE__).'/../protected/config/dev_anton.php');
+			define('YII_DEBUG', true);
+			define('YII_TRACE_LEVEL', 3);
+			break;
+		case stristr($_SERVER['HTTP_HOST'], '.blade'):
+		case stristr($_SERVER['SERVER_ADDR'], '192.168.0.242'):
+			define('YII_FRAMEWORK', dirname(__FILE__).'/../framework/yii.php');
+			define('YII_CONFIG', dirname(__FILE__).'/../protected/config/dev_blade39.php');
+			define('YII_DEBUG', true);
+			define('YII_TRACE_LEVEL', 3);
+			break;
+		// production environment
+		default:
+			define('YII_FRAMEWORK', dirname(__FILE__).'/../framework/yii.php.lite');
+			define('YII_CONFIG', dirname(__FILE__).'/../protected/config/prod_main.php');
+			define('YII_DEBUG', false);
+			define('YII_TRACE_LEVEL', 0);
+			break;
+	}
+	require_once (YII_FRAMEWORK);
+	Yii::createWebApplication(YII_CONFIG)->run();
 }
